@@ -2,6 +2,7 @@ package com.github.royalstorm.android_task_manager.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -13,6 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CalendarView;
+import android.widget.Toast;
 
 import com.github.royalstorm.android_task_manager.R;
 
@@ -43,6 +46,17 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        CalendarView calendar = findViewById(R.id.calendar);
+        calendar.setOnDateChangeListener(
+                new CalendarView.OnDateChangeListener() {
+                    @Override
+                    public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                        Intent intent = new Intent(MainActivity.this, DayActivity.class);
+                        startActivity(intent);
+                    }
+                }
+        );
     }
 
     @Override
@@ -87,11 +101,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(this, DayActivity.class));
         } else if (id == R.id.nav_week) {
             startActivity(new Intent(this, WeekActivity.class));
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_month) {
 
         }
 
