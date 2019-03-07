@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CalendarView;
-import android.widget.Toast;
 
 import com.github.royalstorm.android_task_manager.R;
 
