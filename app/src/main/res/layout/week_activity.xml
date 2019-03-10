@@ -6,10 +6,12 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/linearLayout"
+        android:layout_width="360dp"
         android:layout_height="60dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -32,8 +34,7 @@
                 android:layout_weight="1"
                 android:text="ПН"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
+                android:textColor="@android:color/black" />
 
             <TextView
                 android:id="@+id/tue"
@@ -42,8 +43,7 @@
                 android:layout_weight="1"
                 android:text="ВТ"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
+                android:textColor="@android:color/black" />
 
             <TextView
                 android:id="@+id/wed"
@@ -52,8 +52,7 @@
                 android:layout_weight="1"
                 android:text="СР"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
+                android:textColor="@android:color/black" />
 
             <TextView
                 android:id="@+id/thu"
@@ -62,8 +61,7 @@
                 android:layout_weight="1"
                 android:text="ЧТ"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
+                android:textColor="@android:color/black" />
 
             <TextView
                 android:id="@+id/fri"
@@ -72,8 +70,7 @@
                 android:layout_weight="1"
                 android:text="ПТ"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
+                android:textColor="@android:color/black" />
 
             <TextView
                 android:id="@+id/sat"
@@ -82,8 +79,7 @@
                 android:layout_weight="1"
                 android:text="СБ"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
+                android:textColor="@android:color/black" />
 
             <TextView
                 android:id="@+id/sun"
@@ -92,8 +88,7 @@
                 android:layout_weight="1"
                 android:text="ВС"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
+                android:textColor="@android:color/black" />
         </LinearLayout>
 
         <LinearLayout
@@ -111,8 +106,7 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
+                android:textColor="@android:color/black" />
 
             <TextView
                 android:id="@+id/tueNumber"
@@ -120,8 +114,7 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
+                android:textColor="@android:color/black" />
 
             <TextView
                 android:id="@+id/wedNumber"
@@ -129,8 +122,7 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
+                android:textColor="@android:color/black" />
 
             <TextView
                 android:id="@+id/thuNumber"
@@ -138,8 +130,7 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
+                android:textColor="@android:color/black" />
 
             <TextView
                 android:id="@+id/friNumber"
@@ -147,8 +138,7 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
+                android:textColor="@android:color/black" />
 
             <TextView
                 android:id="@+id/satNumber"
@@ -156,8 +146,7 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
+                android:textColor="@android:color/black" />
 
             <TextView
                 android:id="@+id/sunNumber"
@@ -165,8 +154,7 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
+                android:textColor="@android:color/black" />
         </LinearLayout>
 
     </LinearLayout>
