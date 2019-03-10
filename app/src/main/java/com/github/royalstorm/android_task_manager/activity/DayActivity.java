@@ -3,7 +3,6 @@ package com.github.royalstorm.android_task_manager.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,7 +15,13 @@ import com.github.royalstorm.android_task_manager.activity.dao.Event;
 public class DayActivity extends AppCompatActivity {
 
     ListView hoursList;
+
     Event event;
+
+    ArrayAdapter<String> adapter;
+
+    //TODO: send time in AddEventActivity
+    private static String time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +36,8 @@ public class DayActivity extends AppCompatActivity {
                                     View itemClicked,
                                     int position,
                                     long id) {
+                time = adapter.getItem(position);
+
                 createEvent();
             }
         });
@@ -41,7 +48,7 @@ public class DayActivity extends AppCompatActivity {
     private void showHours() {
         String[] hours = getResources().getStringArray(R.array.hours);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+        adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, hours);
 
         hoursList.setAdapter(adapter);
@@ -57,13 +64,12 @@ public class DayActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data == null){
+        if (data == null)
             return;
-        }
 
         event = (Event) data.getExtras().getSerializable(Event.class.getSimpleName());
 
-        Toast.makeText(getApplicationContext(), "Событие \"" + event.getEventTitle() + "\" было создано",
+        Toast.makeText(getApplicationContext(), "Событие \"" + event.getEventTitle() + "\" было создано. Время: " + time,
                 Toast.LENGTH_SHORT).show();
     }
 }
