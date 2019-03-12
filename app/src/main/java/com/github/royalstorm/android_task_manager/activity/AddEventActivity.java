@@ -8,8 +8,11 @@ import android.widget.EditText;
 
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.Event;
+import com.github.royalstorm.android_task_manager.service.MockUpEventService;
 
 public class AddEventActivity extends AppCompatActivity {
+
+    MockUpEventService mockUpEventService = new MockUpEventService();
 
     EditText eventTitle;
 
@@ -24,7 +27,11 @@ public class AddEventActivity extends AppCompatActivity {
     public void createEvent(View view) {
         Intent intent = new Intent();
 
-        intent.putExtra(Event.class.getSimpleName(), new Event(eventTitle.getText().toString()));
+        Long id = this.mockUpEventService.getCounter();
+
+        mockUpEventService.add(new Event(id, this.eventTitle.getText().toString()));
+
+        this.mockUpEventService.setCounter(++id);
 
         setResult(RESULT_OK, intent);
 
