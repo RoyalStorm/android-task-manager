@@ -7,10 +7,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.royalstorm.android_task_manager.R;
-import com.github.royalstorm.android_task_manager.activity.dao.Event;
+import com.github.royalstorm.android_task_manager.dao.Event;
 
 public class DayActivity extends AppCompatActivity {
 
@@ -19,6 +20,9 @@ public class DayActivity extends AppCompatActivity {
     Event event;
 
     ArrayAdapter<String> adapter;
+
+    TextView currentDay;
+    TextView currentDate;
 
     //TODO: send time in AddEventActivity
     private static String time;
@@ -29,6 +33,9 @@ public class DayActivity extends AppCompatActivity {
         setContentView(R.layout.day_activity);
 
         hoursList = findViewById(R.id.hours);
+
+        currentDate = findViewById(R.id.currentDate);
+        currentDay = findViewById(R.id.currentDay);
 
         hoursList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -41,6 +48,8 @@ public class DayActivity extends AppCompatActivity {
                 createEvent();
             }
         });
+
+        getParamsFromParent();
 
         showHours();
     }
@@ -58,6 +67,18 @@ public class DayActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AddEventActivity.class);
 
         startActivityForResult(intent, 1);
+    }
+
+    private void getParamsFromParent() {
+        Bundle arguments = getIntent().getExtras();
+
+        if (arguments != null) {
+            String currentDay = arguments.getString("currentDay");
+            String currentDate = arguments.getString("currentDate");
+
+            this.currentDay.setText(currentDay);
+            this.currentDate.setText(currentDate);
+        }
     }
 
     @Override

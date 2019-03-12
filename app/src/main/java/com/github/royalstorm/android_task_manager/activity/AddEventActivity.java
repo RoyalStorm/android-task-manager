@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.github.royalstorm.android_task_manager.R;
-import com.github.royalstorm.android_task_manager.activity.dao.Event;
+import com.github.royalstorm.android_task_manager.dao.Event;
 
 public class AddEventActivity extends AppCompatActivity {
 

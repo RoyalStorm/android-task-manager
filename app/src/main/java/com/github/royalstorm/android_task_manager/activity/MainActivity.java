@@ -15,6 +15,9 @@ import android.widget.CalendarView;
 
 import com.github.royalstorm.android_task_manager.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -40,6 +43,47 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                         Intent intent = new Intent(MainActivity.this, DayActivity.class);
+
+                        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+                        Date date = new Date(year, month, dayOfMonth - 1);
+                        String dayOfWeek = sdf.format(date);
+
+                        switch (dayOfWeek) {
+                            case "Sunday":
+                                dayOfWeek = "Воскресенье";
+                                break;
+
+                            case "Monday":
+                                dayOfWeek = "Понедельник";
+                                break;
+
+                            case "Tuesday":
+                                dayOfWeek = "Вторник";
+                                break;
+
+                            case "Wednesday":
+                                dayOfWeek = "Среда";
+                                break;
+
+                            case "Thursday":
+                                dayOfWeek = "Четверг";
+                                break;
+
+                            case "Friday":
+                                dayOfWeek = "Пятница";
+                                break;
+
+                            case "Saturday":
+                                dayOfWeek = "Суббота";
+                                break;
+                        }
+
+                        intent.putExtra("currentDay", dayOfWeek);
+
+                        String currentDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+
+                        intent.putExtra("currentDate", currentDate);
+
                         startActivity(intent);
                     }
                 }

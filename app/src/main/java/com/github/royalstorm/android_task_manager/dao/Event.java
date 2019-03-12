@@ -1,4 +1,4 @@
-package com.github.royalstorm.android_task_manager.activity.dao;
+package com.github.royalstorm.android_task_manager.dao;
 
 import java.io.Serializable;
 
