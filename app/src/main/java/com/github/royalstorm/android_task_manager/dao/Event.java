@@ -4,25 +4,24 @@ import java.io.Serializable;
 
 public class Event implements Serializable {
 
-    private Long id;
+    private int id;
 
     private String eventTitle;
 
-    //Deprecated, will be removed
-    public Event(String eventTitle) {
-        this.eventTitle = eventTitle;
-    }
-
-    public Event(Long id, String eventTitle) {
+    /*
+     * Constructor with id need only for mock service.
+     * In true service, server itself assigns an id to each event.
+     */
+    public Event(int id, String eventTitle) {
         this.id = id;
         this.eventTitle = eventTitle;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

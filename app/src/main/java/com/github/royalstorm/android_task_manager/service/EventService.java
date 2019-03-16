@@ -8,7 +8,7 @@ import java.util.List;
 public class EventService implements EventRepository {
 
     @Override
-    public Event getOne(Long id) {
+    public Event getOne(int id) {
         return null;
     }
 
@@ -23,12 +23,12 @@ public class EventService implements EventRepository {
     }
 
     @Override
-    public Event update(Long id, Event event) {
-        return null;
+    public void update(int id, Event event) {
+
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(int id) {
 
     }
 }

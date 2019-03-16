@@ -10,18 +10,18 @@ import java.util.List;
 public class MockUpEventService implements EventRepository {
 
     private List<Event> events = new ArrayList<>();
-    private Long counter = 0L;
+    private int counter = 0;
 
-    private Event getEvent(Long id) {
+    private Event getEvent(int id) {
         for (Event event : events)
-            if (event.getId().equals(id))
+            if (event.getId() == id)
                 return event;
 
         throw new NotFoundException("Object not found");
     }
 
     @Override
-    public Event getOne(Long id) {
+    public Event getOne(int id) {
         return getEvent(id);
     }
 
@@ -36,25 +36,25 @@ public class MockUpEventService implements EventRepository {
     }
 
     @Override
-    public Event update(Long id, Event event) {
-        Event eventFromMockUp = getEvent(id);
+    public void update(int id, Event event) {
+        Event eventFromDB = getEvent(id);
 
-        eventFromMockUp = event;
-        eventFromMockUp.setId(id);
+        eventFromDB = event;
+        eventFromDB.setId(id);
 
-        return eventFromMockUp;
+        events.set(id, eventFromDB);
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(int id) {
         events.remove(getEvent(id));
     }
 
-    public long getCounter() {
+    public int getCounter() {
         return counter;
     }
 
-    public void setCounter(Long counter) {
+    public void setCounter(int counter) {
         this.counter = counter;
     }
 }

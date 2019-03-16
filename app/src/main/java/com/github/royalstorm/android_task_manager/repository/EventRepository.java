@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface EventRepository {
 
-    Event getOne(Long id);
+    Event getOne(int id);
 
     List<Event> getAll();
 
     void add(Event event);
 
-    Event update(Long id, Event event);
+    void update(int id, Event event);
 
-    void delete(Long id);
+    void delete(int id);
 }

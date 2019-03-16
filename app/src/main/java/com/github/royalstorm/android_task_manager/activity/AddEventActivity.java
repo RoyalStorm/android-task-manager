@@ -27,7 +27,7 @@ public class AddEventActivity extends AppCompatActivity {
     public void createEvent(View view) {
         Intent intent = new Intent();
 
-        Long id = this.mockUpEventService.getCounter();
+        int id = this.mockUpEventService.getCounter();
 
         mockUpEventService.add(new Event(id, this.eventTitle.getText().toString()));
 
