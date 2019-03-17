@@ -9,8 +9,10 @@ import java.util.List;
 
 public class MockUpEventService implements EventRepository {
 
-    private List<Event> events = new ArrayList<>();
-    private int counter = 0;
+    private static List<Event> events = new ArrayList<>();
+    private List<Event> foundEvents;
+
+    public static int counter = 0;
 
     private Event getEvent(int id) {
         for (Event event : events)
@@ -21,17 +23,35 @@ public class MockUpEventService implements EventRepository {
     }
 
     @Override
-    public Event getOne(int id) {
+    public Event findById(int id) {
         return getEvent(id);
     }
 
     @Override
-    public List<Event> getAll() {
+    public List<Event> findAll() {
         return events;
     }
 
     @Override
-    public void add(Event event) {
+    public List<Event> findByDate(String date) {
+        foundEvents = new ArrayList<>();
+
+        for (Event event : events)
+            if (event.getDate().equals(date))
+                foundEvents.add(event);
+
+        return foundEvents;
+    }
+
+    @Override
+    public List<Event> findByDateAndTime(String date, String time) {
+        foundEvents = new ArrayList<>();
+
+        return null;
+    }
+
+    @Override
+    public void create(Event event) {
         events.add(event);
     }
 
@@ -48,13 +68,5 @@ public class MockUpEventService implements EventRepository {
     @Override
     public void delete(int id) {
         events.remove(getEvent(id));
-    }
-
-    public int getCounter() {
-        return counter;
-    }
-
-    public void setCounter(int counter) {
-        this.counter = counter;
     }
 }

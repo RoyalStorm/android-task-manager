@@ -8,17 +8,27 @@ import java.util.List;
 public class EventService implements EventRepository {
 
     @Override
-    public Event getOne(int id) {
+    public Event findById(int id) {
         return null;
     }
 
     @Override
-    public List<Event> getAll() {
+    public List<Event> findAll() {
         return null;
     }
 
     @Override
-    public void add(Event event) {
+    public List<Event> findByDate(String date) {
+        return null;
+    }
+
+    @Override
+    public List<Event> findByDateAndTime(String date, String time) {
+        return null;
+    }
+
+    @Override
+    public void create(Event event) {
 
     }
 

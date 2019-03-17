@@ -6,11 +6,15 @@ import java.util.List;
 
 public interface EventRepository {
 
-    Event getOne(int id);
+    Event findById(int id);
 
-    List<Event> getAll();
+    List<Event> findAll();
 
-    void add(Event event);
+    List<Event> findByDate(String date);
+
+    List<Event> findByDateAndTime(String date, String time);
+
+    void create(Event event);
 
     void update(int id, Event event);
 
