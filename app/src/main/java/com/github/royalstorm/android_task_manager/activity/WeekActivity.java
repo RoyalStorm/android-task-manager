@@ -18,7 +18,7 @@ public class WeekActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.week_activity);
+        // setContentView(R.layout.week_activity);
 
         setCurrentDay();
         setDaysNumbers();

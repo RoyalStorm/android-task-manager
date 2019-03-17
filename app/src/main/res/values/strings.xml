@@ -1,7 +1,9 @@
 <resources>
-    <string name="app_name">Android Task Manager</string>
+    <string name="app_name">Календарь</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <string name="nav_header_title">Колот Юрий</string>
     <string name="nav_header_subtitle">8 (914)736 9914</string>
     <string name="nav_header_desc">Navigation header</string>

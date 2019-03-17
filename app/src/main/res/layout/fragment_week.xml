@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.WeekFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="25dp"
+                android:layout_height="30dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/mon"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:text="ПН"
+                android:textAlignment="center"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/tue"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:text="ВТ"
+                android:textAlignment="center"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/wed"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:text="СР"
+                android:textAlignment="center"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/thu"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:text="ЧТ"
+                android:textAlignment="center"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/fri"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:text="ПТ"
+                android:textAlignment="center"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/sat"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:text="СБ"
+                android:textAlignment="center"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/sun"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:text="ВС"
+                android:textAlignment="center"
+                android:textColor="@android:color/black" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="25dp"
+                android:layout_height="30dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/monNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/tueNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/wedNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/thuNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/friNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/satNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/sunNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:textColor="@android:color/black" />
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="0:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="1:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="2:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="3:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="4:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="5:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="6:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="7:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="8:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="9:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="10:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView13"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="11:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView14"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="12:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="13:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView16"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="14:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView17"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="15:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView18"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="16:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView19"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="17:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView20"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="18:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView21"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="19:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView24"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="20:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView26"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="21:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView23"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="22:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView25"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="23:00"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</FrameLayout>
