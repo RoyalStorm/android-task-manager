@@ -23,7 +23,7 @@
             android:id="@+id/currentDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="18/03/19"
+            android:text="25/03/19"
             android:textAlignment="center"
             android:textColor="@android:color/black"
             android:textSize="20sp" />

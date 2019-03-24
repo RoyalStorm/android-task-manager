@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import com.github.royalstorm.android_task_manager.R;
@@ -19,8 +18,6 @@ public class AddEventActivity extends AppCompatActivity {
 
     private MockUpEventService mockUpEventService = new MockUpEventService();
 
-    EditText eventTitle;
-
     List<Event> eventsList;
 
     ListView listView;
@@ -28,9 +25,7 @@ public class AddEventActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_event_activity);
-
-        eventTitle = findViewById(R.id.eventTitle);
+        setContentView(R.layout.activity_events);
 
         eventsList = new ArrayList<>();
         listView = (ListView) findViewById(R.id.events);
@@ -46,7 +41,7 @@ public class AddEventActivity extends AppCompatActivity {
     public void createEvent(View view) {
         Intent intent = new Intent();
 
-        mockUpEventService.create(new Event(MockUpEventService.counter, this.eventTitle.getText().toString()));
+        // mockUpEventService.create(new Event(MockUpEventService.counter, this.eventTitle.getText().toString()));
 
         ++MockUpEventService.counter;
 

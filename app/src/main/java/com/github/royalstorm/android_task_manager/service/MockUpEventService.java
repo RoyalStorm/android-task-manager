@@ -47,6 +47,10 @@ public class MockUpEventService implements EventRepository {
     public List<Event> findByDateAndTime(String date, String time) {
         foundEvents = new ArrayList<>();
 
+        for (Event event : events)
+            if (event.getDate().equals(date) && event.getBeginTime().equals(time))
+                foundEvents.add(event);
+
         return null;
     }
 
