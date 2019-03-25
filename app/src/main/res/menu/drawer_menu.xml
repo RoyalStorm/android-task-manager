@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
+    tools:showIn="navigation_view"
+    app:itemIconTint="@color/burgundy"
+    app:itemTextColor="@color/burgundy">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_day"
+        <item
+            android:id="@+id/nav_day"
             android:icon="@drawable/ic_day"
             android:title="День" />
 
-        <item android:id="@+id/nav_week"
+        <item
+            android:id="@+id/nav_week"
             android:icon="@drawable/ic_week"
             android:title="Неделя" />
 
-        <item android:id="@+id/nav_month"
+        <item
+            android:id="@+id/nav_month"
             android:icon="@drawable/ic_month"
             android:title="Месяц" />
     </group>

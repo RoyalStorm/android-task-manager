@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="15dp"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/eventName"
+        android:layout_width="385dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Заголовок"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/eventDetails"
+        android:layout_width="385dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Описание"
+        android:inputType="textPersonName" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="?android:attr/listDivider" />
+
+    <EditText
+        android:id="@+id/eventEndTime"
+        android:layout_width="385dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Время окончания события"
+        android:inputType="time" />
+
+</LinearLayout>

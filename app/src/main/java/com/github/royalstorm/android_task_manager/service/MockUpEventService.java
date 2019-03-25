@@ -51,7 +51,7 @@ public class MockUpEventService implements EventRepository {
             if (event.getDate().equals(date) && event.getBeginTime().equals(time))
                 foundEvents.add(event);
 
-        return null;
+        return foundEvents;
     }
 
     @Override

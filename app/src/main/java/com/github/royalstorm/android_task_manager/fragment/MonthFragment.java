@@ -32,6 +32,7 @@ public class MonthFragment extends Fragment {
 
                         getFragmentManager().beginTransaction().replace(R.id.calendarContainer,
                                 new DayFragment()).commit();
+                        // setArguments(new Bundle());
                         // navigationView.setCheckedItem(R.id.nav_day);
                     }
                 }

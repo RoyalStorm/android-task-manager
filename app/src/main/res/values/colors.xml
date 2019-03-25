@@ -3,4 +3,6 @@
     <color name="colorPrimary">#ffc107</color>
     <color name="colorPrimaryDark">#ffab00</color>
     <color name="colorAccent">#ff6f00</color>
+
+    <color name="burgundy">#d4277c</color>
 </resources>

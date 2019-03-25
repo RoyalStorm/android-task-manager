@@ -5,53 +5,80 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
-import com.github.royalstorm.android_task_manager.activity.AddEventActivity;
+import com.github.royalstorm.android_task_manager.activity.EventsActivity;
+
+import java.util.Calendar;
 
 public class DayFragment extends Fragment {
+
+    TextView currentDay;
+    TextView currentDate;
 
     private ListView hoursList;
 
     private ArrayAdapter<String> adapter;
 
-    //TODO: send time in AddEventActivity
-    private static String time;
+    private static final SparseArray<String> daysOfWeek = new SparseArray<>();
+
+    static {
+        daysOfWeek.put(Calendar.MONDAY, "Понедельник");
+        daysOfWeek.put(Calendar.TUESDAY, "Вторник");
+        daysOfWeek.put(Calendar.WEDNESDAY, "Среда");
+        daysOfWeek.put(Calendar.THURSDAY, "Четверг");
+        daysOfWeek.put(Calendar.FRIDAY, "Пятница");
+        daysOfWeek.put(Calendar.SATURDAY, "Суббота");
+        daysOfWeek.put(Calendar.SUNDAY, "Воскресенье");
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_day,
-                container, false);
+        View view = inflater.inflate(R.layout.fragment_day, container, false);
+
+        setDatesFields(view);
 
         hoursList = view.findViewById(R.id.hoursList);
+        showHours();
         hoursList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent,
                                     View itemClicked,
                                     int position,
                                     long id) {
-                time = adapter.getItem(position);
-
-                createEvent();
+                createEvent(position);
             }
         });
-
-        showHours();
 
         return view;
     }
 
-    public void createEvent() {
-        Intent intent = new Intent(getActivity(), AddEventActivity.class);
+    private void setDatesFields(View view) {
+        currentDay = view.findViewById(R.id.currentDay);
+        currentDate = view.findViewById(R.id.currentDate);
 
-        startActivityForResult(intent, 1);
+        Calendar calendar = Calendar.getInstance();
+
+        currentDay.setText(daysOfWeek.get(calendar.get(Calendar.DAY_OF_WEEK)));
+    }
+
+    private void createEvent(int position) {
+        Intent intent = new Intent(getActivity(), EventsActivity.class);
+
+        // Position is equals selected time
+        intent.putExtra("beginTime", position);
+
+        startActivity(intent);
     }
 
     private void showHours() {
