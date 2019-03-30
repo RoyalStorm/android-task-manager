@@ -35,7 +35,7 @@ public class AddEventActivity extends AppCompatActivity {
     }
 
     private void createEvent() {
-        if (eventName.getText().toString().isEmpty()) {
+        if (eventName.getText().toString().trim().isEmpty()) {
             Toast.makeText(this, "Заголовок не может быть пустым", Toast.LENGTH_LONG).show();
             return;
         }

@@ -1,11 +1,9 @@
 package com.github.royalstorm.android_task_manager.fragment;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,44 +37,42 @@ public class WeekFragment extends Fragment {
     private void setCurrentDay(View view) {
         String currentDay = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
 
-        int color = ContextCompat.getColor(getContext(), R.color.colorPrimary);
-
         TextView day;
 
         switch (currentDay) {
             case "Sunday":
                 day = view.findViewById(R.id.sun);
-                day.setTextColor(color);
+                day.setTextColor(day.getContext().getColor(R.color.burgundy));
                 break;
 
             case "Monday":
                 day = view.findViewById(R.id.mon);
-                day.setTextColor(color);
+                day.setTextColor(day.getContext().getColor(R.color.burgundy));
                 break;
 
             case "Tuesday":
                 day = view.findViewById(R.id.tue);
-                day.setTextColor(color);
+                day.setTextColor(day.getContext().getColor(R.color.burgundy));
                 break;
 
             case "Wednesday":
                 day = view.findViewById(R.id.wed);
-                day.setTextColor(color);
+                day.setTextColor(day.getContext().getColor(R.color.burgundy));
                 break;
 
             case "Thursday":
                 day = view.findViewById(R.id.thu);
-                day.setTextColor(color);
+                day.setTextColor(day.getContext().getColor(R.color.burgundy));
                 break;
 
             case "Friday":
                 day = view.findViewById(R.id.fri);
-                day.setTextColor(color);
+                day.setTextColor(day.getContext().getColor(R.color.burgundy));
                 break;
 
             case "Saturday":
                 day = view.findViewById(R.id.sat);
-                day.setTextColor(color);
+                day.setTextColor(day.getContext().getColor(R.color.burgundy));
                 break;
         }
     }
@@ -131,20 +127,21 @@ public class WeekFragment extends Fragment {
 
         for (int i = 0; i < 24; i++) {
             row = new TableRow(getContext());
-            //row.setMinimumHeight(40);
-            //row.setMinimumWidth(100);
 
             TextView[] days = new TextView[7];
 
             for (int j = 0; j < 7; j++) {
                 days[j] = new TextView(getContext());
-                days[j].setHeight(60 * (int) getContext().getResources().getDisplayMetrics().density);
-                // days[j].setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 2f));
+                days[j].setHeight(dpToPix());
                 days[j].setBackground(days[j].getContext().getDrawable(R.drawable.text_view_border));
 
                 row.addView(days[j]);
             }
             tableLayout.addView(row);
         }
+    }
+
+    private int dpToPix() {
+        return 60 * (int) getContext().getResources().getDisplayMetrics().density;
     }
 }
