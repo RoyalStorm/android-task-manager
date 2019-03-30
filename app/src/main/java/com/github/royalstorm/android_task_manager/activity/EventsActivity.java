@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -17,27 +18,39 @@ import java.util.List;
 
 public class EventsActivity extends AppCompatActivity {
 
-    MockUpEventService mockUpEventService = new MockUpEventService();
+    private MockUpEventService mockUpEventService = new MockUpEventService();
 
-    List<Event> eventsList;
+    private List<Event> eventsList;
 
-    ListView listView;
+    private ListView listView;
 
-    FloatingActionButton floatingActionButton;
+    private FloatingActionButton floatingActionButton;
+
+    private String time;
+
+    private int day;
+    private int month;
+    private int year;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events);
 
+        day = getIntent().getExtras().getInt("day");
+        month = getIntent().getExtras().getInt("month");
+        year = getIntent().getExtras().getInt("year");
+        time = getIntent().getExtras().get("beginTime").toString();
+
         floatingActionButton = findViewById(R.id.floatingActionButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String time = getIntent().getExtras().get("beginTime").toString();
-
                 Intent intent = new Intent(EventsActivity.this, AddEventActivity.class);
                 intent.putExtra("beginTime", time);
+                intent.putExtra("day", day);
+                intent.putExtra("month", month);
+                intent.putExtra("year", year);
 
                 startActivity(intent);
             }
@@ -49,7 +62,7 @@ public class EventsActivity extends AppCompatActivity {
         super.onResume();
 
         eventsList = new ArrayList<>();
-        eventsList = mockUpEventService.findByDateAndTime("25/03/2019", "18:00");
+        eventsList = mockUpEventService.findByDateAndTime(day + "/" + month + "/" + year, time);
 
         listView = (ListView) findViewById(R.id.events);
 

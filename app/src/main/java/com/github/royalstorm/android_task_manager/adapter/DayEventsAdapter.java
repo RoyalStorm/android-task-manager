@@ -43,10 +43,10 @@ public class DayEventsAdapter extends ArrayAdapter<Event> {
 
         Event event = eventsList.get(position);
 
-        createdTime.setText("12:15");
-        endTime.setText("15:30");
-        name.setText("Лекция по разработке ПО");
-        details.setText("Просто лекция");
+        createdTime.setText(event.getBeginTime());
+        endTime.setText(event.getEndTime());
+        name.setText(event.getEventTitle());
+        details.setText("Описание");
 
         return view;
     }

@@ -29,11 +29,20 @@ public class MonthFragment extends Fragment {
                     @Override
                     public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                         navigationView = view.findViewById(R.id.nav_view);
+                        // navigationView.setCheckedItem(R.id.nav_day);
+
+                        Bundle bundle = new Bundle();
+
+                        bundle.putInt("day", dayOfMonth);
+                        // Cause January is 0 number
+                        bundle.putInt("month", month + 1);
+                        bundle.putInt("year", year);
+
+                        DayFragment dayFragment = new DayFragment();
+                        dayFragment.setArguments(bundle);
 
                         getFragmentManager().beginTransaction().replace(R.id.calendarContainer,
-                                new DayFragment()).commit();
-                        // setArguments(new Bundle());
-                        // navigationView.setCheckedItem(R.id.nav_day);
+                                dayFragment).commit();
                     }
                 }
         );

@@ -45,12 +45,16 @@ public class AddEventActivity extends AppCompatActivity {
 
         String beginTime = getIntent().getExtras().get("beginTime").toString();
 
+        int day = getIntent().getExtras().getInt("day");
+        int month = getIntent().getExtras().getInt("month");
+        int year = getIntent().getExtras().getInt("year");
+
         mockUpEventService.create(
                 new Event(
                         MockUpEventService.counter,
                         "Me",
                         this.eventName.getText().toString(),
-                        "25/03/2019",
+                        day + "/" + month + "/" + year,
                         beginTime,
                         this.eventEndTime.getText().toString())
         );
