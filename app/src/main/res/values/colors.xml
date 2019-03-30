@@ -4,5 +4,6 @@
     <color name="colorPrimaryDark">#ffab00</color>
     <color name="colorAccent">#ff6f00</color>
 
-    <color name="burgundy">#d4277c</color>
+    <color name="burgundy">#e91e63</color>
+    <color name="elegant_color">#2e2e2e</color>
 </resources>

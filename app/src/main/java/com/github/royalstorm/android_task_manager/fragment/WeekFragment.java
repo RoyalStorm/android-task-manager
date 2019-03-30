@@ -1,5 +1,6 @@
 package com.github.royalstorm.android_task_manager.fragment;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,6 +9,8 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
@@ -28,6 +31,7 @@ public class WeekFragment extends Fragment {
 
         setCurrentDay(view);
         setDaysNumbers(view);
+        createScheduleGrid(view);
 
         return view;
     }
@@ -118,6 +122,29 @@ public class WeekFragment extends Fragment {
             }
 
             calendar.add(Calendar.DAY_OF_WEEK, 1);
+        }
+    }
+
+    private void createScheduleGrid(View view) {
+        TableLayout tableLayout = view.findViewById(R.id.scheduleTable);
+        TableRow row;
+
+        for (int i = 0; i < 24; i++) {
+            row = new TableRow(getContext());
+            //row.setMinimumHeight(40);
+            //row.setMinimumWidth(100);
+
+            TextView[] days = new TextView[7];
+
+            for (int j = 0; j < 7; j++) {
+                days[j] = new TextView(getContext());
+                days[j].setHeight(60 * (int) getContext().getResources().getDisplayMetrics().density);
+                // days[j].setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 2f));
+                days[j].setBackground(days[j].getContext().getDrawable(R.drawable.text_view_border));
+
+                row.addView(days[j]);
+            }
+            tableLayout.addView(row);
         }
     }
 }
