@@ -23,11 +23,6 @@ public class MockUpEventService implements EventRepository {
     }
 
     @Override
-    public Event findById(int id) {
-        return getEvent(id);
-    }
-
-    @Override
     public List<Event> findAll() {
         return events;
     }

@@ -4,18 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.activity.EventsActivity;
+import com.github.royalstorm.android_task_manager.adapter.HoursAdapter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -24,12 +25,12 @@ import java.util.Locale;
 
 public class DayFragment extends Fragment {
 
-    TextView currentDay;
-    TextView currentDate;
+    private TextView currentDay;
+    private TextView currentDate;
 
     private ListView hoursList;
 
-    private ArrayAdapter<String> adapter;
+    private HoursAdapter hoursAdapter;
 
     private static final SparseArray<String> daysOfWeek = new SparseArray<>();
 
@@ -53,18 +54,7 @@ public class DayFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_day, container, false);
 
         setDatesFields(view);
-
-        hoursList = view.findViewById(R.id.hoursList);
-        showHours();
-        hoursList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent,
-                                    View itemClicked,
-                                    int position,
-                                    long id) {
-                createEvent(itemClicked);
-            }
-        });
+        showHours(view);
 
         return view;
     }
@@ -98,8 +88,9 @@ public class DayFragment extends Fragment {
     private void createEvent(View itemClicked) {
         Intent intent = new Intent(getActivity(), EventsActivity.class);
 
-        TextView textView = (TextView) itemClicked;
-        String beginTime = textView.getText().toString();
+        ConstraintLayout item = (ConstraintLayout) itemClicked;
+        TextView hour = (TextView) item.getViewById(R.id.hour);
+        String beginTime = hour.getText().toString();
 
         // Position is equals selected time
         intent.putExtra("beginTime", beginTime);
@@ -110,11 +101,22 @@ public class DayFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void showHours() {
+    private void showHours(View view) {
+        hoursList = view.findViewById(R.id.hoursList);
+
         String[] hours = getResources().getStringArray(R.array.hours);
 
-        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, hours);
+        hoursAdapter = new HoursAdapter(getContext(), R.layout.hour_list_item, hours);
 
-        hoursList.setAdapter(adapter);
+        hoursList.setAdapter(hoursAdapter);
+        hoursList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent,
+                                    View itemClicked,
+                                    int position,
+                                    long id) {
+                createEvent(itemClicked);
+            }
+        });
     }
 }

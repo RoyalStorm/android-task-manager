@@ -6,8 +6,6 @@ import java.util.List;
 
 public interface EventRepository {
 
-    Event findById(int id);
-
     List<Event> findAll();
 
     List<Event> findByDate(String date);

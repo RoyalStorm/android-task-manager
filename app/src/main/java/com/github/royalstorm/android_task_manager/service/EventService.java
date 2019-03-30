@@ -8,11 +8,6 @@ import java.util.List;
 public class EventService implements EventRepository {
 
     @Override
-    public Event findById(int id) {
-        return null;
-    }
-
-    @Override
     public List<Event> findAll() {
         return null;
     }

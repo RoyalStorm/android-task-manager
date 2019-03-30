@@ -13,4 +13,9 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="HoursListDivider">
+        <item name="android:layout_height">@dimen/hours_list_item_divider_height</item>
+        <item name="android:background">@color/elegant_color</item>
+    </style>
+
 </resources>

@@ -7,4 +7,6 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="week_fragment_cell_height">60dp</dimen>
+    <dimen name="hours_list_item_divider_height">0.5dp</dimen>
+    <dimen name="hours_list_item_height">60dp</dimen>
 </resources>

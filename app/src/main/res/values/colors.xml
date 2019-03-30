@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#00e6ff</color>
     <color name="colorPrimaryDark">#00bcd4</color>
-    <color name="colorAccent">#ff6f00</color>
+    <color name="colorAccent">#fd1d1d</color>
 
     <color name="burgundy">#e91e63</color>
     <color name="elegant_color">#2e2e2e</color>
