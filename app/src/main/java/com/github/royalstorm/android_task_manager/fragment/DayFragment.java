@@ -17,10 +17,13 @@ import android.widget.TextView;
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.activity.AddEventActivity;
 import com.github.royalstorm.android_task_manager.adapter.HoursAdapter;
+import com.github.royalstorm.android_task_manager.dao.Event;
+import com.github.royalstorm.android_task_manager.service.MockUpEventService;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class DayFragment extends Fragment {
@@ -38,6 +41,8 @@ public class DayFragment extends Fragment {
     private int month;
     private int year;
 
+    private View view;
+
     static {
         daysOfWeek.put(Calendar.MONDAY, "Понедельник");
         daysOfWeek.put(Calendar.TUESDAY, "Вторник");
@@ -51,10 +56,9 @@ public class DayFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_day, container, false);
+        view = inflater.inflate(R.layout.fragment_day, container, false);
 
         setDatesFields(view);
-        showHours(view);
 
         return view;
     }
@@ -105,8 +109,9 @@ public class DayFragment extends Fragment {
         hoursList = view.findViewById(R.id.hoursList);
 
         String[] hours = getResources().getStringArray(R.array.hours);
+        List<Event> events = getCurrentEvents(day + "/" + month + "/" + year);
 
-        hoursAdapter = new HoursAdapter(getContext(), R.layout.hour_list_item, hours);
+        hoursAdapter = new HoursAdapter(getContext(), R.layout.hour_list_item, hours, events);
 
         hoursList.setAdapter(hoursAdapter);
         hoursList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -118,5 +123,17 @@ public class DayFragment extends Fragment {
                 createEvent(itemClicked);
             }
         });
+    }
+
+    private List<Event> getCurrentEvents(String date) {
+        MockUpEventService mockUpEventService = new MockUpEventService();
+
+        return mockUpEventService.findByDate(date);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        showHours(view);
     }
 }
