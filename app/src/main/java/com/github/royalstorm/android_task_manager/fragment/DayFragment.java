@@ -15,7 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
-import com.github.royalstorm.android_task_manager.activity.EventsActivity;
+import com.github.royalstorm.android_task_manager.activity.AddEventActivity;
 import com.github.royalstorm.android_task_manager.adapter.HoursAdapter;
 
 import java.text.DateFormat;
@@ -86,7 +86,7 @@ public class DayFragment extends Fragment {
     }
 
     private void createEvent(View itemClicked) {
-        Intent intent = new Intent(getActivity(), EventsActivity.class);
+        Intent intent = new Intent(getActivity(), AddEventActivity.class);
 
         ConstraintLayout item = (ConstraintLayout) itemClicked;
         TextView hour = (TextView) item.getViewById(R.id.hour);

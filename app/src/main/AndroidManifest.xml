@@ -20,11 +20,10 @@
         </activity>
 
         <activity
-            android:name=".activity.EventsActivity"
-            android:parentActivityName=".activity.MainActivity" />
-        <activity
             android:name=".activity.AddEventActivity"
             android:parentActivityName=".activity.EventsActivity" />
+
+        <activity android:name=".activity.EventsActivity" />
     </application>
 
 </manifest>

@@ -17,9 +17,9 @@ public class AddEventActivity extends AppCompatActivity {
 
     private MockUpEventService mockUpEventService = new MockUpEventService();
 
-    EditText eventName;
-    EditText eventDetails;
-    EditText eventEndTime;
+    private EditText eventName;
+    private EditText eventDetails;
+    private EditText eventEndTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,15 +51,13 @@ public class AddEventActivity extends AppCompatActivity {
 
         mockUpEventService.create(
                 new Event(
-                        MockUpEventService.counter,
+                        MockUpEventService.getCounter(),
                         "Me",
                         this.eventName.getText().toString(),
                         day + "/" + month + "/" + year,
                         beginTime,
                         this.eventEndTime.getText().toString())
         );
-
-        ++MockUpEventService.counter;
 
         setResult(RESULT_OK, intent);
 

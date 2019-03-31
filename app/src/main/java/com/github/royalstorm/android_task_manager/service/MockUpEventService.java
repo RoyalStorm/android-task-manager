@@ -1,7 +1,6 @@
 package com.github.royalstorm.android_task_manager.service;
 
 import com.github.royalstorm.android_task_manager.dao.Event;
-import com.github.royalstorm.android_task_manager.exception.NotFoundException;
 import com.github.royalstorm.android_task_manager.repository.EventRepository;
 
 import java.util.ArrayList;
@@ -12,14 +11,14 @@ public class MockUpEventService implements EventRepository {
     private static List<Event> events = new ArrayList<>();
     private List<Event> foundEvents;
 
-    public static int counter = 0;
+    private static int counter = 0;
 
     private Event getEvent(int id) {
         for (Event event : events)
             if (event.getId() == id)
                 return event;
 
-        throw new NotFoundException("Object not found");
+        return null;
     }
 
     @Override
@@ -52,6 +51,8 @@ public class MockUpEventService implements EventRepository {
     @Override
     public void create(Event event) {
         events.add(event);
+
+        ++counter;
     }
 
     @Override
@@ -67,5 +68,11 @@ public class MockUpEventService implements EventRepository {
     @Override
     public void delete(int id) {
         events.remove(getEvent(id));
+
+        --counter;
+    }
+
+    public static int getCounter() {
+        return counter;
     }
 }
