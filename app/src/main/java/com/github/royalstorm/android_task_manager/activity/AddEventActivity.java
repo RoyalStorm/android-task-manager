@@ -40,7 +40,6 @@ public class AddEventActivity extends AppCompatActivity {
             return;
         }
 
-
         Intent intent = new Intent();
 
         String beginTime = getIntent().getExtras().get("beginTime").toString();

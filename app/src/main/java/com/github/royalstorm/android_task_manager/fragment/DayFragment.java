@@ -44,13 +44,13 @@ public class DayFragment extends Fragment {
     private View view;
 
     static {
-        daysOfWeek.put(Calendar.MONDAY, "Понедельник");
-        daysOfWeek.put(Calendar.TUESDAY, "Вторник");
-        daysOfWeek.put(Calendar.WEDNESDAY, "Среда");
-        daysOfWeek.put(Calendar.THURSDAY, "Четверг");
-        daysOfWeek.put(Calendar.FRIDAY, "Пятница");
-        daysOfWeek.put(Calendar.SATURDAY, "Суббота");
-        daysOfWeek.put(Calendar.SUNDAY, "Воскресенье");
+        daysOfWeek.put(Calendar.MONDAY, "понедельник");
+        daysOfWeek.put(Calendar.TUESDAY, "вторник");
+        daysOfWeek.put(Calendar.WEDNESDAY, "среда");
+        daysOfWeek.put(Calendar.THURSDAY, "четверг");
+        daysOfWeek.put(Calendar.FRIDAY, "пятница");
+        daysOfWeek.put(Calendar.SATURDAY, "суббота");
+        daysOfWeek.put(Calendar.SUNDAY, "воскресенье");
     }
 
     @Nullable
@@ -84,8 +84,10 @@ public class DayFragment extends Fragment {
             month = bundle.getInt("month");
             year = bundle.getInt("year");
 
-            // currentDay.setText(daysOfWeek.get(day));
-            // currentDate.setText(day + '/' + month + '/' + year);
+            String dayOfWeek = bundle.getString("currentDay");
+
+            currentDay.setText(dayOfWeek);
+            currentDate.setText(day + "/" + month + "/" + year);
         }
     }
 

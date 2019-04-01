@@ -1,12 +1,14 @@
 package com.github.royalstorm.android_task_manager.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
@@ -24,9 +26,6 @@ public class HoursAdapter extends ArrayAdapter<String> {
 
     private int resource;
 
-    private TextView hour;
-    private TextView eventName;
-
     public HoursAdapter(Context context, int resource, String[] hoursList, List<Event> events) {
         super(context, resource, hoursList);
         this.context = context;
@@ -42,15 +41,22 @@ public class HoursAdapter extends ArrayAdapter<String> {
 
         View view = layoutInflater.inflate(resource, null, false);
 
-        hour = view.findViewById(R.id.hour);
+        TextView hour = view.findViewById(R.id.hour);
         String time = hoursList[position];
         hour.setText(time);
 
-        eventName = view.findViewById(R.id.eventName);
+        LinearLayout linearLayout = view.findViewById(R.id.eventsContainer);
+
+        TextView textView;
         for (Event event : events) {
+            textView = new TextView(getContext());
+            textView.setTextColor(Color.WHITE);
+            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
             if (event.getBeginTime().equals(position + ":00")) {
-                eventName.setBackground(eventName.getContext().getDrawable(R.drawable.side_nav_bar));
-                eventName.setText(event.getEventTitle());
+                textView.setBackground(textView.getContext().getDrawable(R.drawable.side_nav_bar));
+                textView.setText(event.getEventTitle());
+
+                linearLayout.addView(textView);
             }
         }
 

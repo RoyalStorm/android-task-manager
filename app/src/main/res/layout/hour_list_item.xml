@@ -23,20 +23,27 @@
         style="@style/HoursListDivider"
         android:layout_width="0dp"
         app:layout_constraintBottom_toBottomOf="@+id/hour"
-        app:layout_constraintHorizontal_weight="12"
+        app:layout_constraintHorizontal_weight="10"
         app:layout_constraintStart_toEndOf="@+id/hour"
         app:layout_constraintTop_toTopOf="@+id/hour"
         app:layout_constraintWidth_default="spread" />
 
-    <TextView
-        android:id="@+id/eventName"
-        android:layout_width="360dp"
+    <LinearLayout
+        android:id="@+id/eventsContainer"
+        android:layout_width="362dp"
         android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginStart="50dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="@+id/hour"
+        app:layout_constraintTop_toBottomOf="@+id/dividerHour">
+
+        <!--<TextView
+            android:id="@+id/eventName"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textAlignment="gravity"
+            android:textColor="@color/white" />-->
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
