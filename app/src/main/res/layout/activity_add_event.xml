@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Заголовок"
+            android:hint="@string/event_name"
             android:inputType="textPersonName" />
 
         <EditText
@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Описание"
+            android:hint="@string/event_details"
             android:inputType="textPersonName" />
 
         <View
@@ -44,9 +44,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:gravity="start|center"
                 android:text="Апрель 2 2019г.(вт)"
-                android:textAlignment="textStart"
                 android:textColor="@color/elegant_color"
                 android:textSize="18sp" />
 
@@ -60,9 +59,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:gravity="end|center"
                 android:text="17:00"
-                android:textAlignment="textEnd"
                 android:textColor="@color/elegant_color"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -78,9 +76,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:gravity="start|center"
                 android:text="Апрель 4 2019г.(чт)"
-                android:textAlignment="textStart"
                 android:textColor="@color/elegant_color"
                 android:textSize="18sp" />
 
@@ -94,9 +91,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:gravity="end|center"
                 android:text="21:15"
-                android:textAlignment="textEnd"
                 android:textColor="@color/elegant_color"
                 android:textSize="18sp" />
         </LinearLayout>

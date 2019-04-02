@@ -36,4 +36,7 @@
         <item>22:00</item>
         <item>23:00</item>
     </string-array>
+
+    <string name="event_details">Описание</string>
+    <string name="event_name">Заголовок</string>
 </resources>
