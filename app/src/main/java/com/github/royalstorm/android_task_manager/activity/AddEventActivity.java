@@ -1,25 +1,33 @@
 package com.github.royalstorm.android_task_manager.activity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.Event;
+import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
 import com.github.royalstorm.android_task_manager.service.MockUpEventService;
 
-public class AddEventActivity extends AppCompatActivity {
+import java.util.Calendar;
+
+public class AddEventActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private MockUpEventService mockUpEventService = new MockUpEventService();
 
     private EditText eventName;
     private EditText eventDetails;
-    private EditText eventEndTime;
+    private TextView eventBeginDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +36,16 @@ public class AddEventActivity extends AppCompatActivity {
 
         eventName = findViewById(R.id.eventName);
         eventDetails = findViewById(R.id.eventDetails);
-        eventEndTime = findViewById(R.id.eventEndTime);
+        /*eventEndTime = findViewById(R.id.eventEndTime);*/
+
+        /*eventBeginDate = findViewById(R.id.eventBeginDate);
+        eventBeginDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment datePicker = new DatePickerFragment();
+                datePicker.show(getSupportFragmentManager(), "Date picker");
+            }
+        });*/
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
         setTitle("Новое событие");
@@ -55,7 +72,7 @@ public class AddEventActivity extends AppCompatActivity {
                         this.eventName.getText().toString(),
                         day + "/" + month + "/" + year,
                         beginTime,
-                        this.eventEndTime.getText().toString())
+                        "...")
         );
 
         setResult(RESULT_OK, intent);
@@ -81,5 +98,13 @@ public class AddEventActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
     }
 }
