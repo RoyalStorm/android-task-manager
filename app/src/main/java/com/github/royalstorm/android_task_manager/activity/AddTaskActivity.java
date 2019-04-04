@@ -26,13 +26,13 @@ import java.util.Calendar;
 public class AddTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private MockUpTaskService mockUpEventService = new MockUpTaskService();
 
-    private TextView eventBeginDate;
-    private TextView eventEndDate;
-    private TextView eventBeginTime;
-    private TextView eventEndTime;
+    private TextView taskBeginDate;
+    private TextView taskEndDate;
+    private TextView taskBeginTime;
+    private TextView taskEndTime;
 
-    private EditText eventName;
-    private EditText eventDetails;
+    private EditText taskName;
+    private EditText taskDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,18 +42,18 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
         setTitle("Новое событие");
 
-        setEventBeginDateListener();
-        setEventEndDateListener();
+        setTaskBeginDateListener();
+        setTaskEndDateListener();
 
-        setEventBeginTime();
-        setEventEndTime();
+        setTaskBeginTime();
+        setTaskEndTime();
 
-        eventName = findViewById(R.id.eventName);
-        eventDetails = findViewById(R.id.eventDetails);
+        taskName = findViewById(R.id.task_name);
+        taskDetails = findViewById(R.id.task_details);
     }
 
-    private void createEvent() {
-        if (eventName.getText().toString().trim().isEmpty()) {
+    private void createTask() {
+        if (taskName.getText().toString().trim().isEmpty()) {
             Snackbar.make(getWindow().getDecorView().
                     getRootView(), "Заголовок не может быть пустым", Snackbar.LENGTH_LONG).show();
             return;
@@ -71,8 +71,8 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
                 new Task(
                         MockUpTaskService.getCounter(),
                         "Me",
-                        this.eventName.getText().toString(),
-                        eventDetails.getText().toString(),
+                        this.taskName.getText().toString(),
+                        taskDetails.getText().toString(),
                         "...",
                         "...",
                         "...",
@@ -84,9 +84,9 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         finish();
     }
 
-    private void setEventBeginDateListener() {
-        eventBeginDate = findViewById(R.id.eventBeginDate);
-        eventBeginDate.setOnClickListener(new View.OnClickListener() {
+    private void setTaskBeginDateListener() {
+        taskBeginDate = findViewById(R.id.task_begin_date);
+        taskBeginDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment beginDatePicker = new DatePickerFragment();
@@ -95,9 +95,9 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         });
     }
 
-    private void setEventEndDateListener() {
-        eventEndDate = findViewById(R.id.eventEndDate);
-        eventEndDate.setOnClickListener(new View.OnClickListener() {
+    private void setTaskEndDateListener() {
+        taskEndDate = findViewById(R.id.task_end_date);
+        taskEndDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment endDatePicker = new DatePickerFragment();
@@ -106,9 +106,9 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         });
     }
 
-    private void setEventBeginTime() {
-        eventBeginTime = findViewById(R.id.eventBeginTime);
-        eventBeginTime.setOnClickListener(new View.OnClickListener() {
+    private void setTaskBeginTime() {
+        taskBeginTime = findViewById(R.id.task_begin_time);
+        taskBeginTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment beginTimePicker = new TimePickerFragment();
@@ -117,9 +117,9 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         });
     }
 
-    private void setEventEndTime() {
-        eventEndTime = findViewById(R.id.eventEndTime);
-        eventEndTime.setOnClickListener(new View.OnClickListener() {
+    private void setTaskEndTime() {
+        taskEndTime = findViewById(R.id.task_end_time);
+        taskEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment endTimePicker = new TimePickerFragment();
@@ -140,7 +140,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.save_event:
-                createEvent();
+                createTask();
                 return true;
 
             default:
@@ -155,6 +155,6 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-        eventBeginDate.setText(DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime()));
+        taskBeginDate.setText(DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime()));
     }
 }

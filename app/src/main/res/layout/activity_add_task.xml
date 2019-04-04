@@ -11,7 +11,7 @@
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/eventName"
+            android:id="@+id/task_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -19,7 +19,7 @@
             android:inputType="textPersonName" />
 
         <EditText
-            android:id="@+id/eventDetails"
+            android:id="@+id/task_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -40,7 +40,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/eventBeginDate"
+                android:id="@+id/task_begin_date"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -55,7 +55,7 @@
                 android:layout_weight="1" />
 
             <TextView
-                android:id="@+id/eventBeginTime"
+                android:id="@+id/task_begin_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -72,7 +72,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/eventEndDate"
+                android:id="@+id/task_end_date"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -87,7 +87,7 @@
                 android:layout_weight="1" />
 
             <TextView
-                android:id="@+id/eventEndTime"
+                android:id="@+id/task_end_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
