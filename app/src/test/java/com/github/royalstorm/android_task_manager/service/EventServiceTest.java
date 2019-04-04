@@ -2,7 +2,6 @@ package com.github.royalstorm.android_task_manager.service;
 
 import com.github.royalstorm.android_task_manager.dao.Event;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,7 +9,7 @@ public class EventServiceTest {
 
     private static final Event event = new Event(0, "День рождения сестры");
 
-    private MockUpEventService mockUpEventService = new MockUpEventService();
+    private MockUpTaskService mockUpEventService = new MockUpTaskService();
 
     @Before
     public void setUp() {

@@ -12,13 +12,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
-import com.github.royalstorm.android_task_manager.dao.Event;
+import com.github.royalstorm.android_task_manager.dao.Task;
 
 import java.util.List;
 
 public class HoursAdapter extends ArrayAdapter<String> {
 
-    private List<Event> events;
+    private List<Task> tasks;
 
     private String[] hoursList;
 
@@ -26,12 +26,12 @@ public class HoursAdapter extends ArrayAdapter<String> {
 
     private int resource;
 
-    public HoursAdapter(Context context, int resource, String[] hoursList, List<Event> events) {
+    public HoursAdapter(Context context, int resource, String[] hoursList, List<Task> tasks) {
         super(context, resource, hoursList);
         this.context = context;
         this.resource = resource;
         this.hoursList = hoursList;
-        this.events = events;
+        this.tasks = tasks;
     }
 
     @NonNull
@@ -48,13 +48,13 @@ public class HoursAdapter extends ArrayAdapter<String> {
         LinearLayout linearLayout = view.findViewById(R.id.eventsContainer);
 
         TextView textView;
-        for (Event event : events) {
+        for (Task event : tasks) {
             textView = new TextView(getContext());
             textView.setTextColor(Color.WHITE);
             textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
             if (event.getBeginTime().equals(position + ":00")) {
                 textView.setBackground(textView.getContext().getDrawable(R.drawable.side_nav_bar));
-                textView.setText(event.getEventTitle());
+                textView.setText(event.getName());
 
                 linearLayout.addView(textView);
             }

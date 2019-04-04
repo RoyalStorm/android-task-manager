@@ -3,6 +3,7 @@ package com.github.royalstorm.android_task_manager.activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -12,18 +13,18 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.royalstorm.android_task_manager.R;
-import com.github.royalstorm.android_task_manager.dao.Event;
+import com.github.royalstorm.android_task_manager.dao.Task;
 import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.TimePickerFragment;
-import com.github.royalstorm.android_task_manager.service.MockUpEventService;
+import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 
-public class AddEventActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
-    private MockUpEventService mockUpEventService = new MockUpEventService();
+public class AddTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+    private MockUpTaskService mockUpEventService = new MockUpTaskService();
 
     private TextView eventBeginDate;
     private TextView eventEndDate;
@@ -36,7 +37,7 @@ public class AddEventActivity extends AppCompatActivity implements DatePickerDia
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_event);
+        setContentView(R.layout.activity_add_task);
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
         setTitle("Новое событие");
@@ -53,7 +54,8 @@ public class AddEventActivity extends AppCompatActivity implements DatePickerDia
 
     private void createEvent() {
         if (eventName.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, "Заголовок не может быть пустым", Toast.LENGTH_LONG).show();
+            Snackbar.make(getWindow().getDecorView().
+                    getRootView(), "Заголовок не может быть пустым", Snackbar.LENGTH_LONG).show();
             return;
         }
 
@@ -66,12 +68,14 @@ public class AddEventActivity extends AppCompatActivity implements DatePickerDia
         int year = getIntent().getExtras().getInt("year");
 
         mockUpEventService.create(
-                new Event(
-                        MockUpEventService.getCounter(),
+                new Task(
+                        MockUpTaskService.getCounter(),
                         "Me",
                         this.eventName.getText().toString(),
-                        day + "/" + month + "/" + year,
-                        beginTime,
+                        eventDetails.getText().toString(),
+                        "...",
+                        "...",
+                        "...",
                         "...")
         );
 
@@ -81,7 +85,7 @@ public class AddEventActivity extends AppCompatActivity implements DatePickerDia
     }
 
     private void setEventBeginDateListener() {
-        eventBeginDate = findViewById(R.id.eventDateBegin);
+        eventBeginDate = findViewById(R.id.eventBeginDate);
         eventBeginDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,7 +96,7 @@ public class AddEventActivity extends AppCompatActivity implements DatePickerDia
     }
 
     private void setEventEndDateListener() {
-        eventEndDate = findViewById(R.id.eventDateEnd);
+        eventEndDate = findViewById(R.id.eventEndDate);
         eventEndDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,7 +131,7 @@ public class AddEventActivity extends AppCompatActivity implements DatePickerDia
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.add_event_menu, menu);
+        menuInflater.inflate(R.menu.add_task_menu, menu);
 
         return true;
     }
@@ -135,7 +139,7 @@ public class AddEventActivity extends AppCompatActivity implements DatePickerDia
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.saveEvent:
+            case R.id.save_event:
                 createEvent();
                 return true;
 
@@ -150,5 +154,7 @@ public class AddEventActivity extends AppCompatActivity implements DatePickerDia
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+        eventBeginDate.setText(DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime()));
     }
 }

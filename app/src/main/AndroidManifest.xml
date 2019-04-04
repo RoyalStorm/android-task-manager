@@ -20,10 +20,10 @@
         </activity>
 
         <activity
-            android:name=".activity.AddEventActivity"
-            android:parentActivityName=".activity.EventsActivity" />
+            android:name=".activity.AddTaskActivity"
+            android:parentActivityName=".activity.TasksActivity" />
 
-        <activity android:name=".activity.EventsActivity" />
+        <activity android:name=".activity.TasksActivity" />
     </application>
 
 </manifest>

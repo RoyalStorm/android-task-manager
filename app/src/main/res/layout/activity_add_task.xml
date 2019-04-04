@@ -40,12 +40,12 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/eventDateBegin"
+                android:id="@+id/eventBeginDate"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="start|center"
-                android:text="Апрель 2 2019г.(вт)"
+                android:text="Апрель 2 2019 (вт)"
                 android:textColor="@color/elegant_color"
                 android:textSize="18sp" />
 
@@ -72,12 +72,12 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/eventDateEnd"
+                android:id="@+id/eventEndDate"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="start|center"
-                android:text="Апрель 4 2019г.(чт)"
+                android:text="Апрель 4 2019 (чт)"
                 android:textColor="@color/elegant_color"
                 android:textSize="18sp" />
 

@@ -15,10 +15,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
-import com.github.royalstorm.android_task_manager.activity.AddEventActivity;
+import com.github.royalstorm.android_task_manager.activity.AddTaskActivity;
 import com.github.royalstorm.android_task_manager.adapter.HoursAdapter;
-import com.github.royalstorm.android_task_manager.dao.Event;
-import com.github.royalstorm.android_task_manager.service.MockUpEventService;
+import com.github.royalstorm.android_task_manager.dao.Task;
+import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -92,7 +92,7 @@ public class DayFragment extends Fragment {
     }
 
     private void createEvent(View itemClicked) {
-        Intent intent = new Intent(getActivity(), AddEventActivity.class);
+        Intent intent = new Intent(getActivity(), AddTaskActivity.class);
 
         ConstraintLayout item = (ConstraintLayout) itemClicked;
         TextView hour = (TextView) item.getViewById(R.id.hour);
@@ -111,7 +111,7 @@ public class DayFragment extends Fragment {
         hoursList = view.findViewById(R.id.hoursList);
 
         String[] hours = getResources().getStringArray(R.array.hours);
-        List<Event> events = getCurrentEvents(day + "/" + month + "/" + year);
+        List<Task> events = getCurrentEvents(day + "/" + month + "/" + year);
 
         hoursAdapter = new HoursAdapter(getContext(), R.layout.hour_list_item, hours, events);
 
@@ -127,8 +127,8 @@ public class DayFragment extends Fragment {
         });
     }
 
-    private List<Event> getCurrentEvents(String date) {
-        MockUpEventService mockUpEventService = new MockUpEventService();
+    private List<Task> getCurrentEvents(String date) {
+        MockUpTaskService mockUpEventService = new MockUpTaskService();
 
         return mockUpEventService.findByDate(date);
     }
