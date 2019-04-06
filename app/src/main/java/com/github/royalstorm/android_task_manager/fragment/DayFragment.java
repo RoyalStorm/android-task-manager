@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,24 +17,22 @@ import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.activity.AddTaskActivity;
 import com.github.royalstorm.android_task_manager.adapter.HoursAdapter;
 import com.github.royalstorm.android_task_manager.dao.Task;
+import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectDayDialog;
 import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
 public class DayFragment extends Fragment {
-
+    private TextView prevDay;
     private TextView currentDay;
-    private TextView currentDate;
+    private TextView nextDay;
 
     private ListView hoursList;
 
     private HoursAdapter hoursAdapter;
-
-    private static final SparseArray<String> daysOfWeek = new SparseArray<>();
 
     private int day;
     private int month;
@@ -43,52 +40,50 @@ public class DayFragment extends Fragment {
 
     private View view;
 
-    static {
-        daysOfWeek.put(Calendar.MONDAY, "понедельник");
-        daysOfWeek.put(Calendar.TUESDAY, "вторник");
-        daysOfWeek.put(Calendar.WEDNESDAY, "среда");
-        daysOfWeek.put(Calendar.THURSDAY, "четверг");
-        daysOfWeek.put(Calendar.FRIDAY, "пятница");
-        daysOfWeek.put(Calendar.SATURDAY, "суббота");
-        daysOfWeek.put(Calendar.SUNDAY, "воскресенье");
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_day, container, false);
 
         setDatesFields(view);
+        setCurrentDayListener(view);
 
         return view;
     }
 
     private void setDatesFields(View view) {
+        currentDay = view.findViewById(R.id.current_day);
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM (E)", Locale.getDefault());
+        simpleDateFormat.setCalendar(new GregorianCalendar());
+        String date = simpleDateFormat.format(new GregorianCalendar().getTime());
+
         Bundle bundle = this.getArguments();
 
-        Calendar calendar = Calendar.getInstance();
-
-        currentDay = view.findViewById(R.id.currentDay);
-        currentDate = view.findViewById(R.id.currentDate);
-
-        if (bundle == null) {
-            currentDay.setText(daysOfWeek.get(calendar.get(Calendar.DAY_OF_WEEK)));
-
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
-            currentDate.setText(dateFormat.format(calendar.getTime()));
-        } else {
-            bundle = this.getArguments();
-
+        if (bundle != null) {
             day = bundle.getInt("day");
             month = bundle.getInt("month");
             year = bundle.getInt("year");
 
-            String dayOfWeek = bundle.getString("currentDay");
-
-            currentDay.setText(dayOfWeek);
-            currentDate.setText(day + "/" + month + "/" + year);
+            date = simpleDateFormat.format(new GregorianCalendar(year, month, day).getTime());
         }
+
+        currentDay.setText(date);
+    }
+
+    private void setCurrentDayListener(View view) {
+        currentDay = view.findViewById(R.id.current_day);
+        currentDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialog();
+            }
+        });
+    }
+
+    private void openDialog() {
+        SelectDayDialog selectDayDialog = new SelectDayDialog();
+        selectDayDialog.show(getFragmentManager(), "Select day dialog");
     }
 
     private void createEvent(View itemClicked) {

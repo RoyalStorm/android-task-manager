@@ -12,9 +12,6 @@ import android.widget.CalendarView;
 
 import com.github.royalstorm.android_task_manager.R;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class MonthFragment extends Fragment {
 
     NavigationView navigationView;
@@ -36,38 +33,8 @@ public class MonthFragment extends Fragment {
                         Bundle bundle = new Bundle();
 
                         bundle.putInt("day", dayOfMonth);
-                        // Cause January is 0 number
-                        bundle.putInt("month", month + 1);
+                        bundle.putInt("month", month);
                         bundle.putInt("year", year);
-
-                        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
-                        Date date = new Date(year, month, dayOfMonth - 1);
-                        String dayOfWeek = sdf.format(date);
-                        switch (dayOfWeek) {
-                            case "Sunday":
-                                dayOfWeek = "Воскресенье";
-                                break;
-                            case "Monday":
-                                dayOfWeek = "Понедельник";
-                                break;
-                            case "Tuesday":
-                                dayOfWeek = "Вторник";
-                                break;
-                            case "Wednesday":
-                                dayOfWeek = "Среда";
-                                break;
-                            case "Thursday":
-                                dayOfWeek = "Четверг";
-                                break;
-                            case "Friday":
-                                dayOfWeek = "Пятница";
-                                break;
-                            case "Saturday":
-                                dayOfWeek = "Суббота";
-                                break;
-                        }
-
-                        bundle.putString("currentDay", dayOfWeek);
 
                         DayFragment dayFragment = new DayFragment();
                         dayFragment.setArguments(bundle);
