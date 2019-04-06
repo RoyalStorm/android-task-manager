@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +22,14 @@ import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectDayDi
 import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
 public class DayFragment extends Fragment {
+    private GregorianCalendar gregorianCalendar;
+
     private TextView prevDay;
     private TextView currentDay;
     private TextView nextDay;
@@ -47,6 +51,8 @@ public class DayFragment extends Fragment {
 
         setDatesFields(view);
         setCurrentDayListener(view);
+        setPrevDayListener(view);
+        setNextDayListener(view);
 
         return view;
     }
@@ -54,21 +60,74 @@ public class DayFragment extends Fragment {
     private void setDatesFields(View view) {
         currentDay = view.findViewById(R.id.current_day);
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM (E)", Locale.getDefault());
-        simpleDateFormat.setCalendar(new GregorianCalendar());
-        String date = simpleDateFormat.format(new GregorianCalendar().getTime());
-
         Bundle bundle = this.getArguments();
 
         if (bundle != null) {
             day = bundle.getInt("day");
             month = bundle.getInt("month");
             year = bundle.getInt("year");
-
-            date = simpleDateFormat.format(new GregorianCalendar(year, month, day).getTime());
+        } else {
+            day = new GregorianCalendar().get(Calendar.DAY_OF_WEEK);
+            month = new GregorianCalendar().get(Calendar.MONTH);
+            year = new GregorianCalendar().get(Calendar.YEAR);
         }
 
+        gregorianCalendar = new GregorianCalendar(year, month, day);
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM (E)", Locale.getDefault());
+
+        String date = simpleDateFormat.format(gregorianCalendar.getTime());
         currentDay.setText(date);
+    }
+
+    private void setPrevDayListener(View view) {
+        prevDay = view.findViewById(R.id.prev_day);
+        prevDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gregorianCalendar.add(Calendar.DAY_OF_MONTH, -1);
+
+                day = gregorianCalendar.get(Calendar.DAY_OF_MONTH);
+                month = gregorianCalendar.get(Calendar.MONTH);
+                year = gregorianCalendar.get(Calendar.YEAR);
+
+                Bundle bundle = new Bundle();
+                bundle.putInt("day", day);
+                bundle.putInt("month", month);
+                bundle.putInt("year", year);
+
+                DayFragment dayFragment = new DayFragment();
+                dayFragment.setArguments(bundle);
+
+                getFragmentManager().beginTransaction().replace(R.id.calendarContainer,
+                        dayFragment).commit();
+            }
+        });
+    }
+
+    private void setNextDayListener(View view) {
+        nextDay = view.findViewById(R.id.next_day);
+        nextDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gregorianCalendar.add(Calendar.DAY_OF_MONTH, 1);
+
+                day = gregorianCalendar.get(Calendar.DAY_OF_MONTH);
+                month = gregorianCalendar.get(Calendar.MONTH);
+                year = gregorianCalendar.get(Calendar.YEAR);
+
+                Bundle bundle = new Bundle();
+                bundle.putInt("day", day);
+                bundle.putInt("month", month);
+                bundle.putInt("year", year);
+
+                DayFragment dayFragment = new DayFragment();
+                dayFragment.setArguments(bundle);
+
+                getFragmentManager().beginTransaction().replace(R.id.calendarContainer,
+                        dayFragment).commit();
+            }
+        });
     }
 
     private void setCurrentDayListener(View view) {
@@ -76,14 +135,10 @@ public class DayFragment extends Fragment {
         currentDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openDialog();
+                SelectDayDialog selectDayDialog = new SelectDayDialog();
+                selectDayDialog.show(getFragmentManager(), "Select day dialog");
             }
         });
-    }
-
-    private void openDialog() {
-        SelectDayDialog selectDayDialog = new SelectDayDialog();
-        selectDayDialog.show(getFragmentManager(), "Select day dialog");
     }
 
     private void createEvent(View itemClicked) {
@@ -93,7 +148,6 @@ public class DayFragment extends Fragment {
         TextView hour = (TextView) item.getViewById(R.id.hour);
         String beginTime = hour.getText().toString();
 
-        // Position is equals selected time
         intent.putExtra("beginTime", beginTime);
         intent.putExtra("day", day);
         intent.putExtra("month", month);
@@ -124,7 +178,6 @@ public class DayFragment extends Fragment {
 
     private List<Task> getCurrentEvents(String date) {
         MockUpTaskService mockUpEventService = new MockUpTaskService();
-
         return mockUpEventService.findByDate(date);
     }
 
