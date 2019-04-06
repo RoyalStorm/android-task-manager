@@ -67,7 +67,7 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
             month = bundle.getInt("month");
             year = bundle.getInt("year");
         } else {
-            day = new GregorianCalendar().get(Calendar.DAY_OF_WEEK);
+            day = new GregorianCalendar().get(Calendar.DAY_OF_MONTH);
             month = new GregorianCalendar().get(Calendar.MONTH);
             year = new GregorianCalendar().get(Calendar.YEAR);
         }
