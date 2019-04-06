@@ -27,7 +27,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
-public class DayFragment extends Fragment {
+public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDialogListener {
     private GregorianCalendar gregorianCalendar;
 
     private TextView prevDay;
@@ -80,6 +80,25 @@ public class DayFragment extends Fragment {
         currentDay.setText(date);
     }
 
+    private void setCurrentDayListener(View view) {
+        currentDay = view.findViewById(R.id.current_day);
+        currentDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SelectDayDialog selectDayDialog = new SelectDayDialog();
+
+                Bundle bundle = new Bundle();
+                bundle.putInt("day", day);
+                bundle.putInt("month", month);
+                bundle.putInt("year", year);
+
+                selectDayDialog.setTargetFragment(DayFragment.this, 1);
+                selectDayDialog.setArguments(bundle);
+                selectDayDialog.show(getFragmentManager(), "Select day dialog");
+            }
+        });
+    }
+
     private void setPrevDayListener(View view) {
         prevDay = view.findViewById(R.id.prev_day);
         prevDay.setOnClickListener(new View.OnClickListener() {
@@ -130,17 +149,6 @@ public class DayFragment extends Fragment {
         });
     }
 
-    private void setCurrentDayListener(View view) {
-        currentDay = view.findViewById(R.id.current_day);
-        currentDay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SelectDayDialog selectDayDialog = new SelectDayDialog();
-                selectDayDialog.show(getFragmentManager(), "Select day dialog");
-            }
-        });
-    }
-
     private void createEvent(View itemClicked) {
         Intent intent = new Intent(getActivity(), AddTaskActivity.class);
 
@@ -185,5 +193,19 @@ public class DayFragment extends Fragment {
     public void onResume() {
         super.onResume();
         showHours(view);
+    }
+
+    @Override
+    public void setDay(int year, int month, int day) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("day", day);
+        bundle.putInt("month", month);
+        bundle.putInt("year", year);
+
+        DayFragment dayFragment = new DayFragment();
+        dayFragment.setArguments(bundle);
+
+        getFragmentManager().beginTransaction().replace(R.id.calendarContainer,
+                dayFragment).commit();
     }
 }
