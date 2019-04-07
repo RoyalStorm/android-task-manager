@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -160,9 +161,28 @@ public class WeekFragment extends Fragment {
             for (int j = 0; j < 7; j++) {
                 days[j] = new TextView(getContext());
                 days[j].setHeight(dpToPix());
+                days[j].setId(j * 100 + i);
                 days[j].setBackground(days[j].getContext().getDrawable(R.drawable.text_view_border));
 
                 row.addView(days[j]);
+
+                days[j].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        day += ((v.getId()) / 100);
+
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("day", day);
+                        bundle.putInt("month", month);
+                        bundle.putInt("year", year);
+
+                        DayFragment dayFragment = new DayFragment();
+                        dayFragment.setArguments(bundle);
+
+                        getFragmentManager().beginTransaction().replace(R.id.calendarContainer,
+                                dayFragment).commit();
+                    }
+                });
             }
 
             tableLayout.addView(row);
