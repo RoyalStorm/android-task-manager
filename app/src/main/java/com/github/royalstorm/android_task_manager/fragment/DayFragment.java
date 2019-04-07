@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +48,7 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_day, container, false);
 
-        setDatesFields(view);
+        setDate(view);
         setCurrentDayListener(view);
         setPrevDayListener(view);
         setNextDayListener(view);
@@ -57,7 +56,7 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
         return view;
     }
 
-    private void setDatesFields(View view) {
+    private void setDate(View view) {
         currentDay = view.findViewById(R.id.current_day);
 
         Bundle bundle = this.getArguments();

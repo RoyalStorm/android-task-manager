@@ -15,11 +15,19 @@ import com.github.royalstorm.android_task_manager.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class WeekFragment extends Fragment {
+    private GregorianCalendar gregorianCalendar;
 
-    private Calendar calendar = Calendar.getInstance();
+    private TextView currentWeek;
+    private TextView prevWeek;
+    private TextView nextWeek;
+
+    private int day;
+    private int month;
+    private int year;
 
     @Nullable
     @Override
@@ -27,98 +35,117 @@ public class WeekFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_week,
                 container, false);
 
-        setCurrentDay(view);
-        setDaysNumbers(view);
+        setDays(view);
+        setPrevWeekListener(view);
+        setNextWeekListener(view);
         createScheduleGrid(view);
 
         return view;
     }
 
-    private void setCurrentDay(View view) {
-        String currentDay = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
+    private void setDays(View view) {
+        currentWeek = view.findViewById(R.id.current_week);
 
-        TextView day;
+        Bundle bundle = this.getArguments();
 
-        switch (currentDay) {
-            case "Sunday":
-                day = view.findViewById(R.id.sun);
-                day.setTextColor(day.getContext().getColor(R.color.burgundy));
-                break;
-
-            case "Monday":
-                day = view.findViewById(R.id.mon);
-                day.setTextColor(day.getContext().getColor(R.color.burgundy));
-                break;
-
-            case "Tuesday":
-                day = view.findViewById(R.id.tue);
-                day.setTextColor(day.getContext().getColor(R.color.burgundy));
-                break;
-
-            case "Wednesday":
-                day = view.findViewById(R.id.wed);
-                day.setTextColor(day.getContext().getColor(R.color.burgundy));
-                break;
-
-            case "Thursday":
-                day = view.findViewById(R.id.thu);
-                day.setTextColor(day.getContext().getColor(R.color.burgundy));
-                break;
-
-            case "Friday":
-                day = view.findViewById(R.id.fri);
-                day.setTextColor(day.getContext().getColor(R.color.burgundy));
-                break;
-
-            case "Saturday":
-                day = view.findViewById(R.id.sat);
-                day.setTextColor(day.getContext().getColor(R.color.burgundy));
-                break;
+        if (bundle != null) {
+            day = bundle.getInt("day");
+            month = bundle.getInt("month");
+            year = bundle.getInt("year");
+        } else {
+            day = new GregorianCalendar().get(Calendar.DAY_OF_WEEK);
+            month = new GregorianCalendar().get(Calendar.MONTH);
+            year = new GregorianCalendar().get(Calendar.YEAR);
         }
+
+        gregorianCalendar = new GregorianCalendar(year, month, day);
+        gregorianCalendar.setFirstDayOfWeek(Calendar.MONDAY);
+        gregorianCalendar.set(Calendar.DAY_OF_WEEK, gregorianCalendar.getFirstDayOfWeek());
+
+        SimpleDateFormat month = new SimpleDateFormat("MMM", Locale.getDefault());
+        String date = month.format(gregorianCalendar.getTime());
+
+        TextView monNumber = view.findViewById(R.id.monNumber);
+        TextView tueNumber = view.findViewById(R.id.tueNumber);
+        TextView wedNumber = view.findViewById(R.id.wedNumber);
+        TextView thuNumber = view.findViewById(R.id.thuNumber);
+        TextView friNumber = view.findViewById(R.id.friNumber);
+        TextView satNumber = view.findViewById(R.id.satNumber);
+        TextView sunNumber = view.findViewById(R.id.sunNumber);
+
+        SimpleDateFormat day = new SimpleDateFormat("d", Locale.getDefault());
+
+        monNumber.setText(day.format(gregorianCalendar.getTime()));
+
+        gregorianCalendar.add(Calendar.DAY_OF_WEEK, 1);
+        tueNumber.setText(day.format(gregorianCalendar.getTime()));
+
+        gregorianCalendar.add(Calendar.DAY_OF_WEEK, 1);
+        wedNumber.setText(day.format(gregorianCalendar.getTime()));
+
+        gregorianCalendar.add(Calendar.DAY_OF_WEEK, 1);
+        thuNumber.setText(day.format(gregorianCalendar.getTime()));
+
+        gregorianCalendar.add(Calendar.DAY_OF_WEEK, 1);
+        friNumber.setText(day.format(gregorianCalendar.getTime()));
+
+        gregorianCalendar.add(Calendar.DAY_OF_WEEK, 1);
+        satNumber.setText(day.format(gregorianCalendar.getTime()));
+
+        gregorianCalendar.add(Calendar.DAY_OF_WEEK, 1);
+        sunNumber.setText(day.format(gregorianCalendar.getTime()));
+
+        currentWeek.setText(date);
     }
 
-    private void setDaysNumbers(View view) {
-        calendar.setFirstDayOfWeek(Calendar.MONDAY);
-        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+    private void setPrevWeekListener(View view) {
+        prevWeek = view.findViewById(R.id.prev_week);
+        prevWeek.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gregorianCalendar.add(Calendar.DAY_OF_MONTH, -13);
 
-        SimpleDateFormat dayNumber = new SimpleDateFormat("dd");
+                day = gregorianCalendar.get(Calendar.DAY_OF_MONTH);
+                month = gregorianCalendar.get(Calendar.MONTH);
+                year = gregorianCalendar.get(Calendar.YEAR);
 
-        TextView number;
+                Bundle bundle = new Bundle();
+                bundle.putInt("day", day);
+                bundle.putInt("month", month);
+                bundle.putInt("year", year);
 
-        for (int i = 0; i < 7; i++) {
-            switch (i) {
-                case 0:
-                    number = view.findViewById(R.id.monNumber);
-                    number.setText(dayNumber.format(calendar.getTime()));
-                    break;
-                case 1:
-                    number = view.findViewById(R.id.tueNumber);
-                    number.setText(dayNumber.format(calendar.getTime()));
-                    break;
-                case 2:
-                    number = view.findViewById(R.id.wedNumber);
-                    number.setText(dayNumber.format(calendar.getTime()));
-                    break;
-                case 3:
-                    number = view.findViewById(R.id.thuNumber);
-                    number.setText(dayNumber.format(calendar.getTime()));
-                    break;
-                case 4:
-                    number = view.findViewById(R.id.friNumber);
-                    number.setText(dayNumber.format(calendar.getTime()));
-                    break;
-                case 5:
-                    number = view.findViewById(R.id.satNumber);
-                    number.setText(dayNumber.format(calendar.getTime()));
-                    break;
-                case 6:
-                    number = view.findViewById(R.id.sunNumber);
-                    number.setText(dayNumber.format(calendar.getTime()));
-                    break;
+                WeekFragment weekFragment = new WeekFragment();
+                weekFragment.setArguments(bundle);
+
+                getFragmentManager().beginTransaction().replace(R.id.calendarContainer,
+                        weekFragment).commit();
             }
+        });
+    }
 
-            calendar.add(Calendar.DAY_OF_WEEK, 1);
-        }
+    private void setNextWeekListener(View view) {
+        nextWeek = view.findViewById(R.id.next_week);
+        nextWeek.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gregorianCalendar.add(Calendar.DAY_OF_MONTH, 1);
+
+                day = gregorianCalendar.get(Calendar.DAY_OF_MONTH);
+                month = gregorianCalendar.get(Calendar.MONTH);
+                year = gregorianCalendar.get(Calendar.YEAR);
+
+                Bundle bundle = new Bundle();
+                bundle.putInt("day", day);
+                bundle.putInt("month", month);
+                bundle.putInt("year", year);
+
+                WeekFragment weekFragment = new WeekFragment();
+                weekFragment.setArguments(bundle);
+
+                getFragmentManager().beginTransaction().replace(R.id.calendarContainer,
+                        weekFragment).commit();
+            }
+        });
     }
 
     private void createScheduleGrid(View view) {
@@ -137,6 +164,7 @@ public class WeekFragment extends Fragment {
 
                 row.addView(days[j]);
             }
+
             tableLayout.addView(row);
         }
     }
