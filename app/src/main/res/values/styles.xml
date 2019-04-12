@@ -1,5 +1,4 @@
 <resources>
-
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
@@ -12,10 +11,4 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
-    <style name="HoursListDivider">
-        <item name="android:layout_height">@dimen/hours_list_item_divider_height</item>
-        <item name="android:background">@color/elegant_color</item>
-    </style>
-
 </resources>

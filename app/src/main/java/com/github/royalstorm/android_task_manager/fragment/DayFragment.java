@@ -4,18 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.activity.AddTaskActivity;
-import com.github.royalstorm.android_task_manager.adapter.HoursAdapter;
+import com.github.royalstorm.android_task_manager.adapter.TasksAdapter;
 import com.github.royalstorm.android_task_manager.dao.Task;
 import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectDayDialog;
 import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
@@ -33,9 +32,9 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
     private TextView currentDay;
     private TextView nextDay;
 
-    private ListView hoursList;
+    private ListView tasksList;
 
-    private HoursAdapter hoursAdapter;
+    private TasksAdapter tasksAdapter;
 
     private int day;
     private int month;
@@ -52,6 +51,14 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
         setCurrentDayListener(view);
         setPrevDayListener(view);
         setNextDayListener(view);
+
+        FloatingActionButton fab = view.findViewById(R.id.add_event);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createTask();
+            }
+        });
 
         return view;
     }
@@ -149,33 +156,16 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
     }
 
     private void showHours(View view) {
-        hoursList = view.findViewById(R.id.hoursList);
+        List<Task> currentTasks = getCurrentTasks(day, month, year);
 
-        String[] hours = getResources().getStringArray(R.array.hours);
-        List<Task> events = getCurrentEvents(day, month, year);
+        tasksAdapter = new TasksAdapter(getContext(), R.layout.tasks_list_item, currentTasks);
 
-        hoursAdapter = new HoursAdapter(getContext(), R.layout.hour_list_item, hours, events);
-
-        hoursList.setAdapter(hoursAdapter);
-        hoursList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent,
-                                    View itemClicked,
-                                    int position,
-                                    long id) {
-                createEvent(itemClicked);
-            }
-        });
+        tasksList = view.findViewById(R.id.tasks_list);
+        tasksList.setAdapter(tasksAdapter);
     }
 
-    private void createEvent(View itemClicked) {
+    private void createTask() {
         Intent intent = new Intent(getActivity(), AddTaskActivity.class);
-
-        ConstraintLayout item = (ConstraintLayout) itemClicked;
-        TextView hour = (TextView) item.getViewById(R.id.hour);
-        String beginTime = hour.getText().toString();
-
-        intent.putExtra("beginTime", beginTime);
         intent.putExtra("day", day);
         intent.putExtra("month", month);
         intent.putExtra("year", year);
@@ -183,7 +173,7 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
         startActivity(intent);
     }
 
-    private List<Task> getCurrentEvents(int year, int month, int day) {
+    private List<Task> getCurrentTasks(int year, int month, int day) {
         MockUpTaskService mockUpEventService = new MockUpTaskService();
         return mockUpEventService.findByDate(year, month, day);
     }

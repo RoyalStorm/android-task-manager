@@ -27,21 +27,6 @@
             android:id="@+id/calendarContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/add_event"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_marginEnd="@dimen/fab_margin"
-                android:layout_marginBottom="@dimen/fab_margin"
-                android:clickable="true"
-                android:focusable="true"
-                android:src="@drawable/ic_add"
-                android:tint="@android:color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:rippleColor="@color/colorPrimary" />
         </FrameLayout>
 
     </LinearLayout>
