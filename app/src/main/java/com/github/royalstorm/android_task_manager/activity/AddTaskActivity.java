@@ -1,11 +1,13 @@
 package com.github.royalstorm.android_task_manager.activity;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.Task;
@@ -20,11 +23,27 @@ import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment
 import com.github.royalstorm.android_task_manager.fragment.ui.TimePickerFragment;
 import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
 
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
-public class AddTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class AddTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private MockUpTaskService mockUpEventService = new MockUpTaskService();
+
+    private GregorianCalendar gregorianCalendar;
+
+    private int beginMinute;
+    private int beginHour;
+    private int beginDay;
+    private int beginMonth;
+    private int beginYear;
+
+    private int endMinute;
+    private int endHour;
+    private int endDay;
+    private int endMonth;
+    private int endYear;
 
     private TextView taskBeginDate;
     private TextView taskEndDate;
@@ -33,6 +52,15 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
     private EditText taskName;
     private EditText taskDetails;
+
+    /*private TimePickerDialog.OnTimeSetListener showTimePicker = new TimePickerDialog.OnTimeSetListener() {
+        public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
+            if (view.getId() == R.id.task_begin_time)
+                Log.d("_______________","begin");
+            else if (view.getId() == R.id.task_end_time)
+                Log.d("____________________", "end");
+        }
+    };*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +71,9 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         setTitle("Новое событие");
 
         setTaskBeginDateListener();
-        setTaskEndDateListener();
-
         setTaskBeginTime();
+
+        setTaskEndDateListener();
         setTaskEndTime();
 
         taskName = findViewById(R.id.task_name);
@@ -61,26 +89,25 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
         Intent intent = new Intent();
 
-        String beginTime = getIntent().getExtras().get("beginTime").toString();
-
-        int day = getIntent().getExtras().getInt("day");
-        int month = getIntent().getExtras().getInt("month");
-        int year = getIntent().getExtras().getInt("year");
-
         mockUpEventService.create(
                 new Task(
                         MockUpTaskService.getCounter(),
                         "Me",
                         this.taskName.getText().toString(),
                         taskDetails.getText().toString(),
-                        "...",
-                        "...",
-                        "...",
-                        "...")
+                        beginMinute,
+                        beginHour,
+                        beginDay,
+                        beginMonth,
+                        beginYear,
+                        endMinute,
+                        endHour,
+                        endDay,
+                        endMonth,
+                        endYear)
         );
 
         setResult(RESULT_OK, intent);
-
         finish();
     }
 
@@ -155,6 +182,19 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-        taskBeginDate.setText(DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime()));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM yyyy (E)", Locale.getDefault());
+
+        String date = simpleDateFormat.format(calendar.getTime());
+
+        taskBeginDate.setText(date);
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        if (view.getId() == R.id.task_begin_time)
+        Log.d("_______________","begin");
+            else if (view.getId() == R.id.task_end_time)
+            Log.d("____________________", "end");
+        taskBeginTime.setText(hourOfDay + ":" + minute);
     }
 }

@@ -73,7 +73,7 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
 
         gregorianCalendar = new GregorianCalendar(year, month, day);
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM (E)", Locale.getDefault());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM (E) yyyy г.", Locale.getDefault());
 
         String date = simpleDateFormat.format(gregorianCalendar.getTime());
         currentDay.setText(date);
@@ -148,26 +148,11 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
         });
     }
 
-    private void createEvent(View itemClicked) {
-        Intent intent = new Intent(getActivity(), AddTaskActivity.class);
-
-        ConstraintLayout item = (ConstraintLayout) itemClicked;
-        TextView hour = (TextView) item.getViewById(R.id.hour);
-        String beginTime = hour.getText().toString();
-
-        intent.putExtra("beginTime", beginTime);
-        intent.putExtra("day", day);
-        intent.putExtra("month", month);
-        intent.putExtra("year", year);
-
-        startActivity(intent);
-    }
-
     private void showHours(View view) {
         hoursList = view.findViewById(R.id.hoursList);
 
         String[] hours = getResources().getStringArray(R.array.hours);
-        List<Task> events = getCurrentEvents(day + "/" + month + "/" + year);
+        List<Task> events = getCurrentEvents(day, month, year);
 
         hoursAdapter = new HoursAdapter(getContext(), R.layout.hour_list_item, hours, events);
 
@@ -183,9 +168,24 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
         });
     }
 
-    private List<Task> getCurrentEvents(String date) {
+    private void createEvent(View itemClicked) {
+        Intent intent = new Intent(getActivity(), AddTaskActivity.class);
+
+        ConstraintLayout item = (ConstraintLayout) itemClicked;
+        TextView hour = (TextView) item.getViewById(R.id.hour);
+        String beginTime = hour.getText().toString();
+
+        intent.putExtra("beginTime", beginTime);
+        intent.putExtra("day", day);
+        intent.putExtra("month", month);
+        intent.putExtra("year", year);
+
+        startActivity(intent);
+    }
+
+    private List<Task> getCurrentEvents(int year, int month, int day) {
         MockUpTaskService mockUpEventService = new MockUpTaskService();
-        return mockUpEventService.findByDate(date);
+        return mockUpEventService.findByDate(year, month, day);
     }
 
     @Override

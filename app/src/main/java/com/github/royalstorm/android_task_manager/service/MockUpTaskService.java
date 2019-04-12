@@ -27,24 +27,28 @@ public class MockUpTaskService implements TaskRepository {
     }
 
     @Override
-    public List<Task> findByDate(String date) {
+    public List<Task> findByDate(int year, int month, int day) {
         foundEvents = new ArrayList<>();
 
-        //TODO: rework this method
         for (Task event : events)
-            if (event.getBeginDate().equals(date))
+            if (event.getBeginYear() == year &&
+                event.getBeginMonth() == month &&
+                event.getBeginDay() == day)
                 foundEvents.add(event);
 
         return foundEvents;
     }
 
     @Override
-    public List<Task> findByDateAndTime(String date, String time) {
+    public List<Task> findByDateAndTime(int year, int month, int day, int hour, int minute) {
         foundEvents = new ArrayList<>();
 
-        //TODO: rework this method
         for (Task event : events)
-            if (event.getBeginDate().equals(date) && event.getBeginTime().equals(time))
+            if (event.getBeginYear() == year &&
+                event.getBeginMonth() == month &&
+                event.getBeginDay() == day &&
+                event.getBeginHour() == hour &&
+                event.getBeginMinute() == minute)
                 foundEvents.add(event);
 
         return foundEvents;

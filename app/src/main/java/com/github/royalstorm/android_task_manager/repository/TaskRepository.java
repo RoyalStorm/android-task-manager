@@ -8,9 +8,9 @@ public interface TaskRepository {
 
     List<Task> findAll();
 
-    List<Task> findByDate(String date);
+    List<Task> findByDate(int year, int month, int day);
 
-    List<Task> findByDateAndTime(String date, String time);
+    List<Task> findByDateAndTime(int year, int month, int day, int hour, int minute);
 
     void create(Task event);
 

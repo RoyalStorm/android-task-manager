@@ -17,7 +17,6 @@ import com.github.royalstorm.android_task_manager.dao.Task;
 import java.util.List;
 
 public class HoursAdapter extends ArrayAdapter<String> {
-
     private List<Task> tasks;
 
     private String[] hoursList;
@@ -48,13 +47,14 @@ public class HoursAdapter extends ArrayAdapter<String> {
         LinearLayout linearLayout = view.findViewById(R.id.eventsContainer);
 
         TextView textView;
-        for (Task event : tasks) {
+        for (Task task : tasks) {
             textView = new TextView(getContext());
             textView.setTextColor(Color.WHITE);
             textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            if (event.getBeginTime().equals(position + ":00")) {
+
+            if (task.getBeginHour() == position && task.getBeginMinute() == 0) {
                 textView.setBackground(textView.getContext().getDrawable(R.drawable.side_nav_bar));
-                textView.setText(event.getName());
+                textView.setText(task.getName());
 
                 linearLayout.addView(textView);
             }

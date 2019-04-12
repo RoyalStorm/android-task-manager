@@ -13,12 +13,12 @@ public class TaskService implements TaskRepository {
     }
 
     @Override
-    public List<Task> findByDate(String date) {
+    public List<Task> findByDate(int year, int month, int day) {
         return null;
     }
 
     @Override
-    public List<Task> findByDateAndTime(String date, String time) {
+    public List<Task> findByDateAndTime(int year, int month, int day, int hour, int minute) {
         return null;
     }
 
