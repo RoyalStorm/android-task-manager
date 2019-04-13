@@ -11,12 +11,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
-import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
 
 public class SelectDayDialog extends AppCompatDialogFragment {
-    private TextView currentDay;
     private DatePicker datePicker;
 
     private SelectDayDialogListener selectDayDialogListener;
@@ -70,10 +68,10 @@ public class SelectDayDialog extends AppCompatDialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try{
+        try {
             selectDayDialogListener = (SelectDayDialogListener) getTargetFragment();
-        }catch (ClassCastException e){
-            Log.e("______________:", "onAttach: ClassCastException : " + e.getMessage() );
+        } catch (ClassCastException e) {
+            Log.e("______________:", "onAttach: ClassCastException : " + e.getMessage());
         }
     }
 

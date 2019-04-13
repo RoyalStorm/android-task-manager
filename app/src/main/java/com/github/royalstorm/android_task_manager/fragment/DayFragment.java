@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -155,7 +156,7 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
         });
     }
 
-    private void showHours(View view) {
+    private void showTasks(View view) {
         List<Task> currentTasks = getCurrentTasks(day, month, year);
 
         tasksAdapter = new TasksAdapter(getContext(), R.layout.tasks_list_item, currentTasks);
@@ -166,9 +167,14 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
 
     private void createTask() {
         Intent intent = new Intent(getActivity(), AddTaskActivity.class);
-        intent.putExtra("day", day);
-        intent.putExtra("month", month);
-        intent.putExtra("year", year);
+        Task task = new Task();
+        task.setBeginMinute(new GregorianCalendar().getTime().getMinutes());
+        task.setBeginHour(new GregorianCalendar().getTime().getHours());
+        task.setBeginDay(day);
+        task.setBeginMonth(month);
+        task.setBeginYear(year);
+
+        intent.putExtra(Task.class.getSimpleName(), task);
 
         startActivity(intent);
     }
@@ -181,7 +187,7 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
     @Override
     public void onResume() {
         super.onResume();
-        showHours(view);
+        showTasks(view);
     }
 
     @Override

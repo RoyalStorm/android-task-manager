@@ -21,6 +21,9 @@ public class Task implements Serializable {
     private int endMonth;
     private int endYear;
 
+    public Task() {
+    }
+
     public Task(int id, String owner, String name, String details, int beginMinute, int beginHour, int beginDay, int beginMonth, int beginYear, int endMinute, int endHour, int endDay, int endMonth, int endYear) {
         this.id = id;
         this.owner = owner;
