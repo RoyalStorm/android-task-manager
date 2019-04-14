@@ -22,11 +22,13 @@
         <activity
             android:name=".activity.AddTaskActivity"
             android:parentActivityName=".activity.TasksActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity android:name=".activity.TasksActivity" />
-        <activity android:name=".activity.EditTaskActivity"
-            android:parentActivityName=".activity.TasksActivity"/>
+        <activity
+            android:name=".activity.EditTaskActivity"
+            android:parentActivityName=".activity.TasksActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

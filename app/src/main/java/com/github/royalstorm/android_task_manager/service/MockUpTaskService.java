@@ -79,8 +79,6 @@ public class MockUpTaskService implements TaskRepository {
     @Override
     public void delete(int id) {
         tasks.remove(getTask(id));
-
-        --counter;
     }
 
     public static int getCounter() {
