@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -142,6 +143,15 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
             Snackbar.make(getWindow().getDecorView().
                     getRootView(), "Заголовок не может быть пустым", Snackbar.LENGTH_LONG).show();
             return;
+        } else {
+            GregorianCalendar begin = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), task.getBeginDay(), task.getBeginHour(), task.getBeginMinute());
+            GregorianCalendar end = new GregorianCalendar(task.getEndYear(), task.getEndMonth(), task.getEndDay(), task.getEndHour(), task.getEndMinute());
+
+            if (begin.after(end)) {
+                Snackbar.make(getWindow().getDecorView().
+                        getRootView(), "Событие не может завершиться раньше, чем начаться", Snackbar.LENGTH_LONG).show();
+                return;
+            }
         }
 
         Intent intent = new Intent();
