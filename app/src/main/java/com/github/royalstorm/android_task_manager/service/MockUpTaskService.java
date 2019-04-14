@@ -8,72 +8,72 @@ import java.util.List;
 
 public class MockUpTaskService implements TaskRepository {
 
-    private static List<Task> events = new ArrayList<>();
-    private List<Task> foundEvents;
+    private static List<Task> tasks = new ArrayList<>();
+    private List<Task> foundTasks;
 
     private static int counter = 0;
 
-    private Task getEvent(int id) {
-        for (Task event : events)
-            if (event.getId() == id)
-                return event;
+    private Task getTask(int id) {
+        for (Task task : tasks)
+            if (task.getId() == id)
+                return task;
 
         return null;
     }
 
     @Override
     public List<Task> findAll() {
-        return events;
+        return tasks;
     }
 
     @Override
     public List<Task> findByDate(int year, int month, int day) {
-        foundEvents = new ArrayList<>();
+        foundTasks = new ArrayList<>();
 
-        for (Task event : events)
-            if (event.getBeginYear() == year &&
-                event.getBeginMonth() == month &&
-                event.getBeginDay() == day)
-                foundEvents.add(event);
+        for (Task task : tasks)
+            if (task.getBeginYear() == year &&
+                task.getBeginMonth() == month &&
+                task.getBeginDay() == day)
+                foundTasks.add(task);
 
-        return foundEvents;
+        return foundTasks;
     }
 
     @Override
-    public List<Task> findByDateAndTime(int year, int month, int day, int hour, int minute) {
-        foundEvents = new ArrayList<>();
+    public List<Task> findByDateAndTime(int year, int month, int day, int hours, int minutes) {
+        foundTasks = new ArrayList<>();
 
-        for (Task event : events)
-            if (event.getBeginYear() == year &&
-                event.getBeginMonth() == month &&
-                event.getBeginDay() == day &&
-                event.getBeginHour() == hour &&
-                event.getBeginMinute() == minute)
-                foundEvents.add(event);
+        for (Task task : tasks)
+            if (task.getBeginYear() == year &&
+                    task.getBeginMonth() == month &&
+                    task.getBeginDay() == day &&
+                    task.getBeginHour() == hours &&
+                    task.getBeginMinute() == minutes)
+                foundTasks.add(task);
 
-        return foundEvents;
+        return foundTasks;
     }
 
     @Override
-    public void create(Task event) {
-        events.add(event);
+    public void create(Task task) {
+        tasks.add(task);
 
         ++counter;
     }
 
     @Override
-    public void update(int id, Task event) {
-        Task eventFromDB = getEvent(id);
+    public void update(int id, Task task) {
+        Task taskFromDB = getTask(id);
 
-        eventFromDB = event;
-        eventFromDB.setId(id);
+        taskFromDB = task;
+        taskFromDB.setId(id);
 
-        events.set(id, eventFromDB);
+        tasks.set(id, taskFromDB);
     }
 
     @Override
     public void delete(int id) {
-        events.remove(getEvent(id));
+        tasks.remove(getTask(id));
 
         --counter;
     }

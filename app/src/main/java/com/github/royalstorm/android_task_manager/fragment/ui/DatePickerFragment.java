@@ -6,18 +6,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
-import java.util.Calendar;
+import com.github.royalstorm.android_task_manager.dao.Task;
 
 public class DatePickerFragment extends DialogFragment {
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        Bundle bundle = getArguments();
+        Task task = (Task) bundle.getSerializable(Task.class.getSimpleName());
 
-        return new DatePickerDialog(getActivity(), (DatePickerDialog.OnDateSetListener) getActivity(), year, month, day);
+        return new DatePickerDialog(getActivity(),
+                (DatePickerDialog.OnDateSetListener) getActivity(),
+                task.getBeginYear(), task.getBeginMonth(), task.getBeginDay());
     }
 }

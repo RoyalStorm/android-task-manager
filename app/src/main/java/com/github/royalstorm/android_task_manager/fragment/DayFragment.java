@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +67,6 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
         currentDay = view.findViewById(R.id.current_day);
 
         Bundle bundle = this.getArguments();
-
         if (bundle != null) {
             day = bundle.getInt("day");
             month = bundle.getInt("month");
@@ -157,11 +155,10 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
     }
 
     private void showTasks(View view) {
-        List<Task> currentTasks = getCurrentTasks(day, month, year);
-
-        tasksAdapter = new TasksAdapter(getContext(), R.layout.tasks_list_item, currentTasks);
+        List<Task> currentTasks = getCurrentTasks(year, month, day);
 
         tasksList = view.findViewById(R.id.tasks_list);
+        tasksAdapter = new TasksAdapter(getContext(), R.layout.tasks_list_item, currentTasks);
         tasksList.setAdapter(tasksAdapter);
     }
 

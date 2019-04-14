@@ -45,7 +45,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="start|center"
-                android:text="Апрель 2 2019 (вт)"
                 android:textColor="@color/elegant_color"
                 android:textSize="18sp" />
 
@@ -60,7 +59,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="end|center"
-                android:text="17:00"
                 android:textColor="@color/elegant_color"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -77,7 +75,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="start|center"
-                android:text="Апрель 4 2019 (чт)"
                 android:textColor="@color/elegant_color"
                 android:textSize="18sp" />
 
@@ -92,7 +89,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="end|center"
-                android:text="21:15"
                 android:textColor="@color/elegant_color"
                 android:textSize="18sp" />
         </LinearLayout>
