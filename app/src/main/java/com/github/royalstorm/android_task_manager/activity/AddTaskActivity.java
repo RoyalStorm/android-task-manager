@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -53,44 +52,42 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     private View.OnClickListener dateListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            picker = new DatePickerFragment();
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(Task.class.getSimpleName(), task);
-            picker.setArguments(bundle);
-
             switch (v.getId()) {
                 case R.id.task_begin_date:
                     IS_BEGIN_DATE = true;
-                    picker.show(getSupportFragmentManager(), "Begin date picker");
                     break;
-
                 case R.id.task_end_date:
                     IS_BEGIN_DATE = false;
-                    picker.show(getSupportFragmentManager(), "End date picker");
                     break;
             }
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Task.class.getSimpleName(), task);
+            bundle.putBoolean("IS_BEGIN_DATE", IS_BEGIN_DATE);
+            picker = new DatePickerFragment();
+            picker.setArguments(bundle);
+            picker.show(getSupportFragmentManager(), "Date picker");
         }
     };
 
     private View.OnClickListener timeListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            picker = new TimePickerFragment();
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(Task.class.getSimpleName(), task);
-            picker.setArguments(bundle);
-
             switch (v.getId()) {
                 case R.id.task_begin_time:
                     IS_BEGIN_TIME = true;
-                    picker.show(getSupportFragmentManager(), "Begin time picker");
                     break;
-
                 case R.id.task_end_time:
                     IS_BEGIN_TIME = false;
-                    picker.show(getSupportFragmentManager(), "End time picker");
                     break;
             }
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Task.class.getSimpleName(), task);
+            bundle.putBoolean("IS_BEGIN_TIME", IS_BEGIN_TIME);
+            picker = new TimePickerFragment();
+            picker.setArguments(bundle);
+            picker.show(getSupportFragmentManager(), "Time picker");
         }
     };
 
@@ -128,8 +125,16 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         String taskDate = simpleDateFormat.format(gregorianCalendar.getTime());
         taskBeginDate.setText(taskDate);
         taskEndDate.setText(taskDate);
-        taskBeginTime.setText(gregorianCalendar.getTime().getHours() + 1 + ":00");
-        taskEndTime.setText(gregorianCalendar.getTime().getHours() + 2 + ":00");
+
+        gregorianCalendar.add(Calendar.HOUR, 1);
+
+        task.setBeginHour(gregorianCalendar.getTime().getHours());
+        task.setBeginMinute(0);
+        task.setEndHour(gregorianCalendar.getTime().getHours());
+        task.setEndMinute(0);
+
+        taskBeginTime.setText(gregorianCalendar.getTime().getHours() + ":00");
+        taskEndTime.setText(gregorianCalendar.getTime().getHours() + ":00");
     }
 
     private void createTask() {

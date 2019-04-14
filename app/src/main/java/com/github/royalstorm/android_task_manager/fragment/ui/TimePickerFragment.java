@@ -9,8 +9,6 @@ import android.text.format.DateFormat;
 
 import com.github.royalstorm.android_task_manager.dao.Task;
 
-import java.util.Calendar;
-
 public class TimePickerFragment extends DialogFragment {
 
     @NonNull
@@ -18,8 +16,17 @@ public class TimePickerFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle bundle = getArguments();
         Task task = (Task) bundle.getSerializable(Task.class.getSimpleName());
+        boolean IS_BEGIN_TIME = bundle.getBoolean("IS_BEGIN_TIME");
 
-        return new TimePickerDialog(getActivity(), (TimePickerDialog.OnTimeSetListener) getActivity(), task.getBeginHour(), task.getBeginMinute(),
-                DateFormat.is24HourFormat(getActivity()));
+        if (IS_BEGIN_TIME)
+            return new TimePickerDialog(getActivity(),
+                    (TimePickerDialog.OnTimeSetListener) getActivity(),
+                    task.getBeginHour(), task.getBeginMinute(),
+                    DateFormat.is24HourFormat(getActivity()));
+        else
+            return new TimePickerDialog(getActivity(),
+                    (TimePickerDialog.OnTimeSetListener) getActivity(),
+                    task.getEndHour(), task.getEndMinute(),
+                    DateFormat.is24HourFormat(getActivity()));
     }
 }

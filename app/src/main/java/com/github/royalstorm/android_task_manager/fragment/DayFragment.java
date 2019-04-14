@@ -171,6 +171,10 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
         task.setBeginMonth(month);
         task.setBeginYear(year);
 
+        task.setEndDay(day);
+        task.setEndMonth(month);
+        task.setEndYear(year);
+
         intent.putExtra(Task.class.getSimpleName(), task);
 
         startActivity(intent);

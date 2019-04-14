@@ -21,7 +21,8 @@
 
         <activity
             android:name=".activity.AddTaskActivity"
-            android:parentActivityName=".activity.TasksActivity" />
+            android:parentActivityName=".activity.TasksActivity"
+            android:screenOrientation="portrait"/>
 
         <activity android:name=".activity.TasksActivity" />
     </application>

@@ -14,9 +14,15 @@ public class DatePickerFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle bundle = getArguments();
         Task task = (Task) bundle.getSerializable(Task.class.getSimpleName());
+        boolean IS_BEGIN_DATE = bundle.getBoolean("IS_BEGIN_DATE");
 
-        return new DatePickerDialog(getActivity(),
-                (DatePickerDialog.OnDateSetListener) getActivity(),
-                task.getBeginYear(), task.getBeginMonth(), task.getBeginDay());
+        if (IS_BEGIN_DATE)
+            return new DatePickerDialog(getActivity(),
+                    (DatePickerDialog.OnDateSetListener) getActivity(),
+                    task.getBeginYear(), task.getBeginMonth(), task.getBeginDay());
+        else
+            return new DatePickerDialog(getActivity(),
+                    (DatePickerDialog.OnDateSetListener) getActivity(),
+                    task.getEndYear(), task.getEndMonth(), task.getEndDay());
     }
 }
