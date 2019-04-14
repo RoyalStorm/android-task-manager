@@ -8,6 +8,8 @@ public interface TaskRepository {
 
     List<Task> findAll();
 
+    Task findById(int id);
+
     List<Task> findByDate(int year, int month, int day);
 
     List<Task> findByDateAndTime(int year, int month, int day, int hour, int minute);

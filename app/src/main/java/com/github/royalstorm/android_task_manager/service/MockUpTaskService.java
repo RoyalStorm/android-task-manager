@@ -27,6 +27,11 @@ public class MockUpTaskService implements TaskRepository {
     }
 
     @Override
+    public Task findById(int id) {
+        return getTask(id);
+    }
+
+    @Override
     public List<Task> findByDate(int year, int month, int day) {
         foundTasks = new ArrayList<>();
 

@@ -13,6 +13,11 @@ public class TaskService implements TaskRepository {
     }
 
     @Override
+    public Task findById(int id) {
+        return null;
+    }
+
+    @Override
     public List<Task> findByDate(int year, int month, int day) {
         return null;
     }

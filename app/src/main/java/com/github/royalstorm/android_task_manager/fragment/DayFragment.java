@@ -6,14 +6,17 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.activity.AddTaskActivity;
+import com.github.royalstorm.android_task_manager.activity.EditTaskActivity;
 import com.github.royalstorm.android_task_manager.adapter.TasksAdapter;
 import com.github.royalstorm.android_task_manager.dao.Task;
 import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectDayDialog;
@@ -26,6 +29,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDialogListener {
+    private MockUpTaskService mockUpEventService = new MockUpTaskService();
+
     private GregorianCalendar gregorianCalendar;
 
     private TextView prevDay;
@@ -160,6 +165,13 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
         tasksList = view.findViewById(R.id.tasks_list);
         tasksAdapter = new TasksAdapter(getContext(), R.layout.tasks_list_item, currentTasks);
         tasksList.setAdapter(tasksAdapter);
+        tasksList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Task task = (Task) parent.getAdapter().getItem(position);
+                editTask(task.getId());
+            }
+        });
     }
 
     private void createTask() {
@@ -180,8 +192,14 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
         startActivity(intent);
     }
 
+    private void editTask(int id) {
+        Intent intent = new Intent(getActivity(), EditTaskActivity.class);
+        Task task = mockUpEventService.findById(id);
+        intent.putExtra(Task.class.getSimpleName(), task);
+        startActivity(intent);
+    }
+
     private List<Task> getCurrentTasks(int year, int month, int day) {
-        MockUpTaskService mockUpEventService = new MockUpTaskService();
         return mockUpEventService.findByDate(year, month, day);
     }
 
