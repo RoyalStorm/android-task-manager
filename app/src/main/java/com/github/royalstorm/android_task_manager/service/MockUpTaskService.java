@@ -36,9 +36,9 @@ public class MockUpTaskService implements TaskRepository {
         foundTasks = new ArrayList<>();
 
         for (Task task : tasks)
-            if (task.getBeginYear() == year &&
-                task.getBeginMonth() == month &&
-                task.getBeginDay() == day)
+            if (year >= task.getBeginYear() && year <= task.getEndYear() &&
+                month >= task.getBeginMonth() && month <= task.getEndMonth() &&
+                day >= task.getBeginDay() && day <= task.getEndDay())
                 foundTasks.add(task);
 
         return foundTasks;

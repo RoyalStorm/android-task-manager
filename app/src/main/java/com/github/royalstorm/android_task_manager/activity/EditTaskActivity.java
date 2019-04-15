@@ -150,9 +150,6 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
                     getRootView(), "Заголовок не может быть пустым", Snackbar.LENGTH_LONG).show();
             return;
         } else {
-            GregorianCalendar begin = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), task.getBeginDay(), task.getBeginHour(), task.getBeginMinute());
-            GregorianCalendar end = new GregorianCalendar(task.getEndYear(), task.getEndMonth(), task.getEndDay(), task.getEndHour(), task.getEndMinute());
-
             if (begin.after(end)) {
                 Snackbar.make(getWindow().getDecorView().
                         getRootView(), "Событие не может завершиться раньше, чем начаться", Snackbar.LENGTH_LONG).show();
@@ -244,11 +241,17 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         if (IS_BEGIN_TIME) {
+            begin.set(Calendar.HOUR, hourOfDay);
+            begin.set(Calendar.MINUTE, minute);
+
             task.setBeginHour(hourOfDay);
             task.setBeginMinute(minute);
 
             taskBeginTime.setText(hourOfDay + ":" + minute);
         } else {
+            end.set(Calendar.HOUR, hourOfDay);
+            end.set(Calendar.MINUTE, minute);
+
             task.setEndHour(hourOfDay);
             task.setEndMinute(minute);
 
