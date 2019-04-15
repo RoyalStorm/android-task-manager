@@ -4,6 +4,7 @@ import com.github.royalstorm.android_task_manager.dao.Task;
 import com.github.royalstorm.android_task_manager.repository.TaskRepository;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class MockUpTaskService implements TaskRepository {
@@ -45,15 +46,40 @@ public class MockUpTaskService implements TaskRepository {
     }
 
     @Override
-    public List<Task> findByDateAndTime(int year, int month, int day, int hours, int minutes) {
+    public List<Task> findByDateAndTime(int year, int month, int day, int hour, int minutes) {
+        foundTasks = new ArrayList<>();
+
+        GregorianCalendar current = new GregorianCalendar(year, month, day, hour, minutes);
+
+        for (Task task : tasks) {
+            GregorianCalendar begin = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), task.getBeginDay(), task.getBeginHour(), task.getBeginMinute());
+            GregorianCalendar end = new GregorianCalendar(task.getEndYear(), task.getEndMonth(), task.getEndDay(), task.getEndHour(), task.getEndMinute());
+
+            if (isWithinRange(begin, current, end))
+                foundTasks.add(task);
+
+        }
+
+        /*for (Task task : tasks)
+            if (year >= task.getBeginYear() && year <= task.getEndYear() &&
+                month >= task.getBeginMonth() && month <= task.getEndMonth() &&
+                day >= task.getBeginDay() && day <= task.getEndDay() &&
+                hour >= task.getBeginHour() && hour <= task.getEndHour() &&
+                minutes >= task.getBeginMinute() && minutes <= task.getEndMinute())
+                foundTasks.add(task);*/
+
+        return foundTasks;
+    }
+
+    @Override
+    public List<Task> findByDateAndHours(int year, int month, int day, int hour) {
         foundTasks = new ArrayList<>();
 
         for (Task task : tasks)
-            if (task.getBeginYear() == year &&
-                    task.getBeginMonth() == month &&
-                    task.getBeginDay() == day &&
-                    task.getBeginHour() == hours &&
-                    task.getBeginMinute() == minutes)
+            if (year >= task.getBeginYear() && year <= task.getEndYear() &&
+                month >= task.getBeginMonth() && month <= task.getEndMonth() &&
+                day >= task.getBeginDay() && day <= task.getEndDay() &&
+                hour >= task.getBeginHour() && hour <= task.getEndHour())
                 foundTasks.add(task);
 
         return foundTasks;
@@ -83,5 +109,9 @@ public class MockUpTaskService implements TaskRepository {
 
     public static int getCounter() {
         return counter;
+    }
+
+    boolean isWithinRange(GregorianCalendar begin, GregorianCalendar current, GregorianCalendar end) {
+        return !(current.before(begin) || current.after(end));
     }
 }

@@ -12,6 +12,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
+import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -151,6 +152,7 @@ public class WeekFragment extends Fragment {
     }
 
     private void createScheduleGrid(View view) {
+        MockUpTaskService mockUpTaskService = new MockUpTaskService();
         TableLayout tableLayout = view.findViewById(R.id.scheduleTable);
         TableRow row;
 
@@ -163,9 +165,13 @@ public class WeekFragment extends Fragment {
                 days[j] = new TextView(getContext());
                 days[j].setHeight(dpToPix());
                 days[j].setId(j * 100 + i);
+
                 days[j].setBackground(days[j].getContext().getDrawable(R.drawable.text_view_border));
 
                 row.addView(days[j]);
+
+                if (mockUpTaskService.findByDateAndTime(year, month, day + j, i, 0).size() > 0)
+                    days[j].setBackground(days[j].getContext().getDrawable(R.drawable.side_nav_bar));
 
                 days[j].setOnClickListener(new View.OnClickListener() {
                     @Override

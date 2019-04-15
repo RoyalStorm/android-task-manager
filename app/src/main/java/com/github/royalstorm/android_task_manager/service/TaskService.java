@@ -28,6 +28,11 @@ public class TaskService implements TaskRepository {
     }
 
     @Override
+    public List<Task> findByDateAndHours(int year, int month, int day, int hour) {
+        return null;
+    }
+
+    @Override
     public void create(Task event) {
 
     }
