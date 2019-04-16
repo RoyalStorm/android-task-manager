@@ -60,26 +60,16 @@ public class MockUpTaskService implements TaskRepository {
 
         }
 
-        /*for (Task task : tasks)
-            if (year >= task.getBeginYear() && year <= task.getEndYear() &&
-                month >= task.getBeginMonth() && month <= task.getEndMonth() &&
-                day >= task.getBeginDay() && day <= task.getEndDay() &&
-                hour >= task.getBeginHour() && hour <= task.getEndHour() &&
-                minutes >= task.getBeginMinute() && minutes <= task.getEndMinute())
-                foundTasks.add(task);*/
-
         return foundTasks;
     }
 
     @Override
-    public List<Task> findByDateAndHours(int year, int month, int day, int hour) {
+    public List<Task> findByYearAndMonth(int year, int month) {
         foundTasks = new ArrayList<>();
 
         for (Task task : tasks)
             if (year >= task.getBeginYear() && year <= task.getEndYear() &&
-                month >= task.getBeginMonth() && month <= task.getEndMonth() &&
-                day >= task.getBeginDay() && day <= task.getEndDay() &&
-                hour >= task.getBeginHour() && hour <= task.getEndHour())
+                month >= task.getBeginMonth() && month <= task.getEndMonth())
                 foundTasks.add(task);
 
         return foundTasks;
@@ -111,7 +101,7 @@ public class MockUpTaskService implements TaskRepository {
         return counter;
     }
 
-    boolean isWithinRange(GregorianCalendar begin, GregorianCalendar current, GregorianCalendar end) {
+    private boolean isWithinRange(GregorianCalendar begin, GregorianCalendar current, GregorianCalendar end) {
         return !(current.before(begin) || current.after(end));
     }
 }

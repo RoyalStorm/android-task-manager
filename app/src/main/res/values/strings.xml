@@ -9,32 +9,27 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string-array name="hours">
-        <item>0:00</item>
-        <item>1:00</item>
-        <item>2:00</item>
-        <item>3:00</item>
-        <item>4:00</item>
-        <item>5:00</item>
-        <item>6:00</item>
-        <item>7:00</item>
-        <item>8:00</item>
-        <item>9:00</item>
-        <item>10:00</item>
-        <item>11:00</item>
-        <item>12:00</item>
+    <string name="material_calendar_monday">Пн</string>
+    <string name="material_calendar_tuesday">Вт</string>
+    <string name="material_calendar_wednesday">Ср</string>
+    <string name="material_calendar_thursday">Чт</string>
+    <string name="material_calendar_friday">Пт</string>
+    <string name="material_calendar_saturday">Сб</string>
+    <string name="material_calendar_sunday">Вс</string>
 
-        <item>13:00</item>
-        <item>14:00</item>
-        <item>15:00</item>
-        <item>16:00</item>
-        <item>17:00</item>
-        <item>18:00</item>
-        <item>19:00</item>
-        <item>20:00</item>
-        <item>21:00</item>
-        <item>22:00</item>
-        <item>23:00</item>
+    <string-array name="material_calendar_months_array">
+        <item>Январь</item>
+        <item>Февраль</item>
+        <item>Март</item>
+        <item>Апрель</item>
+        <item>Май</item>
+        <item>Июнь</item>
+        <item>Июль</item>
+        <item>Август</item>
+        <item>Сентябрь</item>
+        <item>Октябрь</item>
+        <item>Ноябрь</item>
+        <item>Декабрь</item>
     </string-array>
 
     <string name="event_details">Описание</string>

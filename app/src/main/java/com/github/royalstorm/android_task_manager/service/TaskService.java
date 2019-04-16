@@ -28,7 +28,7 @@ public class TaskService implements TaskRepository {
     }
 
     @Override
-    public List<Task> findByDateAndHours(int year, int month, int day, int hour) {
+    public List<Task> findByYearAndMonth(int year, int month) {
         return null;
     }
 

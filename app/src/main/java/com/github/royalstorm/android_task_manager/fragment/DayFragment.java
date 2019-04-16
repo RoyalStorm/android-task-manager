@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDialogListener {
-    private MockUpTaskService mockUpEventService = new MockUpTaskService();
+    private MockUpTaskService mockUpTaskService = new MockUpTaskService();
 
     private GregorianCalendar gregorianCalendar;
 
@@ -58,12 +57,7 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
         setNextDayListener(view);
 
         FloatingActionButton fab = view.findViewById(R.id.add_event);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createTask();
-            }
-        });
+        fab.setOnClickListener(view -> createTask());
 
         return view;
     }
@@ -194,13 +188,13 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
 
     private void editTask(int id) {
         Intent intent = new Intent(getActivity(), EditTaskActivity.class);
-        Task task = mockUpEventService.findById(id);
+        Task task = mockUpTaskService.findById(id);
         intent.putExtra(Task.class.getSimpleName(), task);
         startActivity(intent);
     }
 
     private List<Task> getCurrentTasks(int year, int month, int day) {
-        return mockUpEventService.findByDate(year, month, day);
+        return mockUpTaskService.findByDate(year, month, day);
     }
 
     @Override
