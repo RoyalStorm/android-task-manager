@@ -465,7 +465,7 @@
         </ScrollView>
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
+    <!--<android.support.design.widget.FloatingActionButton
         android:id="@+id/add_event"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -478,5 +478,5 @@
         android:tint="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:rippleColor="@color/colorPrimary" />
+        app:rippleColor="@color/colorPrimary" />-->
 </FrameLayout>

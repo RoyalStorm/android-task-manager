@@ -153,21 +153,6 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
         });
     }
 
-    private void showTasks(View view) {
-        List<Task> currentTasks = getCurrentTasks(year, month, day);
-
-        tasksList = view.findViewById(R.id.tasks_list);
-        tasksAdapter = new TasksAdapter(getContext(), R.layout.tasks_list_item, currentTasks);
-        tasksList.setAdapter(tasksAdapter);
-        tasksList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Task task = (Task) parent.getAdapter().getItem(position);
-                editTask(task.getId());
-            }
-        });
-    }
-
     private void createTask() {
         Intent intent = new Intent(getActivity(), AddTaskActivity.class);
         Task task = new Task();
@@ -195,6 +180,21 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
 
     private List<Task> getCurrentTasks(int year, int month, int day) {
         return mockUpTaskService.findByDate(year, month, day);
+    }
+
+    private void showTasks(View view) {
+        List<Task> currentTasks = getCurrentTasks(year, month, day);
+
+        tasksList = view.findViewById(R.id.tasks_list);
+        tasksAdapter = new TasksAdapter(getContext(), R.layout.tasks_list_item, currentTasks);
+        tasksList.setAdapter(tasksAdapter);
+        tasksList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Task task = (Task) parent.getAdapter().getItem(position);
+                editTask(task.getId());
+            }
+        });
     }
 
     @Override

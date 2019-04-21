@@ -35,17 +35,6 @@ public class MonthFragment extends Fragment {
 
         calendar = view.findViewById(R.id.calendar);
 
-        tasks = getCurrentTasks(currentCalendar.get(Calendar.YEAR), currentCalendar.get(Calendar.MONTH));
-
-        for (Task task: tasks) {
-            for (int i = task.getBeginDay(); i <= task.getEndDay(); i++) {
-                GregorianCalendar currentEventCalendar = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), i);
-                events.add(new EventDay(currentEventCalendar, R.drawable.ic_star));
-            }
-        }
-
-        calendar.setEvents(events);
-
         calendar.setOnDayClickListener(eventDay -> {
             Bundle bundle = new Bundle();
 
@@ -63,7 +52,26 @@ public class MonthFragment extends Fragment {
         return view;
     }
 
+    private void showTasks() {
+        tasks = getCurrentTasks(currentCalendar.get(Calendar.YEAR), currentCalendar.get(Calendar.MONTH));
+
+        for (Task task: tasks) {
+            for (int i = task.getBeginDay(); i <= task.getEndDay(); i++) {
+                GregorianCalendar currentEventCalendar = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), i);
+                events.add(new EventDay(currentEventCalendar, R.drawable.ic_star));
+            }
+        }
+
+        calendar.setEvents(events);
+    }
+
     private List<Task> getCurrentTasks(int year, int month) {
         return mockUpTaskService.findByYearAndMonth(year, month);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        showTasks();
     }
 }

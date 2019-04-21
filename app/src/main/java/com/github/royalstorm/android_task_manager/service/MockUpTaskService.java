@@ -4,6 +4,7 @@ import com.github.royalstorm.android_task_manager.dao.Task;
 import com.github.royalstorm.android_task_manager.repository.TaskRepository;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -36,11 +37,15 @@ public class MockUpTaskService implements TaskRepository {
     public List<Task> findByDate(int year, int month, int day) {
         foundTasks = new ArrayList<>();
 
-        for (Task task : tasks)
-            if (year >= task.getBeginYear() && year <= task.getEndYear() &&
-                month >= task.getBeginMonth() && month <= task.getEndMonth() &&
-                day >= task.getBeginDay() && day <= task.getEndDay())
+        GregorianCalendar current = new GregorianCalendar(year, month, day);
+
+        for (Task task : tasks) {
+            GregorianCalendar begin = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), task.getBeginDay());
+            GregorianCalendar end = new GregorianCalendar(task.getEndYear(), task.getEndMonth(), task.getEndDay());
+
+            if (isWithinRange(begin, current, end))
                 foundTasks.add(task);
+        }
 
         return foundTasks;
     }
@@ -57,7 +62,6 @@ public class MockUpTaskService implements TaskRepository {
 
             if (isWithinRange(begin, current, end))
                 foundTasks.add(task);
-
         }
 
         return foundTasks;
@@ -67,10 +71,22 @@ public class MockUpTaskService implements TaskRepository {
     public List<Task> findByYearAndMonth(int year, int month) {
         foundTasks = new ArrayList<>();
 
-        for (Task task : tasks)
-            if (year >= task.getBeginYear() && year <= task.getEndYear() &&
-                month >= task.getBeginMonth() && month <= task.getEndMonth())
+        GregorianCalendar current = new GregorianCalendar();
+        current.set(Calendar.YEAR, year);
+        current.set(Calendar.MONTH, month);
+
+        for (Task task : tasks) {
+            GregorianCalendar begin = new GregorianCalendar();
+            begin.set(Calendar.YEAR, task.getBeginYear());
+            begin.set(Calendar.MONTH, task.getBeginMonth());
+
+            GregorianCalendar end = new GregorianCalendar();
+            end.set(Calendar.YEAR, task.getEndYear());
+            end.set(Calendar.MONTH, task.getEndMonth());
+
+            if (isWithinRange(begin, current, end))
                 foundTasks.add(task);
+        }
 
         return foundTasks;
     }
