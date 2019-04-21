@@ -55,10 +55,14 @@ public class MonthFragment extends Fragment {
     private void showTasks() {
         tasks = getCurrentTasks(currentCalendar.get(Calendar.YEAR), currentCalendar.get(Calendar.MONTH));
 
-        for (Task task: tasks) {
-            for (int i = task.getBeginDay(); i <= task.getEndDay(); i++) {
-                GregorianCalendar currentEventCalendar = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), i);
-                events.add(new EventDay(currentEventCalendar, R.drawable.ic_star));
+        for (Task task : tasks) {
+            GregorianCalendar beginEventCalendar = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), task.getBeginDay());
+            GregorianCalendar currentEventCalendar = beginEventCalendar;
+            GregorianCalendar endEventCalendar = new GregorianCalendar(task.getEndYear(), task.getEndMonth(), task.getEndDay());
+
+            while (!(currentEventCalendar.before(beginEventCalendar) || currentEventCalendar.after(endEventCalendar))) {
+                events.add(new EventDay(new GregorianCalendar(currentEventCalendar.get(Calendar.YEAR), currentEventCalendar.get(Calendar.MONTH), currentEventCalendar.get(Calendar.DAY_OF_MONTH)), R.drawable.ic_star));
+                currentEventCalendar.add(Calendar.DAY_OF_MONTH, 1);
             }
         }
 

@@ -117,7 +117,7 @@ public class MockUpTaskService implements TaskRepository {
         return counter;
     }
 
-    private boolean isWithinRange(GregorianCalendar begin, GregorianCalendar current, GregorianCalendar end) {
+    public boolean isWithinRange(GregorianCalendar begin, GregorianCalendar current, GregorianCalendar end) {
         return !(current.before(begin) || current.after(end));
     }
 }
