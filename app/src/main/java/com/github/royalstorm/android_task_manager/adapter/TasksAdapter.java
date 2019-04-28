@@ -14,8 +14,6 @@ import com.github.royalstorm.android_task_manager.dao.Task;
 
 import java.util.List;
 
-import static java.lang.String.*;
-
 public class TasksAdapter extends ArrayAdapter<Task> {
     private List<Task> tasksList;
 
@@ -44,11 +42,15 @@ public class TasksAdapter extends ArrayAdapter<Task> {
 
         Task task = tasksList.get(position);
 
-        beginTime.setText(valueOf(task.getBeginHour()) + ":" + task.getBeginMinute());
-        endTime.setText(valueOf(task.getEndHour()) + ":" + task.getEndMinute());
+        beginTime.setText(getTimeFormat(task.getBeginHour(), task.getBeginMinute()));
+        endTime.setText(getTimeFormat(task.getEndHour(), task.getEndMinute()));
         name.setText(task.getName());
         details.setText(task.getDetails());
 
         return view;
+    }
+
+    private String getTimeFormat(int hourOfDay, int minute) {
+        return hourOfDay + ":" + (minute < 10 ? ("0" + minute) : minute);
     }
 }

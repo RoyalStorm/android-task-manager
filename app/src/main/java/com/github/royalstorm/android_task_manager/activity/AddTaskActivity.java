@@ -133,8 +133,8 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         task.setEndHour(gregorianCalendar.getTime().getHours());
         task.setEndMinute(0);
 
-        taskBeginTime.setText(gregorianCalendar.getTime().getHours() + ":00");
-        taskEndTime.setText(gregorianCalendar.getTime().getHours() + ":00");
+        taskBeginTime.setText(getTimeFormat(gregorianCalendar.getTime().getHours(), 0));
+        taskEndTime.setText(getTimeFormat(gregorianCalendar.getTime().getHours(), 0));
     }
 
     private void createTask() {
@@ -232,12 +232,16 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
             task.setBeginHour(hourOfDay);
             task.setBeginMinute(minute);
 
-            taskBeginTime.setText(hourOfDay + ":" + minute);
+            taskBeginTime.setText(getTimeFormat(hourOfDay, minute));
         } else {
             task.setEndHour(hourOfDay);
             task.setEndMinute(minute);
 
-            taskEndTime.setText(hourOfDay + ":" + minute);
+            taskEndTime.setText(getTimeFormat(hourOfDay, minute));
         }
+    }
+
+    private String getTimeFormat(int hourOfDay, int minute) {
+        return hourOfDay + ":" + (minute < 10 ? ("0" + minute) : minute);
     }
 }

@@ -132,8 +132,8 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
         taskBeginDate.setText(simpleDateFormat.format(begin.getTime()));
         taskEndDate.setText(simpleDateFormat.format(end.getTime()));
 
-        taskBeginTime.setText(begin.getTime().getHours() + ":" + begin.getTime().getMinutes());
-        taskEndTime.setText(end.getTime().getHours() + ":" + end.getTime().getMinutes());
+        taskBeginTime.setText(getTimeFormat(begin.getTime().getHours(), begin.getTime().getMinutes()));
+        taskEndTime.setText(getTimeFormat(end.getTime().getHours(), end.getTime().getMinutes()));
     }
 
     private void deleteTask(int id) {
@@ -247,7 +247,7 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
             task.setBeginHour(hourOfDay);
             task.setBeginMinute(minute);
 
-            taskBeginTime.setText(hourOfDay + ":" + minute);
+            taskBeginTime.setText(getTimeFormat(hourOfDay, minute));
         } else {
             end.set(Calendar.HOUR, hourOfDay);
             end.set(Calendar.MINUTE, minute);
@@ -255,7 +255,11 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
             task.setEndHour(hourOfDay);
             task.setEndMinute(minute);
 
-            taskEndTime.setText(hourOfDay + ":" + minute);
+            taskEndTime.setText(getTimeFormat(hourOfDay, minute));
         }
+    }
+
+    private String getTimeFormat(int hourOfDay, int minute) {
+        return hourOfDay + ":" + (minute < 10 ? ("0" + minute) : minute);
     }
 }
