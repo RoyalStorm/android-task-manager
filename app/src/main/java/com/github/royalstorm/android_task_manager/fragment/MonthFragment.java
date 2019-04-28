@@ -12,6 +12,7 @@ import com.applandeo.materialcalendarview.EventDay;
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.Task;
 import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
+import com.github.royalstorm.android_task_manager.service.TaskService;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,8 +23,6 @@ public class MonthFragment extends Fragment {
     private com.applandeo.materialcalendarview.CalendarView calendar;
 
     private MockUpTaskService mockUpTaskService = new MockUpTaskService();
-
-    GregorianCalendar currentCalendar = new GregorianCalendar();
 
     private List<EventDay> events = new ArrayList<>();
     private List<Task> tasks;
@@ -53,7 +52,7 @@ public class MonthFragment extends Fragment {
     }
 
     private void showTasks() {
-        tasks = getCurrentTasks(currentCalendar.get(Calendar.YEAR), currentCalendar.get(Calendar.MONTH));
+        tasks = mockUpTaskService.findAll();
 
         for (Task task : tasks) {
             GregorianCalendar beginEventCalendar = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), task.getBeginDay());
@@ -69,13 +68,12 @@ public class MonthFragment extends Fragment {
         calendar.setEvents(events);
     }
 
-    private List<Task> getCurrentTasks(int year, int month) {
-        return mockUpTaskService.findByYearAndMonth(year, month);
-    }
-
     @Override
     public void onResume() {
         super.onResume();
         showTasks();
+
+        TaskService taskService = new TaskService();
+        taskService.retrofitTest();
     }
 }

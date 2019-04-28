@@ -68,30 +68,6 @@ public class MockUpTaskService implements TaskRepository {
     }
 
     @Override
-    public List<Task> findByYearAndMonth(int year, int month) {
-        foundTasks = new ArrayList<>();
-
-        GregorianCalendar current = new GregorianCalendar();
-        current.set(Calendar.YEAR, year);
-        current.set(Calendar.MONTH, month);
-
-        for (Task task : tasks) {
-            GregorianCalendar begin = new GregorianCalendar();
-            begin.set(Calendar.YEAR, task.getBeginYear());
-            begin.set(Calendar.MONTH, task.getBeginMonth());
-
-            GregorianCalendar end = new GregorianCalendar();
-            end.set(Calendar.YEAR, task.getEndYear());
-            end.set(Calendar.MONTH, task.getEndMonth());
-
-            if (isWithinRange(begin, current, end))
-                foundTasks.add(task);
-        }
-
-        return foundTasks;
-    }
-
-    @Override
     public void create(Task task) {
         tasks.add(task);
 
