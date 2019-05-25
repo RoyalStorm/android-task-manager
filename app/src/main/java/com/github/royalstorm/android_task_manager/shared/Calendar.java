@@ -16,7 +16,7 @@ public class Calendar extends Application {
         super.onCreate();
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.99.100")
+                .baseUrl("http://192.168.99.100/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         plannerApi = retrofit.create(PlannerApi.class);

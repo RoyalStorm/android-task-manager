@@ -7,7 +7,7 @@
     <string name="nav_header_title">Колот Юрий</string>
     <string name="nav_header_subtitle">8 (914)736 9914</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Настройки доступа</string>
 
     <string name="material_calendar_monday">Пн</string>
     <string name="material_calendar_tuesday">Вт</string>

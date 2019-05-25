@@ -4,7 +4,6 @@ import com.github.royalstorm.android_task_manager.dao.Task;
 import com.github.royalstorm.android_task_manager.repository.TaskRepository;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -95,7 +94,7 @@ public class MockUpTaskService implements TaskRepository {
         return counter;
     }
 
-    public boolean isWithinRange(GregorianCalendar begin, GregorianCalendar current, GregorianCalendar end) {
+    private boolean isWithinRange(GregorianCalendar begin, GregorianCalendar current, GregorianCalendar end) {
         return !(current.before(begin) || current.after(end));
     }
 }
