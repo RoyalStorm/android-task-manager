@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="15dp"
@@ -27,7 +28,6 @@
             android:inputType="textPersonName" />
 
         <View
-            android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="5dp"
@@ -90,6 +90,36 @@
                 android:layout_weight="1"
                 android:gravity="end|center"
                 android:textColor="@color/elegant_color"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="?android:attr/listDivider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.15"
+                app:srcCompat="@drawable/ic_repeat" />
+
+            <TextView
+                android:id="@+id/task_repeat_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="5dp"
+                android:gravity="start|center"
+                android:textColor="@color/elegant_color"
+                android:text="Не повторяется"
                 android:textSize="18sp" />
         </LinearLayout>
 

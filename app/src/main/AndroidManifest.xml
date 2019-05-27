@@ -28,9 +28,12 @@
             android:screenOrientation="portrait" />
 
         <activity android:name=".activity.TasksActivity" />
+
         <activity
             android:name=".activity.EditTaskActivity"
             android:parentActivityName=".activity.TasksActivity"
             android:screenOrientation="portrait" />
+
+        <activity android:name=".activity.RepeatModeActivity" />
     </application>
 </manifest>

@@ -74,6 +74,5 @@ public class MonthFragment extends Fragment {
         showTasks();
 
         TaskService taskService = new TaskService();
-        taskService.get();
     }
 }

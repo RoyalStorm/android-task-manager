@@ -43,6 +43,8 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     private TextView taskBeginTime;
     private TextView taskEndTime;
 
+    private TextView taskRepeatMode;
+
     private EditText taskName;
     private EditText taskDetails;
 
@@ -109,6 +111,18 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
         taskName = findViewById(R.id.task_name);
         taskDetails = findViewById(R.id.task_details);
+
+        taskRepeatMode = findViewById(R.id.task_repeat_mode);
+        taskRepeatMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddTaskActivity.this, RepeatModeActivity.class);
+
+                intent.putExtra(Task.class.getSimpleName(), task);
+
+                startActivity(intent);
+            }
+        });
     }
 
     private void initDateFields() {

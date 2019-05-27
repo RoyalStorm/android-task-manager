@@ -21,6 +21,10 @@ public class Task implements Serializable {
     private int endMonth;
     private int endYear;
 
+    private int repeatNumber;
+    private String repeatMode;
+    private int[] repeatDays;
+
     public Task() {
     }
 
@@ -39,6 +43,26 @@ public class Task implements Serializable {
         this.endDay = endDay;
         this.endMonth = endMonth;
         this.endYear = endYear;
+    }
+
+    public Task(int id, String owner, String name, String details, int beginMinute, int beginHour, int beginDay, int beginMonth, int beginYear, int endMinute, int endHour, int endDay, int endMonth, int endYear, int repeatNumber, String repeatMode, int[] repeatDays) {
+        this.id = id;
+        this.owner = owner;
+        this.name = name;
+        this.details = details;
+        this.beginMinute = beginMinute;
+        this.beginHour = beginHour;
+        this.beginDay = beginDay;
+        this.beginMonth = beginMonth;
+        this.beginYear = beginYear;
+        this.endMinute = endMinute;
+        this.endHour = endHour;
+        this.endDay = endDay;
+        this.endMonth = endMonth;
+        this.endYear = endYear;
+        this.repeatNumber = repeatNumber;
+        this.repeatMode = repeatMode;
+        this.repeatDays = repeatDays;
     }
 
     public int getId() {
@@ -151,5 +175,29 @@ public class Task implements Serializable {
 
     public void setEndYear(int endYear) {
         this.endYear = endYear;
+    }
+
+    public int getRepeatNumber() {
+        return repeatNumber;
+    }
+
+    public void setRepeatNumber(int repeatNumber) {
+        this.repeatNumber = repeatNumber;
+    }
+
+    public String getRepeatMode() {
+        return repeatMode;
+    }
+
+    public void setRepeatMode(String repeatMode) {
+        this.repeatMode = repeatMode;
+    }
+
+    public int[] getRepeatDays() {
+        return repeatDays;
+    }
+
+    public void setRepeatDays(int[] repeatDays) {
+        this.repeatDays = repeatDays;
     }
 }
