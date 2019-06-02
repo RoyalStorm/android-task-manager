@@ -1,20 +1,46 @@
 package com.github.royalstorm.android_task_manager.dao;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.Arrays;
+
 public class Event {
+    @SerializedName("created_at")
+    @Expose
     private String createdAt;
+    @SerializedName("details")
+    @Expose
     private String details;
 
+    @SerializedName("id")
+    @Expose
     private int id;
 
+    @SerializedName("location")
+    @Expose
     private String location;
+    @SerializedName("name")
+    @Expose
     private String name;
 
+    @SerializedName("owner_id")
+    @Expose
     private int ownerId;
 
+    @SerializedName("patterns")
+    @Expose
     private EventPattern[] patterns;
 
+    @SerializedName("status")
+    @Expose
     private String status;
+    @SerializedName("updated_at")
+    @Expose
     private String updatedAt;
+
+    public Event() {
+    }
 
     public Event(String createdAt, String details, String location, String name, int ownerId, EventPattern[] patterns, String status, String updatedAt) {
         this.createdAt = createdAt;
@@ -97,5 +123,20 @@ public class Event {
 
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "createdAt='" + createdAt + '\'' +
+                ", details='" + details + '\'' +
+                ", id=" + id +
+                ", location='" + location + '\'' +
+                ", name='" + name + '\'' +
+                ", ownerId=" + ownerId +
+                ", patterns=" + Arrays.toString(patterns) +
+                ", status='" + status + '\'' +
+                ", updatedAt='" + updatedAt + '\'' +
+                '}';
     }
 }
