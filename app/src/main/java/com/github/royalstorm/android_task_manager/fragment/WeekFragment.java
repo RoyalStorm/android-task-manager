@@ -53,14 +53,15 @@ public class WeekFragment extends Fragment {
         gregorianCalendar.setFirstDayOfWeek(Calendar.MONDAY);
         gregorianCalendar.set(Calendar.DAY_OF_WEEK, gregorianCalendar.getFirstDayOfWeek());
 
+        //This "if" maybe useless cause bundle local variable
         if (bundle != null) {
             day = bundle.getInt("day");
             month = bundle.getInt("month");
             year = bundle.getInt("year");
         } else {
             day = gregorianCalendar.get(Calendar.DAY_OF_MONTH);
-            month = new GregorianCalendar().get(Calendar.MONTH);
-            year = new GregorianCalendar().get(Calendar.YEAR);
+            month = gregorianCalendar.get(Calendar.MONTH);
+            year = gregorianCalendar.get(Calendar.YEAR);
         }
 
         gregorianCalendar.set(year, month, day);

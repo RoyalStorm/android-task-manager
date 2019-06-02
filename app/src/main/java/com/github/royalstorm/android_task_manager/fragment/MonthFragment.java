@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import com.applandeo.materialcalendarview.EventDay;
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.Task;
+import com.github.royalstorm.android_task_manager.service.EventResponseService;
 import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
-import com.github.royalstorm.android_task_manager.service.TaskService;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -73,6 +73,7 @@ public class MonthFragment extends Fragment {
         super.onResume();
         showTasks();
 
-        TaskService taskService = new TaskService();
+        EventResponseService eventResponseService = new EventResponseService();
+        eventResponseService.getAll();
     }
 }
