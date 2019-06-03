@@ -41,5 +41,5 @@ public interface EventRepository {
             "X-Firebase-Auth: serega_mem"
     })
     @DELETE("/api/v1/events/{id}")
-    Call<Integer> delete(@Path("id") long id);
+    Call<Void> delete(@Path("id") int id);
 }

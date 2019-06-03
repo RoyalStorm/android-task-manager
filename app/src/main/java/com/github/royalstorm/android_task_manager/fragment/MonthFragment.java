@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,14 @@ import android.view.ViewGroup;
 import com.applandeo.materialcalendarview.EventDay;
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.Event;
+import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dao.Task;
 import com.github.royalstorm.android_task_manager.service.EventService;
 import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -76,15 +81,21 @@ public class MonthFragment extends Fragment {
 
         EventService eventService = new EventService();
 
-        Event event = new Event();
+        EventPattern[] eventPatterns = new EventPattern[0];
 
-        event.setDetails("First test");
-        event.setName("Serega mem");
-        event.setOwnerId(0);
-        event.setLocation("string");
-        event.setPatterns(null);
+        Event event = new Event("FROM ANDROID", "HOME", "TEST", 1, eventPatterns, "TEST");
 
-        eventService.save(event);
+        /*Gson gson = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .setLenient()
+                .create();
+        String json = gson.toJson(event);
+
+        Log.d("____________Body", json);*/
+
         eventService.getAll();
+        eventService.save(event);
+        //eventService.update(12, event);
+        //eventService.delete(15);
     }
 }

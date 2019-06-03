@@ -9,31 +9,23 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitInstance {
     private final static String BASE_URL = "http://planner.skillmasters.ga/";
-    private Retrofit retrofit = null;
 
-    /*public static Retrofit getInstance() {
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
+    private Retrofit retrofit;
 
-        if (retrofit == null)
-            retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .build();
-
-        return retrofit;
-    }*/
+    private Gson gson = new GsonBuilder()
+            .excludeFieldsWithoutExposeAnnotation()
+            .setLenient()
+            .create();
 
     public RetrofitInstance() {
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
-
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
+    }
+
+    public Gson getGson() {
+        return gson;
     }
 
     public EventRepository getEventRepository() {

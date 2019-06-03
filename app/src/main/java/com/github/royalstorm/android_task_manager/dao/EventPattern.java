@@ -50,6 +50,9 @@ public class EventPattern {
     @Expose
     private String year;
 
+    public EventPattern() {
+    }
+
     public EventPattern(String createdAt, String day, int duration, String endedAt, String hour, String minute, String month, String startedAt, int type, String updatedAt, String weekday, String year) {
         this.createdAt = createdAt;
         this.day = day;
