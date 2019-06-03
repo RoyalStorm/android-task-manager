@@ -1,7 +1,6 @@
 package com.github.royalstorm.android_task_manager.shared;
 
 import com.github.royalstorm.android_task_manager.repository.EventRepository;
-import com.github.royalstorm.android_task_manager.repository.EventResponseRepository;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -35,10 +34,6 @@ public class RetrofitInstance {
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
-    }
-
-    public EventResponseRepository getEventResponseRepository() {
-        return retrofit.create(EventResponseRepository.class);
     }
 
     public EventRepository getEventRepository() {

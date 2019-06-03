@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import com.applandeo.materialcalendarview.EventDay;
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.Event;
 import com.github.royalstorm.android_task_manager.dao.Task;
-import com.github.royalstorm.android_task_manager.service.EventResponseService;
 import com.github.royalstorm.android_task_manager.service.EventService;
 import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
 
@@ -76,16 +74,17 @@ public class MonthFragment extends Fragment {
         super.onResume();
         showTasks();
 
-        EventResponseService eventResponseService = new EventResponseService();
-        eventResponseService.getAll();
-
         EventService eventService = new EventService();
+
         Event event = new Event();
 
         event.setDetails("First test");
         event.setName("Serega mem");
-        Log.d("_______Before ",event.toString());
+        event.setOwnerId(0);
+        event.setLocation("string");
+        event.setPatterns(null);
 
         eventService.save(event);
+        eventService.getAll();
     }
 }

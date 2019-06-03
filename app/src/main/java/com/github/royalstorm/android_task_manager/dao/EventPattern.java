@@ -1,24 +1,53 @@
 package com.github.royalstorm.android_task_manager.dao;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class EventPattern {
+    @SerializedName("created_at")
+    @Expose
     private String createdAt;
+    @SerializedName("day")
+    @Expose
     private String day;
 
+    @SerializedName("duration")
+    @Expose
     private int duration;
 
+    @SerializedName("ended_at")
+    @Expose
     private String endedAt;
+    @SerializedName("hour")
+    @Expose
     private String hour;
 
+    @SerializedName("id")
+    @Expose
     private int id;
 
+    @SerializedName("minute")
+    @Expose
     private String minute;
+    @SerializedName("month")
+    @Expose
     private String month;
+    @SerializedName("started_at")
+    @Expose
     private String startedAt;
 
+    @SerializedName("type")
+    @Expose
     private int type;
 
+    @SerializedName("updated_at")
+    @Expose
     private String updatedAt;
+    @SerializedName("weekday")
+    @Expose
     private String weekday;
+    @SerializedName("year")
+    @Expose
     private String year;
 
     public EventPattern(String createdAt, String day, int duration, String endedAt, String hour, String minute, String month, String startedAt, int type, String updatedAt, String weekday, String year) {

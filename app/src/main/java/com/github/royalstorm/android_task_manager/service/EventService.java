@@ -13,13 +13,25 @@ import retrofit2.Response;
 public class EventService {
     private RetrofitInstance retrofitInstance = new RetrofitInstance();
 
+    public void getAll() {
+        retrofitInstance.getEventRepository().getAll().enqueue(new Callback<EventResponse>() {
+            @Override
+            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+                Log.d("Status: ", response.code() + "");
+                Log.d("Body: ", response.body().toString());
+            }
+
+            @Override
+            public void onFailure(Call<EventResponse> call, Throwable throwable) {
+                Log.d("Error: ", throwable.getMessage().toString());
+            }
+        });
+    }
+
     public void save(Event event) {
         retrofitInstance.getEventRepository().save(event).enqueue(new Callback<EventResponse>() {
             @Override
             public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
-                if (response.isSuccessful()) {
-                    Log.d("_________Response body", response.body().toString());
-                }
                 Log.d("_________Status", response.code() + "");
             }
 
