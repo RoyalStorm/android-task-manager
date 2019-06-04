@@ -20,6 +20,7 @@ import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.Task;
 import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.TimePickerFragment;
+import com.github.royalstorm.android_task_manager.service.EventService;
 import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
 
 import java.text.SimpleDateFormat;
@@ -29,6 +30,7 @@ import java.util.Locale;
 
 public class EditTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private MockUpTaskService mockUpTaskService = new MockUpTaskService();
+    private EventService eventService = new EventService();
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM yyyy (E)", Locale.getDefault());
 
@@ -138,6 +140,7 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
 
     private void deleteTask(int id) {
         mockUpTaskService.delete(id);
+        //eventService.delete(id);
 
         Intent intent = new Intent();
         setResult(RESULT_OK, intent);

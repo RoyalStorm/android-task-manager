@@ -3,7 +3,7 @@ package com.github.royalstorm.android_task_manager.service;
 import android.util.Log;
 
 import com.github.royalstorm.android_task_manager.dao.Event;
-import com.github.royalstorm.android_task_manager.dao.EventResponse;
+import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.shared.RetrofitInstance;
 
 import retrofit2.Call;

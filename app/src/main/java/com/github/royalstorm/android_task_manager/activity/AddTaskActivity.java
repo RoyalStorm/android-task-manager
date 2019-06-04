@@ -17,9 +17,12 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.github.royalstorm.android_task_manager.R;
+import com.github.royalstorm.android_task_manager.dao.Event;
+import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dao.Task;
 import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.TimePickerFragment;
+import com.github.royalstorm.android_task_manager.service.EventService;
 import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
 
 import java.text.SimpleDateFormat;
@@ -29,6 +32,7 @@ import java.util.Locale;
 
 public class AddTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private MockUpTaskService mockUpEventService = new MockUpTaskService();
+    private EventService eventService = new EventService();
 
     private GregorianCalendar gregorianCalendar;
 
@@ -37,6 +41,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     private DialogFragment picker;
 
     private Task task;
+    private Event event = new Event();
 
     private TextView taskBeginDate;
     private TextView taskEndDate;
@@ -169,13 +174,26 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
         Intent intent = new Intent();
 
-        //Set other fields and add to mock up
         task.setId(MockUpTaskService.getCounter());
+
         task.setOwner("Me");
+        event.setOwnerId(0);
+
         task.setName(taskName.getText().toString());
+        event.setName(taskName.getText().toString());
+
+        event.setLocation("Testing");
+
         task.setDetails(taskDetails.getText().toString());
+        event.setDetails(taskDetails.getText().toString());
 
         mockUpEventService.create(task);
+
+        EventPattern[] eventPatterns = new EventPattern[0];
+        event.setPatterns(eventPatterns);
+        event.setStatus("IDK");
+
+        //eventService.save(event);
 
         setResult(RESULT_OK, intent);
         finish();

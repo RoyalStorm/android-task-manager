@@ -1,5 +1,6 @@
-package com.github.royalstorm.android_task_manager.dao;
+package com.github.royalstorm.android_task_manager.dto;
 
+import com.github.royalstorm.android_task_manager.dao.Event;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

@@ -1,7 +1,7 @@
 package com.github.royalstorm.android_task_manager.repository;
 
 import com.github.royalstorm.android_task_manager.dao.Event;
-import com.github.royalstorm.android_task_manager.dao.EventResponse;
+import com.github.royalstorm.android_task_manager.dto.EventResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
