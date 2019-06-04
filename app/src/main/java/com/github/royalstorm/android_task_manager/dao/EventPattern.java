@@ -12,7 +12,7 @@ public class EventPattern {
     private int duration;
 
     @Expose
-    private String endedAt;
+    private Long endedAt;
     @Expose
     private String hour;
 
@@ -24,7 +24,7 @@ public class EventPattern {
     @Expose
     private String month;
     @Expose
-    private String startedAt;
+    private Long startedAt;
 
     @Expose
     private int type;
@@ -39,7 +39,7 @@ public class EventPattern {
     public EventPattern() {
     }
 
-    public EventPattern(String day, int duration, String endedAt, String hour, String minute, String month, String startedAt, int type, String weekday, String year) {
+    public EventPattern(String day, int duration, Long endedAt, String hour, String minute, String month, Long startedAt, int type, String weekday, String year) {
         this.day = day;
         this.duration = duration;
         this.endedAt = endedAt;
@@ -54,10 +54,6 @@ public class EventPattern {
 
     public String getCreatedAt() {
         return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
     }
 
     public String getDay() {
@@ -76,11 +72,11 @@ public class EventPattern {
         this.duration = duration;
     }
 
-    public String getEndedAt() {
+    public Long getEndedAt() {
         return endedAt;
     }
 
-    public void setEndedAt(String endedAt) {
+    public void setEndedAt(Long endedAt) {
         this.endedAt = endedAt;
     }
 
@@ -94,10 +90,6 @@ public class EventPattern {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getMinute() {
@@ -116,11 +108,11 @@ public class EventPattern {
         this.month = month;
     }
 
-    public String getStartedAt() {
+    public Long getStartedAt() {
         return startedAt;
     }
 
-    public void setStartedAt(String startedAt) {
+    public void setStartedAt(Long startedAt) {
         this.startedAt = startedAt;
     }
 
@@ -134,10 +126,6 @@ public class EventPattern {
 
     public String getUpdatedAt() {
         return updatedAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public String getWeekday() {

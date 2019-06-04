@@ -42,10 +42,6 @@ public class Event {
         return createdAt;
     }
 
-    public void setCreatedAt(Long createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public String getDetails() {
         return details;
     }
@@ -56,10 +52,6 @@ public class Event {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getLocation() {
@@ -104,9 +96,5 @@ public class Event {
 
     public Long getUpdatedAt() {
         return updatedAt;
-    }
-
-    public void setUpdatedAt(Long updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,15 +24,15 @@ import com.github.royalstorm.android_task_manager.dao.Task;
 import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.TimePickerFragment;
 import com.github.royalstorm.android_task_manager.service.EventService;
-import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class AddTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
-    private MockUpTaskService mockUpEventService = new MockUpTaskService();
     private EventService eventService = new EventService();
 
     private GregorianCalendar gregorianCalendar;
@@ -42,12 +43,12 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
     private Task task;
     private Event event = new Event();
+    private EventPattern eventPattern = new EventPattern();
 
     private TextView taskBeginDate;
     private TextView taskEndDate;
     private TextView taskBeginTime;
     private TextView taskEndTime;
-
     private TextView taskRepeatMode;
 
     private EditText taskName;
@@ -118,15 +119,12 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         taskDetails = findViewById(R.id.task_details);
 
         taskRepeatMode = findViewById(R.id.task_repeat_mode);
-        taskRepeatMode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AddTaskActivity.this, RepeatModeActivity.class);
+        taskRepeatMode.setOnClickListener(v -> {
+            Intent intent = new Intent(AddTaskActivity.this, RepeatModeActivity.class);
 
-                intent.putExtra(Task.class.getSimpleName(), task);
+            intent.putExtra(Task.class.getSimpleName(), task);
 
-                startActivity(intent);
-            }
+            startActivity(intent);
         });
     }
 
@@ -165,35 +163,41 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
             GregorianCalendar begin = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), task.getBeginDay(), task.getBeginHour(), task.getBeginMinute());
             GregorianCalendar end = new GregorianCalendar(task.getEndYear(), task.getEndMonth(), task.getEndDay(), task.getEndHour(), task.getEndMinute());
 
+            Log.d("Begin Time", dateToTimestamp(begin) + "");
+            Log.d("End Time", dateToTimestamp(end) + "");
+
             if (begin.after(end)) {
                 Snackbar.make(getWindow().getDecorView().
                         getRootView(), "Событие не может завершиться раньше, чем начаться", Snackbar.LENGTH_LONG).show();
                 return;
             }
+
+            eventPattern.setStartedAt(dateToTimestamp(begin));
+            eventPattern.setEndedAt(dateToTimestamp(end));
+            eventPattern.setMinute("*");
+            eventPattern.setHour("*");
+            eventPattern.setDay("*");
+            eventPattern.setMonth("*");
+            eventPattern.setWeekday("*");
+            eventPattern.setYear("*");
+            eventPattern.setType(0);
+            eventPattern.setDuration(8800);
         }
 
         Intent intent = new Intent();
 
-        task.setId(MockUpTaskService.getCounter());
-
-        task.setOwner("Me");
         event.setOwnerId(0);
+        event.setName(taskName.getText().toString().trim());
+        event.setDetails(taskDetails.getText().toString().trim());
+        event.setLocation("Неизвестно");
+        event.setStatus("С паттерном");
 
-        task.setName(taskName.getText().toString());
-        event.setName(taskName.getText().toString());
+        EventPattern[] eventPatterns = new EventPattern[1];
+        eventPatterns[0] = eventPattern;
 
-        event.setLocation("Testing");
-
-        task.setDetails(taskDetails.getText().toString());
-        event.setDetails(taskDetails.getText().toString());
-
-        mockUpEventService.create(task);
-
-        EventPattern[] eventPatterns = new EventPattern[0];
         event.setPatterns(eventPatterns);
-        event.setStatus("IDK");
 
-        //eventService.save(event);
+        eventService.save(event);
 
         setResult(RESULT_OK, intent);
         finish();
@@ -275,5 +279,9 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
     private String getTimeFormat(int hourOfDay, int minute) {
         return hourOfDay + ":" + (minute < 10 ? ("0" + minute) : minute);
+    }
+
+    private Long dateToTimestamp(GregorianCalendar gregorianCalendar) {
+        return new Timestamp(gregorianCalendar.getTimeInMillis()).getTime();
     }
 }
