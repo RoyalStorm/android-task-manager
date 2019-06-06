@@ -74,16 +74,5 @@ public class MonthFragment extends Fragment {
     public void onResume() {
         super.onResume();
         showTasks();
-
-        EventService eventService = new EventService();
-
-        EventPattern[] eventPatterns = new EventPattern[0];
-
-        Event event = new Event("ANOTHER ONE ANDROID", "HOME", "TEST", 1, eventPatterns, "TEST");
-
-        //eventService.getAll();
-        //eventService.save(event);
-        //eventService.update(12, event);
-        //eventService.delete(15);
     }
 }

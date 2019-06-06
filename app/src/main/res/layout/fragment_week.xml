@@ -26,7 +26,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="4.2"
-                    android:background="@drawable/navigate_prev"
+                    android:background="@drawable/ic_navigate_before"
                     android:gravity="center" />
 
                 <TextView
@@ -44,7 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="4.2"
-                    android:background="@drawable/navigate_next"
+                    android:background="@drawable/ic_navigate_next"
                     android:gravity="center" />
             </LinearLayout>
 

@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view"
     app:itemIconTint="@color/burgundy"
-    app:itemTextColor="@color/burgundy">
+    app:itemTextColor="@color/burgundy"
+    tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
         <item
@@ -22,5 +22,14 @@
             android:icon="@drawable/ic_month"
             android:title="Месяц" />
     </group>
+
+    <item android:title="Настройки прав доступа">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_sharing"
+                android:title="Права доступа" />
+        </menu>
+    </item>
 
 </menu>
