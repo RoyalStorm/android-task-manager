@@ -32,11 +32,28 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class AddTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+    @BindView(R.id.task_name)
+    EditText taskName;
+    @BindView(R.id.task_details)
+    EditText taskDetails;
+
+    @BindView(R.id.task_begin_date)
+    TextView taskBeginDate;
+    @BindView(R.id.task_end_date)
+    TextView taskEndDate;
+    @BindView(R.id.task_begin_time)
+    TextView taskBeginTime;
+    @BindView(R.id.task_end_time)
+    TextView taskEndTime;
+    @BindView(R.id.task_repeat_mode)
+    TextView taskRepeatMode;
+
     private EventService eventService = new EventService();
-
     private Event event = new Event();
-
     private EventPattern eventPattern = new EventPattern();
 
     private GregorianCalendar gregorianCalendar;
@@ -46,15 +63,6 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     private DialogFragment picker;
 
     private Task task;
-
-    private TextView taskBeginDate;
-    private TextView taskEndDate;
-    private TextView taskBeginTime;
-    private TextView taskEndTime;
-    private TextView taskRepeatMode;
-
-    private EditText taskName;
-    private EditText taskDetails;
 
     private boolean IS_BEGIN_DATE = true;
     private boolean IS_BEGIN_TIME = true;
@@ -109,6 +117,8 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
         setTitle("Новое событие");
 
+        ButterKnife.bind(this);
+
         initDateFields();
 
         setTaskBeginDateListener();
@@ -116,9 +126,6 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
         setTaskEndDateListener();
         setTaskEndTime();
-
-        taskName = findViewById(R.id.task_name);
-        taskDetails = findViewById(R.id.task_details);
 
         taskRepeatMode = findViewById(R.id.task_repeat_mode);
         taskRepeatMode.setOnClickListener(v -> {
@@ -131,11 +138,6 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     }
 
     private void initDateFields() {
-        taskBeginDate = findViewById(R.id.task_begin_date);
-        taskEndDate = findViewById(R.id.task_end_date);
-        taskBeginTime = findViewById(R.id.task_begin_time);
-        taskEndTime = findViewById(R.id.task_end_time);
-
         Bundle bundle = getIntent().getExtras();
         task = (Task) bundle.getSerializable(Task.class.getSimpleName());
 
@@ -198,7 +200,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         Log.d("___________", event.toString());
         Log.d("___________", eventPattern.toString());
 
-        EventResponse response = eventService.save(event);
+        eventService.save(event);
 
         setResult(RESULT_OK, intent);
         finish();
