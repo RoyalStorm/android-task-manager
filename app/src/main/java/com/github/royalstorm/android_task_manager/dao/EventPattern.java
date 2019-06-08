@@ -3,34 +3,27 @@ package com.github.royalstorm.android_task_manager.dao;
 import com.google.gson.annotations.Expose;
 
 public class EventPattern {
-    @Expose
+    /*Readonly fields*/
+    private int id;
     private String createdAt;
+    private String updatedAt;
+
     @Expose
     private String day;
-
     @Expose
     private int duration;
-
     @Expose
     private Long endedAt;
     @Expose
     private String hour;
-
-    @Expose
-    private int id;
-
     @Expose
     private String minute;
     @Expose
     private String month;
     @Expose
     private Long startedAt;
-
     @Expose
     private int type;
-
-    @Expose
-    private String updatedAt;
     @Expose
     private String weekday;
     @Expose
@@ -142,5 +135,24 @@ public class EventPattern {
 
     public void setYear(String year) {
         this.year = year;
+    }
+
+    @Override
+    public String toString() {
+        return "EventPattern{" +
+                "id=" + id +
+                ", createdAt='" + createdAt + '\'' +
+                ", updatedAt='" + updatedAt + '\'' +
+                ", day='" + day + '\'' +
+                ", duration=" + duration +
+                ", endedAt=" + endedAt +
+                ", hour='" + hour + '\'' +
+                ", minute='" + minute + '\'' +
+                ", month='" + month + '\'' +
+                ", startedAt=" + startedAt +
+                ", type=" + type +
+                ", weekday='" + weekday + '\'' +
+                ", year='" + year + '\'' +
+                '}';
     }
 }

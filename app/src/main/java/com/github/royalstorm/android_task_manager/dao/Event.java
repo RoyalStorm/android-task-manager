@@ -2,29 +2,26 @@ package com.github.royalstorm.android_task_manager.dao;
 
 import com.google.gson.annotations.Expose;
 
+import java.util.Arrays;
+
 public class Event {
-    @Expose
+    /*Readonly fields*/
+    private int id;
     private Long createdAt;
+    private Long updatedAt;
+
     @Expose
     private String details;
-
-    private int id;
-
     @Expose
     private String location;
     @Expose
     private String name;
-
     @Expose
     private int ownerId;
-
     @Expose
     private EventPattern[] patterns;
-
     @Expose
     private String status;
-    @Expose
-    private Long updatedAt;
 
     public Event() {
     }
@@ -96,5 +93,20 @@ public class Event {
 
     public Long getUpdatedAt() {
         return updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "createdAt=" + createdAt +
+                ", details='" + details + '\'' +
+                ", id=" + id +
+                ", location='" + location + '\'' +
+                ", name='" + name + '\'' +
+                ", ownerId=" + ownerId +
+                ", patterns=" + Arrays.toString(patterns) +
+                ", status='" + status + '\'' +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }

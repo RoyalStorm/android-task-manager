@@ -13,59 +13,69 @@ import retrofit2.Response;
 public class EventService {
     private RetrofitInstance retrofitInstance = new RetrofitInstance();
 
-    public void getAll() {
+    private EventResponse eventResponse;
+
+    public EventResponse getAll() {
         retrofitInstance.getEventRepository().getAll().enqueue(new Callback<EventResponse>() {
             @Override
             public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
-                Log.d("___GET Status", response.code() + "");
-                Log.d("___GET Body", response.body().toString());
+                if (response.isSuccessful())
+                    eventResponse = response.body();
+                else eventResponse = null;
             }
 
             @Override
             public void onFailure(Call<EventResponse> call, Throwable throwable) {
-                Log.d("___GET Error", throwable.getMessage());
             }
         });
+
+        return eventResponse;
     }
 
-    public void save(Event event) {
+    public EventResponse save(Event event) {
         retrofitInstance.getEventRepository().save(event).enqueue(new Callback<EventResponse>() {
             @Override
             public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
-                Log.d("___POST Response code", response.code() + "");
+                Log.d("___POST Response", response.code() + "");
+
+                if (response.isSuccessful())
+                    eventResponse = response.body();
+                else eventResponse = null;
             }
 
             @Override
             public void onFailure(Call<EventResponse> call, Throwable throwable) {
-                Log.d("___POST Error", throwable.getMessage());
             }
         });
+
+        return eventResponse;
     }
 
-    public void update(int id, Event event) {
+    public EventResponse update(int id, Event event) {
         retrofitInstance.getEventRepository().update(id, event).enqueue(new Callback<EventResponse>() {
             @Override
             public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
-                Log.d("___PUT Response code", response.code() + "");
+                if (response.isSuccessful())
+                    eventResponse = response.body();
+                else eventResponse = null;
             }
 
             @Override
             public void onFailure(Call<EventResponse> call, Throwable throwable) {
-                Log.d("___PUT Error", throwable.getMessage());
             }
         });
+
+        return eventResponse;
     }
 
     public void delete(int id) {
         retrofitInstance.getEventRepository().delete(id).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Log.d("___DELETE Response code", response.code() + "");
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable throwable) {
-                Log.d("___DELETE Error", throwable.getMessage());
             }
         });
     }

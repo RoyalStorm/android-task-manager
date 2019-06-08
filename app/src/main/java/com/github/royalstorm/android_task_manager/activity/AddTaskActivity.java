@@ -21,6 +21,7 @@ import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.Event;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dao.Task;
+import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.TimePickerFragment;
 import com.github.royalstorm.android_task_manager.service.EventService;
@@ -28,12 +29,15 @@ import com.github.royalstorm.android_task_manager.service.EventService;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class AddTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private EventService eventService = new EventService();
+
+    private Event event = new Event();
+
+    private EventPattern eventPattern = new EventPattern();
 
     private GregorianCalendar gregorianCalendar;
 
@@ -42,8 +46,6 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     private DialogFragment picker;
 
     private Task task;
-    private Event event = new Event();
-    private EventPattern eventPattern = new EventPattern();
 
     private TextView taskBeginDate;
     private TextView taskEndDate;
@@ -191,13 +193,12 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         event.setDetails(taskDetails.getText().toString().trim());
         event.setLocation("Неизвестно");
         event.setStatus("С паттерном");
+        event.setPatterns(new EventPattern[]{eventPattern});
 
-        EventPattern[] eventPatterns = new EventPattern[1];
-        eventPatterns[0] = eventPattern;
+        Log.d("___________", event.toString());
+        Log.d("___________", eventPattern.toString());
 
-        event.setPatterns(eventPatterns);
-
-        eventService.save(event);
+        EventResponse response = eventService.save(event);
 
         setResult(RESULT_OK, intent);
         finish();
