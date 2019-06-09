@@ -188,12 +188,11 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         event.setDetails(taskDetails.getText().toString().trim());
         event.setLocation("Неизвестно");
         event.setStatus("С датами в таймстемпе");
-        event.setPatterns(new EventPattern[]{eventPattern});
 
         Log.d("___________", RetrofitInstance.getGson().toJson(event));
         Log.d("___________", RetrofitInstance.getGson().toJson(event));
 
-        eventService.save(event);
+        //eventService.save(event);
 
         setResult(RESULT_OK, intent);
         finish();

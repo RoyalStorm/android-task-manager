@@ -70,17 +70,15 @@ public class EventPatternService {
         return eventPatternResponse;
     }
 
-    public EventPatternResponse delete(int id) {
-        retrofitInstance.getEventPatternRepository().delete(id).enqueue(new Callback<EventPatternResponse>() {
+    public void delete(int id) {
+        retrofitInstance.getEventPatternRepository().delete(id).enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
+            public void onResponse(Call<Void> call, Response<Void> response) {
             }
 
             @Override
-            public void onFailure(Call<EventPatternResponse> call, Throwable throwable) {
+            public void onFailure(Call<Void> call, Throwable throwable) {
             }
         });
-
-        return eventPatternResponse;
     }
 }
