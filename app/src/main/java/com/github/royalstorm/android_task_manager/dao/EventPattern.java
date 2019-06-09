@@ -9,52 +9,41 @@ public class EventPattern {
     private String updatedAt;
 
     @Expose
-    private String day;
-    @Expose
     private int duration;
     @Expose
-    private Long endedAt;
+    private String endedAt;
     @Expose
-    private String hour;
+    private String exrule;
     @Expose
-    private String minute;
+    private String rrule;
     @Expose
-    private String month;
-    @Expose
-    private Long startedAt;
+    private String startedAt;
     @Expose
     private int type;
-    @Expose
-    private String weekday;
-    @Expose
-    private String year;
 
+    /*Default constructor*/
     public EventPattern() {
     }
 
-    public EventPattern(String day, int duration, Long endedAt, String hour, String minute, String month, Long startedAt, int type, String weekday, String year) {
-        this.day = day;
+    public EventPattern(int duration, String endedAt, String exrule, String rrule, String startedAt, int type) {
         this.duration = duration;
         this.endedAt = endedAt;
-        this.hour = hour;
-        this.minute = minute;
-        this.month = month;
+        this.exrule = exrule;
+        this.rrule = rrule;
         this.startedAt = startedAt;
         this.type = type;
-        this.weekday = weekday;
-        this.year = year;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getCreatedAt() {
         return createdAt;
     }
 
-    public String getDay() {
-        return day;
-    }
-
-    public void setDay(String day) {
-        this.day = day;
+    public String getUpdatedAt() {
+        return updatedAt;
     }
 
     public int getDuration() {
@@ -65,47 +54,35 @@ public class EventPattern {
         this.duration = duration;
     }
 
-    public Long getEndedAt() {
+    public String getEndedAt() {
         return endedAt;
     }
 
-    public void setEndedAt(Long endedAt) {
+    public void setEndedAt(String endedAt) {
         this.endedAt = endedAt;
     }
 
-    public String getHour() {
-        return hour;
+    public String getExrule() {
+        return exrule;
     }
 
-    public void setHour(String hour) {
-        this.hour = hour;
+    public void setExrule(String exrule) {
+        this.exrule = exrule;
     }
 
-    public int getId() {
-        return id;
+    public String getRrule() {
+        return rrule;
     }
 
-    public String getMinute() {
-        return minute;
+    public void setRrule(String rrule) {
+        this.rrule = rrule;
     }
 
-    public void setMinute(String minute) {
-        this.minute = minute;
-    }
-
-    public String getMonth() {
-        return month;
-    }
-
-    public void setMonth(String month) {
-        this.month = month;
-    }
-
-    public Long getStartedAt() {
+    public String getStartedAt() {
         return startedAt;
     }
 
-    public void setStartedAt(Long startedAt) {
+    public void setStartedAt(String startedAt) {
         this.startedAt = startedAt;
     }
 
@@ -115,44 +92,5 @@ public class EventPattern {
 
     public void setType(int type) {
         this.type = type;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public String getWeekday() {
-        return weekday;
-    }
-
-    public void setWeekday(String weekday) {
-        this.weekday = weekday;
-    }
-
-    public String getYear() {
-        return year;
-    }
-
-    public void setYear(String year) {
-        this.year = year;
-    }
-
-    @Override
-    public String toString() {
-        return "EventPattern{" +
-                "id=" + id +
-                ", createdAt='" + createdAt + '\'' +
-                ", updatedAt='" + updatedAt + '\'' +
-                ", day='" + day + '\'' +
-                ", duration=" + duration +
-                ", endedAt=" + endedAt +
-                ", hour='" + hour + '\'' +
-                ", minute='" + minute + '\'' +
-                ", month='" + month + '\'' +
-                ", startedAt=" + startedAt +
-                ", type=" + type +
-                ", weekday='" + weekday + '\'' +
-                ", year='" + year + '\'' +
-                '}';
     }
 }

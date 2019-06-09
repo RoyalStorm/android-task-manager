@@ -21,12 +21,11 @@ import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.Event;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dao.Task;
-import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.TimePickerFragment;
 import com.github.royalstorm.android_task_manager.service.EventService;
+import com.github.royalstorm.android_task_manager.shared.RetrofitInstance;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -167,8 +166,8 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
             GregorianCalendar begin = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), task.getBeginDay(), task.getBeginHour(), task.getBeginMinute());
             GregorianCalendar end = new GregorianCalendar(task.getEndYear(), task.getEndMonth(), task.getEndDay(), task.getEndHour(), task.getEndMinute());
 
-            Log.d("Begin Time", dateToTimestamp(begin) + "");
-            Log.d("End Time", dateToTimestamp(end) + "");
+            Log.d("Begin Time", dateToTimestamp(begin.getTimeInMillis()));
+            Log.d("End Time", dateToTimestamp(end.getTimeInMillis()));
 
             if (begin.after(end)) {
                 Snackbar.make(getWindow().getDecorView().
@@ -176,8 +175,8 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
                 return;
             }
 
-            eventPattern.setStartedAt(dateToTimestamp(begin));
-            eventPattern.setEndedAt(dateToTimestamp(end));
+            eventPattern.setStartedAt(dateToTimestamp(begin.getTimeInMillis()));
+            eventPattern.setEndedAt(dateToTimestamp(end.getTimeInMillis()));
             eventPattern.setMinute("*");
             eventPattern.setHour("*");
             eventPattern.setDay("*");
@@ -194,11 +193,11 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         event.setName(taskName.getText().toString().trim());
         event.setDetails(taskDetails.getText().toString().trim());
         event.setLocation("Неизвестно");
-        event.setStatus("С паттерном");
+        event.setStatus("С датами в таймстемпе");
         event.setPatterns(new EventPattern[]{eventPattern});
 
-        Log.d("___________", event.toString());
-        Log.d("___________", eventPattern.toString());
+        Log.d("___________", RetrofitInstance.getGson().toJson(event));
+        Log.d("___________", RetrofitInstance.getGson().toJson(event));
 
         eventService.save(event);
 
@@ -284,7 +283,8 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         return hourOfDay + ":" + (minute < 10 ? ("0" + minute) : minute);
     }
 
-    private Long dateToTimestamp(GregorianCalendar gregorianCalendar) {
-        return new Timestamp(gregorianCalendar.getTimeInMillis()).getTime();
+    private String dateToTimestamp(Long millis) {
+        SimpleDateFormat timestamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        return timestamp.format(millis);
     }
 }
