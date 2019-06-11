@@ -21,10 +21,13 @@ import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.Event;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dao.Task;
+import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.TimePickerFragment;
+import com.github.royalstorm.android_task_manager.repository.EventRepository;
+import com.github.royalstorm.android_task_manager.service.EventPatternService;
 import com.github.royalstorm.android_task_manager.service.EventService;
-import com.github.royalstorm.android_task_manager.shared.RetrofitInstance;
+import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,6 +36,9 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AddTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     @BindView(R.id.task_name)
@@ -52,8 +58,11 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     TextView taskRepeatMode;
 
     private EventService eventService = new EventService();
+    private EventPatternService eventPatternService = new EventPatternService();
     private Event event = new Event();
     private EventPattern eventPattern = new EventPattern();
+
+    private EventRepository eventRepository;
 
     private GregorianCalendar gregorianCalendar;
 
@@ -166,33 +175,42 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
             GregorianCalendar begin = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), task.getBeginDay(), task.getBeginHour(), task.getBeginMinute());
             GregorianCalendar end = new GregorianCalendar(task.getEndYear(), task.getEndMonth(), task.getEndDay(), task.getEndHour(), task.getEndMinute());
 
-            Log.d("Begin Time", dateToTimestamp(begin.getTimeInMillis()));
-            Log.d("End Time", dateToTimestamp(end.getTimeInMillis()));
-
             if (begin.after(end)) {
                 Snackbar.make(getWindow().getDecorView().
                         getRootView(), "Событие не может завершиться раньше, чем начаться", Snackbar.LENGTH_LONG).show();
                 return;
             }
 
-            eventPattern.setStartedAt(dateToTimestamp(begin.getTimeInMillis()));
-            eventPattern.setEndedAt(dateToTimestamp(end.getTimeInMillis()));
-            eventPattern.setType(0);
-            eventPattern.setDuration(8800);
+            eventPattern.setStartedAt(begin.getTimeInMillis());
+            eventPattern.setEndedAt(end.getTimeInMillis());
+            eventPattern.setTimezone("UTS");
+            eventPattern.setRrule("FREQ=DAILY;INTERVAL=1");
+            eventPattern.setExrule("FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH");
+            eventPattern.setDuration(end.getTimeInMillis() - begin.getTimeInMillis());
         }
 
         Intent intent = new Intent();
 
-        event.setOwnerId(0);
-        event.setName(taskName.getText().toString().trim());
         event.setDetails(taskDetails.getText().toString().trim());
-        event.setLocation("Неизвестно");
-        event.setStatus("С датами в таймстемпе");
+        event.setLocation("Тест");
+        event.setName(taskName.getText().toString().trim());
+        event.setStatus("Busy");
 
-        Log.d("___________", RetrofitInstance.getGson().toJson(event));
-        Log.d("___________", RetrofitInstance.getGson().toJson(event));
+        RetrofitClient retrofitClient = RetrofitClient.getInstance();
 
-        //eventService.save(event);
+        retrofitClient.getEventRepository().save(event).enqueue(new Callback<EventResponse>() {
+            @Override
+            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+                if (response.isSuccessful()) {
+                    eventPatternService.save(response.body().getData()[0].getId(), eventPattern);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EventResponse> call, Throwable t) {
+
+            }
+        });
 
         setResult(RESULT_OK, intent);
         finish();
@@ -224,14 +242,11 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.save_event:
-                createTask();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.save_event) {
+            createTask();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -274,10 +289,5 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
     private String getTimeFormat(int hourOfDay, int minute) {
         return hourOfDay + ":" + (minute < 10 ? ("0" + minute) : minute);
-    }
-
-    private String dateToTimestamp(Long millis) {
-        SimpleDateFormat timestamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        return timestamp.format(millis);
     }
 }

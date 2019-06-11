@@ -1,6 +1,6 @@
 package com.github.royalstorm.android_task_manager.repository;
 
-import com.github.royalstorm.android_task_manager.dao.Event;
+import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dto.EventPatternResponse;
 
 import java.util.Map;
@@ -12,7 +12,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
@@ -30,7 +29,7 @@ public interface EventPatternRepository {
             "X-Firebase-Auth: serega_mem"
     })
     @POST("/api/v1/patterns")
-    Call<EventPatternResponse> save(@Query("event_id") int eventId, @Body Event event);
+    Call<EventPatternResponse> save(@Query("event_id") Long eventId, @Body EventPattern eventPattern);
 
     @Headers({
             "Accept: application/json",
@@ -38,7 +37,7 @@ public interface EventPatternRepository {
             "X-Firebase-Auth: serega_mem"
     })
     @PATCH("/api/v1/patterns/{id}")
-    Call<EventPatternResponse> update(@Path("id") int id, @Body Event event);
+    Call<EventPatternResponse> update(@Path("id") Long id, @Body EventPattern eventPattern);
 
     @Headers({
             "Accept: application/json",
@@ -46,5 +45,5 @@ public interface EventPatternRepository {
             "X-Firebase-Auth: serega_mem"
     })
     @DELETE("/api/v1/patterns/{id}")
-    Call<Void> delete(@Path("id") int id);
+    Call<Void> delete(@Path("id") Long id);
 }

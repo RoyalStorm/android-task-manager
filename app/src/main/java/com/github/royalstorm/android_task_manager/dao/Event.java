@@ -4,11 +4,14 @@ import com.google.gson.annotations.Expose;
 
 public class Event {
     /*Readonly fields*/
-    private int id;
+    @Expose
+    private Long id;
+    @Expose
+    private Long ownerId;
+    @Expose
     private Long createdAt;
+    @Expose
     private Long updatedAt;
-    private Long startedAt;
-    private Long endedAt;
 
     @Expose
     private String details;
@@ -17,24 +20,25 @@ public class Event {
     @Expose
     private String name;
     @Expose
-    private int ownerId;
-    @Expose
     private String status;
 
     /*Default constructor*/
     public Event() {
     }
 
-    public Event(String details, String location, String name, int ownerId, String status) {
+    public Event(String details, String location, String name, String status) {
         this.details = details;
         this.location = location;
         this.name = name;
-        this.ownerId = ownerId;
         this.status = status;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
+    }
+
+    public Long getOwnerId() {
+        return ownerId;
     }
 
     public Long getCreatedAt() {
@@ -43,14 +47,6 @@ public class Event {
 
     public Long getUpdatedAt() {
         return updatedAt;
-    }
-
-    public Long getStartedAt() {
-        return startedAt;
-    }
-
-    public Long getEndedAt() {
-        return endedAt;
     }
 
     public String getDetails() {
@@ -75,14 +71,6 @@ public class Event {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(int ownerId) {
-        this.ownerId = ownerId;
     }
 
     public String getStatus() {

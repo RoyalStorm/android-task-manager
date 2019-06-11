@@ -8,25 +8,30 @@ import com.google.gson.GsonBuilder;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RetrofitInstance {
+public class RetrofitClient {
     private final static String BASE_URL = "http://planner.skillmasters.ga/";
 
-    private static Retrofit retrofit;
+    private static RetrofitClient instance;
+
+    private Retrofit retrofit;
 
     private static Gson gson = new GsonBuilder()
             .excludeFieldsWithoutExposeAnnotation()
             .setLenient()
             .create();
 
-    public RetrofitInstance() {
+    private RetrofitClient() {
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
     }
 
-    public static Gson getGson() {
-        return gson;
+    public static synchronized RetrofitClient getInstance() {
+        if (instance == null)
+            instance = new RetrofitClient();
+
+        return instance;
     }
 
     public EventRepository getEventRepository() {

@@ -8,8 +8,8 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface EventRepository {
@@ -32,8 +32,8 @@ public interface EventRepository {
             "Content-Type: application/json",
             "X-Firebase-Auth: serega_mem"
     })
-    @PUT("/api/v1/events/{id}")
-    Call<EventResponse> update(@Path("id") long id, @Body Event event);
+    @PATCH("/api/v1/events/{id}")
+    Call<EventResponse> update(@Path("id") Long id, @Body Event event);
 
     @Headers({
             "Accept: application/json",
@@ -41,5 +41,5 @@ public interface EventRepository {
             "X-Firebase-Auth: serega_mem"
     })
     @DELETE("/api/v1/events/{id}")
-    Call<Void> delete(@Path("id") int id);
+    Call<Void> delete(@Path("id") Long id);
 }

@@ -9,29 +9,29 @@ public class EventPattern {
     private String updatedAt;
 
     @Expose
-    private int duration;
+    private Long duration;
     @Expose
-    private String endedAt;
+    private Long endedAt;
     @Expose
     private String exrule;
     @Expose
     private String rrule;
     @Expose
-    private String startedAt;
+    private Long startedAt;
     @Expose
-    private int type;
+    private String timezone;
 
     /*Default constructor*/
     public EventPattern() {
     }
 
-    public EventPattern(int duration, String endedAt, String exrule, String rrule, String startedAt, int type) {
+    public EventPattern(Long duration, Long endedAt, String exrule, String rrule, Long startedAt, String timezone) {
         this.duration = duration;
         this.endedAt = endedAt;
         this.exrule = exrule;
         this.rrule = rrule;
         this.startedAt = startedAt;
-        this.type = type;
+        this.timezone = timezone;
     }
 
     public int getId() {
@@ -46,19 +46,19 @@ public class EventPattern {
         return updatedAt;
     }
 
-    public int getDuration() {
+    public Long getDuration() {
         return duration;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(Long duration) {
         this.duration = duration;
     }
 
-    public String getEndedAt() {
+    public Long getEndedAt() {
         return endedAt;
     }
 
-    public void setEndedAt(String endedAt) {
+    public void setEndedAt(Long endedAt) {
         this.endedAt = endedAt;
     }
 
@@ -78,19 +78,19 @@ public class EventPattern {
         this.rrule = rrule;
     }
 
-    public String getStartedAt() {
+    public Long getStartedAt() {
         return startedAt;
     }
 
-    public void setStartedAt(String startedAt) {
+    public void setStartedAt(Long startedAt) {
         this.startedAt = startedAt;
     }
 
-    public int getType() {
-        return type;
+    public String getTimezone() {
+        return timezone;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
     }
 }

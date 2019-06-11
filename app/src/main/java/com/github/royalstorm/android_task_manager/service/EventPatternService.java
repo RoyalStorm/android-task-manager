@@ -2,9 +2,9 @@ package com.github.royalstorm.android_task_manager.service;
 
 import android.util.Log;
 
-import com.github.royalstorm.android_task_manager.dao.Event;
+import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dto.EventPatternResponse;
-import com.github.royalstorm.android_task_manager.shared.RetrofitInstance;
+import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
 import java.util.Map;
 
@@ -13,12 +13,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class EventPatternService {
-    private RetrofitInstance retrofitInstance = new RetrofitInstance();
+    private RetrofitClient retrofitClient = RetrofitClient.getInstance();
 
     private EventPatternResponse eventPatternResponse = new EventPatternResponse();
 
     public EventPatternResponse getAll(Map<String, String> params) {
-        retrofitInstance.getEventPatternRepository().getAll(params).enqueue(new Callback<EventPatternResponse>() {
+        retrofitClient.getEventPatternRepository().getAll(params).enqueue(new Callback<EventPatternResponse>() {
             @Override
             public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
                 if (response.isSuccessful())
@@ -34,11 +34,11 @@ public class EventPatternService {
         return eventPatternResponse;
     }
 
-    public EventPatternResponse save(int eventId, Event event) {
-        retrofitInstance.getEventPatternRepository().save(eventId, event).enqueue(new Callback<EventPatternResponse>() {
+    public EventPatternResponse save(Long eventId, EventPattern eventPattern) {
+        retrofitClient.getEventPatternRepository().save(eventId, eventPattern).enqueue(new Callback<EventPatternResponse>() {
             @Override
             public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
-                Log.d("___POST Response", response.code() + "");
+                Log.d("_POST Pattern Response", response.code() + "");
 
                 if (response.isSuccessful())
                     eventPatternResponse = response.body();
@@ -53,8 +53,8 @@ public class EventPatternService {
         return eventPatternResponse;
     }
 
-    public EventPatternResponse update(int id, Event event) {
-        retrofitInstance.getEventPatternRepository().update(id, event).enqueue(new Callback<EventPatternResponse>() {
+    public EventPatternResponse update(Long id, EventPattern eventPattern) {
+        retrofitClient.getEventPatternRepository().update(id, eventPattern).enqueue(new Callback<EventPatternResponse>() {
             @Override
             public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
                 if (response.isSuccessful())
@@ -70,8 +70,8 @@ public class EventPatternService {
         return eventPatternResponse;
     }
 
-    public void delete(int id) {
-        retrofitInstance.getEventPatternRepository().delete(id).enqueue(new Callback<Void>() {
+    public void delete(Long id) {
+        retrofitClient.getEventPatternRepository().delete(id).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
             }
