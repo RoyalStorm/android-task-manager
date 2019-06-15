@@ -9,13 +9,22 @@ import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
+import com.github.royalstorm.android_task_manager.dto.EventResponse;
+import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
+
+    private RetrofitClient retrofitClient = RetrofitClient.getInstance();
 
     private List<EventInstance> eventInstances = new ArrayList<>();
 
@@ -38,18 +47,31 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         }
 
         void bind(EventInstance eventInstance) {
-            eventStart.setText("12:00");
-            eventEnd.setText("21:30");
-            eventName.setText("Шашлыки");
-            eventOwner.setText("Колот Юрий");
-            eventDetails.setText("Описание происходящего события");
+            eventStart.setText(timestampToDate(eventInstance.getStartedAt()));
+            eventEnd.setText(timestampToDate(eventInstance.getEndedAt()));
+
+            retrofitClient.getEventRepository().getEventsById(new Long[]{eventInstance.getEventId()}).enqueue(new Callback<EventResponse>() {
+                @Override
+                public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+                    if (response.isSuccessful()) {
+                        if (response.body() != null) {
+                            /*Get by 0 index, cause in data array only 1 object*/
+                            eventName.setText(response.body().getData()[0].getName());
+                            eventOwner.setText(response.body().getData()[0].getOwnerId().toString());
+                            eventDetails.setText(response.body().getData()[0].getDetails());
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<EventResponse> call, Throwable t) {
+
+                }
+            });
         }
 
-        private GregorianCalendar timestampToDate(Long millis) {
-            GregorianCalendar calendar = new GregorianCalendar();
-            calendar.setTimeInMillis(millis);
-
-            return calendar;
+        private String timestampToDate(Long millis) {
+            return new SimpleDateFormat("hh:mm", Locale.getDefault()).format(millis);
         }
     }
 

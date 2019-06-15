@@ -24,6 +24,12 @@ public interface EventRepository {
     @Headers({
             "X-Firebase-Auth: serega_mem"
     })
+    @GET("/api/v1/events")
+    Call<EventResponse> getEventsById(@Query("id") Long[] id);
+
+    @Headers({
+            "X-Firebase-Auth: serega_mem"
+    })
     @GET("/api/v1/events/instances")
     Call<EventInstanceResponse> getInstancesByInterval(@Query("from") Long from, @Query("to") Long to);
 

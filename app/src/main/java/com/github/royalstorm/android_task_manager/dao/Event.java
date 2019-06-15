@@ -1,14 +1,18 @@
 package com.github.royalstorm.android_task_manager.dao;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class Event {
     /*Readonly fields*/
     @Expose
     private Long id;
     @Expose
+    @SerializedName("owner_id")
     private Long ownerId;
+    @SerializedName("created_at")
     private Long createdAt;
+    @SerializedName("updated_at")
     private Long updatedAt;
 
     @Expose

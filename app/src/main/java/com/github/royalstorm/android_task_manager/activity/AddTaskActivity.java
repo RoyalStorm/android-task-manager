@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,9 +23,7 @@ import com.github.royalstorm.android_task_manager.dao.Task;
 import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.TimePickerFragment;
-import com.github.royalstorm.android_task_manager.repository.EventRepository;
 import com.github.royalstorm.android_task_manager.service.EventPatternService;
-import com.github.royalstorm.android_task_manager.service.EventService;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
 import java.text.SimpleDateFormat;
@@ -57,12 +54,9 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     @BindView(R.id.task_repeat_mode)
     TextView taskRepeatMode;
 
-    private EventService eventService = new EventService();
     private EventPatternService eventPatternService = new EventPatternService();
     private Event event = new Event();
     private EventPattern eventPattern = new EventPattern();
-
-    private EventRepository eventRepository;
 
     private GregorianCalendar gregorianCalendar;
 
