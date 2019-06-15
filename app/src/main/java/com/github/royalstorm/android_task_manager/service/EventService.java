@@ -15,7 +15,7 @@ public class EventService {
 
     private EventResponse eventResponse;
 
-    public EventResponse getAll() {
+    /*public EventResponse getAll() {
         retrofitClient.getEventRepository().getAll().enqueue(new Callback<EventResponse>() {
             @Override
             public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
@@ -30,7 +30,7 @@ public class EventService {
         });
 
         return eventResponse;
-    }
+    }*/
 
     public EventResponse save(Event event) {
         retrofitClient.getEventRepository().save(event).enqueue(new Callback<EventResponse>() {

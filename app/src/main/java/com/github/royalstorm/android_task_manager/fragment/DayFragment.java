@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,9 +16,13 @@ import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.activity.AddTaskActivity;
 import com.github.royalstorm.android_task_manager.activity.EditTaskActivity;
 import com.github.royalstorm.android_task_manager.adapter.TasksAdapter;
+import com.github.royalstorm.android_task_manager.dao.Event;
 import com.github.royalstorm.android_task_manager.dao.Task;
+import com.github.royalstorm.android_task_manager.dto.EventInstanceResponse;
+import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectDayDialog;
 import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
+import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -27,8 +30,14 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDialogListener {
     private MockUpTaskService mockUpTaskService = new MockUpTaskService();
+
+    private EventResponse eventResponse;
 
     private GregorianCalendar gregorianCalendar;
 
@@ -178,23 +187,35 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
         startActivity(intent);
     }
 
-    private List<Task> getCurrentTasks(int year, int month, int day) {
-        return mockUpTaskService.findByDate(year, month, day);
+    private void getCurrentEvents(Long from, Long to) {
+        RetrofitClient retrofitClient = RetrofitClient.getInstance();
+        retrofitClient.getEventRepository().getInstancesByInterval(from, to).enqueue(new Callback<EventInstanceResponse>() {
+            @Override
+            public void onResponse(Call<EventInstanceResponse> call, Response<EventInstanceResponse> response) {
+                if (response.isSuccessful()) {
+                    //eventResponse = response.body();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EventInstanceResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     private void showTasks(View view) {
-        List<Task> currentTasks = getCurrentTasks(year, month, day);
+        getCurrentEvents(
+                new GregorianCalendar(year, month, day, 0, 0).getTimeInMillis(),
+                new GregorianCalendar(year, month, day, 23, 59).getTimeInMillis());
 
         tasksList = view.findViewById(R.id.tasks_list);
-        tasksAdapter = new TasksAdapter(getContext(), R.layout.tasks_list_item, currentTasks);
-        tasksList.setAdapter(tasksAdapter);
-        tasksList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Task task = (Task) parent.getAdapter().getItem(position);
-                editTask(task.getId());
-            }
-        });
+        //tasksAdapter = new TasksAdapter(getContext(), R.layout.tasks_list_item, currentTasks);
+        //tasksList.setAdapter(tasksAdapter);
+        /*tasksList.setOnItemClickListener((parent, view1, position, id) -> {
+            Task task = (Task) parent.getAdapter().getItem(position);
+            editTask(task.getId());
+        });*/
     }
 
     @Override
@@ -215,5 +236,12 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
 
         getFragmentManager().beginTransaction().replace(R.id.calendarContainer,
                 dayFragment).commit();
+    }
+
+    private GregorianCalendar timestampToDate(Long millis) {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTimeInMillis(millis);
+
+        return calendar;
     }
 }

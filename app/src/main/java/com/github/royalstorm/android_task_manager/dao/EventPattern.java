@@ -1,22 +1,26 @@
 package com.github.royalstorm.android_task_manager.dao;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class EventPattern {
     /*Readonly fields*/
-    private int id;
-    private String createdAt;
-    private String updatedAt;
+    @Expose
+    private Long id;
+    private Long createdAt;
+    private Long updatedAt;
 
     @Expose
     private Long duration;
     @Expose
+    @SerializedName("ended_at")
     private Long endedAt;
     @Expose
     private String exrule;
     @Expose
     private String rrule;
     @Expose
+    @SerializedName("started_at")
     private Long startedAt;
     @Expose
     private String timezone;
@@ -34,15 +38,15 @@ public class EventPattern {
         this.timezone = timezone;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public String getCreatedAt() {
+    public Long getCreatedAt() {
         return createdAt;
     }
 
-    public String getUpdatedAt() {
+    public Long getUpdatedAt() {
         return updatedAt;
     }
 

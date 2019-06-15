@@ -60,7 +60,7 @@
             android:fontFamily="sans-serif-medium"
             android:lines="1"
             android:textSize="16sp"
-            tools:text="Name" />
+            tools:text="Название события" />
 
         <TextView
             android:id="@+id/event_owner"
@@ -68,16 +68,16 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:lines="1"
-            tools:text="Prof" />
+            tools:text="Создатель события" />
 
         <TextView
-            android:id="@+id/event_description"
+            android:id="@+id/event_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="0.7"
             android:ellipsize="end"
             android:lines="1"
             android:textSize="12sp"
-            tools:text="Place" />
+            tools:text="Описание события" />
     </LinearLayout>
 </LinearLayout>

@@ -12,16 +12,13 @@ import android.view.MenuItem;
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.fragment.DayFragment;
 import com.github.royalstorm.android_task_manager.fragment.MonthFragment;
+import com.github.royalstorm.android_task_manager.fragment.RulesSharingFragment;
 import com.github.royalstorm.android_task_manager.fragment.WeekFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout drawer;
-
-    DayFragment dayFragment;
-    WeekFragment weekFragment;
-    MonthFragment monthFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +38,8 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        initFragments();
-
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.calendarContainer, monthFragment)
+            getSupportFragmentManager().beginTransaction().replace(R.id.calendarContainer, new MonthFragment())
                     .commit();
             navigationView.setCheckedItem(R.id.nav_month);
         }
@@ -77,16 +72,14 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction().replace(R.id.calendarContainer,
                         new MonthFragment()).commit();
                 break;
+
+            case R.id.nav_share:
+                getSupportFragmentManager().beginTransaction().replace(R.id.calendarContainer,
+                        new RulesSharingFragment()).commit();
         }
 
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
-    }
-
-    private void initFragments() {
-        dayFragment = new DayFragment();
-        weekFragment = new WeekFragment();
-        monthFragment = new MonthFragment();
     }
 }

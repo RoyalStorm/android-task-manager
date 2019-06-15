@@ -17,8 +17,8 @@ public class EventPatternService {
 
     private EventPatternResponse eventPatternResponse = new EventPatternResponse();
 
-    public EventPatternResponse getAll(Map<String, String> params) {
-        retrofitClient.getEventPatternRepository().getAll(params).enqueue(new Callback<EventPatternResponse>() {
+    /*public EventPatternResponse getAll(Long from, Long to) {
+        retrofitClient.getEventPatternRepository().findFromTo(params).enqueue(new Callback<EventPatternResponse>() {
             @Override
             public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
                 if (response.isSuccessful())
@@ -32,7 +32,7 @@ public class EventPatternService {
         });
 
         return eventPatternResponse;
-    }
+    }*/
 
     public EventPatternResponse save(Long eventId, EventPattern eventPattern) {
         retrofitClient.getEventPatternRepository().save(eventId, eventPattern).enqueue(new Callback<EventPatternResponse>() {

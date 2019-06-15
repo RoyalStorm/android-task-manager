@@ -183,7 +183,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
             eventPattern.setStartedAt(begin.getTimeInMillis());
             eventPattern.setEndedAt(end.getTimeInMillis());
-            eventPattern.setTimezone("UTS");
+            eventPattern.setTimezone("Asia/Vladivostok");
             eventPattern.setRrule("FREQ=DAILY;INTERVAL=1");
             eventPattern.setExrule("FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH");
             eventPattern.setDuration(end.getTimeInMillis() - begin.getTimeInMillis());

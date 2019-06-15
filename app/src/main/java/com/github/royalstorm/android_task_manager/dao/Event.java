@@ -8,9 +8,7 @@ public class Event {
     private Long id;
     @Expose
     private Long ownerId;
-    @Expose
     private Long createdAt;
-    @Expose
     private Long updatedAt;
 
     @Expose
