@@ -8,15 +8,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
-import com.github.royalstorm.android_task_manager.dto.EventInstanceResponse;
+import com.github.royalstorm.android_task_manager.dao.EventInstance;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
-    private List<EventInstanceResponse> eventInstanceResponses = new ArrayList<>();
+    private List<EventInstance> eventInstances = new ArrayList<>();
 
     class EventViewHolder extends RecyclerView.ViewHolder {
 
@@ -26,7 +27,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         TextView eventOwner;
         TextView eventDetails;
 
-        public EventViewHolder(View itemView) {
+        EventViewHolder(View itemView) {
             super(itemView);
 
             eventStart = itemView.findViewById(R.id.event_start);
@@ -36,22 +37,29 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             eventDetails = itemView.findViewById(R.id.event_details);
         }
 
-        public void bind(EventInstanceResponse eventInstanceResponse) {
+        void bind(EventInstance eventInstance) {
             eventStart.setText("12:00");
             eventEnd.setText("21:30");
             eventName.setText("Шашлыки");
             eventOwner.setText("Колот Юрий");
             eventDetails.setText("Описание происходящего события");
         }
+
+        private GregorianCalendar timestampToDate(Long millis) {
+            GregorianCalendar calendar = new GregorianCalendar();
+            calendar.setTimeInMillis(millis);
+
+            return calendar;
+        }
     }
 
-    public void setItems(Collection<EventInstanceResponse> eventInstanceResponses) {
-        this.eventInstanceResponses.addAll(eventInstanceResponses);
+    public void setItems(Collection<EventInstance> eventInstances) {
+        this.eventInstances.addAll(eventInstances);
         notifyDataSetChanged();
     }
 
     public void clearItems() {
-        eventInstanceResponses.clear();
+        eventInstances.clear();
         notifyDataSetChanged();
     }
 
@@ -64,11 +72,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder eventViewHolder, int i) {
-        eventViewHolder.bind(eventInstanceResponses.get(i));
+        eventViewHolder.bind(eventInstances.get(i));
     }
 
     @Override
     public int getItemCount() {
-        return eventInstanceResponses.size();
+        return eventInstances.size();
     }
 }

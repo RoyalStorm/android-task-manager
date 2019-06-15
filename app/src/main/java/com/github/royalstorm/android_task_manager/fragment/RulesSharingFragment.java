@@ -17,6 +17,7 @@ import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 
 import retrofit2.Call;
@@ -48,7 +49,7 @@ public class RulesSharingFragment extends Fragment {
             @Override
             public void onResponse(Call<EventInstanceResponse> call, Response<EventInstanceResponse> response) {
                 if (response.isSuccessful()) {
-                    eventAdapter.setItems(Arrays.asList(response.body()));
+                    eventAdapter.setItems(Arrays.asList(response.body().getData()));
 
                     recyclerView.setAdapter(eventAdapter);
                 }
