@@ -32,7 +32,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDialogListener {
+public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDialogListener, EventAdapter.OnEventListener {
     private RetrofitClient retrofitClient = RetrofitClient.getInstance();
 
     private RecyclerView recyclerView;
@@ -166,17 +166,13 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
         startActivity(intent);
     }
 
-    private void editTask(int id) {
-        Intent intent = new Intent(getActivity(), EditTaskActivity.class);
-        startActivity(intent);
-    }
-
     private void getEvents(GregorianCalendar from, GregorianCalendar to) {
         retrofitClient.getEventRepository().getInstancesByInterval(from.getTimeInMillis(), to.getTimeInMillis()).enqueue(new Callback<EventInstanceResponse>() {
             @Override
             public void onResponse(Call<EventInstanceResponse> call, Response<EventInstanceResponse> response) {
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
+                        eventAdapter.clearItems();
                         eventAdapter.setItems(Arrays.asList(response.body().getData()));
                         recyclerView.setAdapter(eventAdapter);
                     }
@@ -211,5 +207,11 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
 
         getFragmentManager().beginTransaction().replace(R.id.calendarContainer,
                 dayFragment).commit();
+    }
+
+    @Override
+    public void onEventClick(int position) {
+        Intent intent = new Intent(getActivity(), EditTaskActivity.class);
+        startActivity(intent);
     }
 }

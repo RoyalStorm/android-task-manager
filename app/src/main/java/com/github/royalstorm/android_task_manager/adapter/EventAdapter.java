@@ -75,6 +75,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         }
     }
 
+    public interface OnEventListener {
+        void onEventClick(int position);
+    }
+
     public void setItems(Collection<EventInstance> eventInstances) {
         this.eventInstances.addAll(eventInstances);
         notifyDataSetChanged();
