@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.github.royalstorm.android_task_manager.R;
+import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.dao.Task;
 import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.TimePickerFragment;
@@ -103,10 +105,11 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
         setTitle("Редактирование события");
 
         Bundle bundle = getIntent().getExtras();
-        task = (Task) bundle.getSerializable(Task.class.getSimpleName());
+        EventInstance eventInstance = (EventInstance) bundle.getSerializable(EventInstance.class.getSimpleName());
+        Log.d("_____", eventInstance.toString());
 
         findComponents();
-        initFields();
+        //initFields();
 
         setTaskBeginDateListener();
         setTaskBeginTime();

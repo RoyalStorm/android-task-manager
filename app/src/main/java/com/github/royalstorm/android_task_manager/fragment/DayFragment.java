@@ -17,15 +17,18 @@ import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.activity.AddTaskActivity;
 import com.github.royalstorm.android_task_manager.activity.EditTaskActivity;
 import com.github.royalstorm.android_task_manager.adapter.EventAdapter;
+import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.dao.Task;
 import com.github.royalstorm.android_task_manager.dto.EventInstanceResponse;
 import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectDayDialog;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -37,6 +40,8 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
 
     private RecyclerView recyclerView;
     private EventAdapter eventAdapter;
+
+    private List<EventInstance> eventInstances;
 
     private GregorianCalendar gregorianCalendar;
 
@@ -64,7 +69,7 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
         recyclerView = view.findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        eventAdapter = new EventAdapter();
+        eventAdapter = new EventAdapter(new ArrayList<>(), this);
 
         return view;
     }
@@ -172,8 +177,8 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
             public void onResponse(Call<EventInstanceResponse> call, Response<EventInstanceResponse> response) {
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
-                        eventAdapter.clearItems();
-                        eventAdapter.setItems(Arrays.asList(response.body().getData()));
+                        eventInstances = Arrays.asList(response.body().getData());
+                        eventAdapter.setItems(eventInstances);
                         recyclerView.setAdapter(eventAdapter);
                     }
                 }
@@ -212,6 +217,7 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
     @Override
     public void onEventClick(int position) {
         Intent intent = new Intent(getActivity(), EditTaskActivity.class);
+        intent.putExtra(EventInstance.class.getSimpleName(), eventInstances.get(position));
         startActivity(intent);
     }
 }

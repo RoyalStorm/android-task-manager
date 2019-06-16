@@ -40,7 +40,7 @@ public class RulesSharingFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        eventAdapter = new EventAdapter();
+        //eventAdapter = new EventAdapter();
 
         GregorianCalendar begin = new GregorianCalendar(2019, Calendar.JUNE, 15, 0, 0);
         GregorianCalendar end = new GregorianCalendar(2019, Calendar.JUNE, 15, 23, 59);

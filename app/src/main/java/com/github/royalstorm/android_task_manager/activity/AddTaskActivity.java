@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -177,7 +178,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
             eventPattern.setStartedAt(begin.getTimeInMillis());
             eventPattern.setEndedAt(end.getTimeInMillis());
-            eventPattern.setTimezone("Asia/Vladivostok");
+            eventPattern.setTimezone(TimeZone.getDefault().getID());
             eventPattern.setRrule("FREQ=DAILY;INTERVAL=1");
             eventPattern.setExrule("FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH");
             eventPattern.setDuration(end.getTimeInMillis() - begin.getTimeInMillis());

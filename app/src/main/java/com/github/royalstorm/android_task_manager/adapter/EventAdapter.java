@@ -13,7 +13,6 @@ import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -26,9 +25,16 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     private RetrofitClient retrofitClient = RetrofitClient.getInstance();
 
-    private List<EventInstance> eventInstances = new ArrayList<>();
+    private List<EventInstance> eventInstances;
 
-    class EventViewHolder extends RecyclerView.ViewHolder {
+    private OnEventListener onEventListener;
+
+    public EventAdapter(List<EventInstance> eventInstances, OnEventListener onEventListener) {
+        this.eventInstances = eventInstances;
+        this.onEventListener = onEventListener;
+    }
+
+    class EventViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView eventStart;
         TextView eventEnd;
@@ -36,7 +42,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         TextView eventOwner;
         TextView eventDetails;
 
-        EventViewHolder(View itemView) {
+        OnEventListener onEventListener;
+
+        EventViewHolder(View itemView, OnEventListener onEventListener) {
             super(itemView);
 
             eventStart = itemView.findViewById(R.id.event_start);
@@ -44,6 +52,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             eventName = itemView.findViewById(R.id.event_name);
             eventOwner = itemView.findViewById(R.id.event_owner);
             eventDetails = itemView.findViewById(R.id.event_details);
+
+            this.onEventListener = onEventListener;
+
+            itemView.setOnClickListener(this);
         }
 
         void bind(EventInstance eventInstance) {
@@ -73,6 +85,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         private String timestampToDate(Long millis) {
             return new SimpleDateFormat("hh:mm", Locale.getDefault()).format(millis);
         }
+
+        @Override
+        public void onClick(View view) {
+            onEventListener.onEventClick(getAdapterPosition());
+        }
     }
 
     public interface OnEventListener {
@@ -80,20 +97,20 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     public void setItems(Collection<EventInstance> eventInstances) {
+        clearItems();
         this.eventInstances.addAll(eventInstances);
         notifyDataSetChanged();
     }
 
-    public void clearItems() {
+    private void clearItems() {
         eventInstances.clear();
-        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.event_item, viewGroup, false);
-        return new EventViewHolder(view);
+        return new EventViewHolder(view, onEventListener);
     }
 
     @Override
