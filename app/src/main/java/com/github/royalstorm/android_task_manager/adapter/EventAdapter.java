@@ -83,7 +83,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         }
 
         private String timestampToDate(Long millis) {
-            return new SimpleDateFormat("hh:mm", Locale.getDefault()).format(millis);
+            return new SimpleDateFormat("HH:mm", Locale.getDefault()).format(millis);
         }
 
         @Override

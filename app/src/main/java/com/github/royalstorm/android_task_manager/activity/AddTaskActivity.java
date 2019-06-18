@@ -146,19 +146,21 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
         gregorianCalendar = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), task.getBeginDay(), task.getBeginHour(), task.getBeginMinute());
 
-        String taskDate = simpleDateFormat.format(gregorianCalendar.getTime());
-        taskBeginDate.setText(taskDate);
-        taskEndDate.setText(taskDate);
-
         gregorianCalendar.add(Calendar.HOUR, 1);
+
+        taskBeginDate.setText(simpleDateFormat.format(gregorianCalendar.getTime()));
+        taskBeginTime.setText(getTimeFormat(gregorianCalendar.getTime().getHours(), 0));
 
         task.setBeginHour(gregorianCalendar.getTime().getHours());
         task.setBeginMinute(0);
+
+        gregorianCalendar.add(Calendar.HOUR, 1);
+
+        taskEndDate.setText(simpleDateFormat.format(gregorianCalendar.getTime()));
+        taskEndTime.setText(getTimeFormat(gregorianCalendar.getTime().getHours(), 0));
+
         task.setEndHour(gregorianCalendar.getTime().getHours());
         task.setEndMinute(0);
-
-        taskBeginTime.setText(getTimeFormat(gregorianCalendar.getTime().getHours(), 0));
-        taskEndTime.setText(getTimeFormat(gregorianCalendar.getTime().getHours(), 0));
     }
 
     private void createTask() {

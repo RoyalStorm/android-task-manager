@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,19 +19,29 @@ import android.widget.TimePicker;
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.dao.Task;
+import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.TimePickerFragment;
 import com.github.royalstorm.android_task_manager.service.EventService;
-import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
+import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class EditTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
-    private MockUpTaskService mockUpTaskService = new MockUpTaskService();
+    private RetrofitClient retrofitClient = RetrofitClient.getInstance();
+
     private EventService eventService = new EventService();
+
+    private EventInstance eventInstance;
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM yyyy (E)", Locale.getDefault());
 
@@ -41,13 +50,19 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
 
     private Task task;
 
-    private EditText taskName;
-    private EditText taskDetails;
+    @BindView(R.id.task_name)
+    EditText taskName;
+    @BindView(R.id.task_details)
+    EditText taskDetails;
 
-    private TextView taskBeginDate;
-    private TextView taskEndDate;
-    private TextView taskBeginTime;
-    private TextView taskEndTime;
+    @BindView(R.id.task_begin_date)
+    TextView taskBeginDate;
+    @BindView(R.id.task_end_date)
+    TextView taskEndDate;
+    @BindView(R.id.task_begin_time)
+    TextView taskBeginTime;
+    @BindView(R.id.task_end_time)
+    TextView taskEndTime;
 
     private DialogFragment picker;
 
@@ -105,11 +120,10 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
         setTitle("Редактирование события");
 
         Bundle bundle = getIntent().getExtras();
-        EventInstance eventInstance = (EventInstance) bundle.getSerializable(EventInstance.class.getSimpleName());
-        Log.d("_____", eventInstance.toString());
+        eventInstance = (EventInstance) bundle.getSerializable(EventInstance.class.getSimpleName());
 
-        findComponents();
-        //initFields();
+        ButterKnife.bind(this);
+        initFields(eventInstance);
 
         setTaskBeginDateListener();
         setTaskBeginTime();
@@ -118,32 +132,36 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
         setTaskEndTime();
     }
 
-    private void findComponents() {
-        taskName = findViewById(R.id.task_name);
-        taskDetails = findViewById(R.id.task_details);
-        taskBeginDate = findViewById(R.id.task_begin_date);
-        taskEndDate = findViewById(R.id.task_end_date);
-        taskBeginTime = findViewById(R.id.task_begin_time);
-        taskEndTime = findViewById(R.id.task_end_time);
+    private void initFields(EventInstance eventInstance) {
+        retrofitClient.getEventRepository().getEventsById(new Long[]{eventInstance.getEventId()}).enqueue(new Callback<EventResponse>() {
+            @Override
+            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        taskName.setText(response.body().getData()[0].getName());
+                        taskDetails.setText(response.body().getData()[0].getDetails());
+
+                        /*begin = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), task.getBeginDay(), task.getBeginHour(), task.getBeginMinute());
+                        end = new GregorianCalendar(task.getEndYear(), task.getEndMonth(), task.getEndDay(), task.getEndHour(), task.getEndMinute());
+
+                        taskBeginDate.setText(simpleDateFormat.format(begin.getTime()));
+                        taskEndDate.setText(simpleDateFormat.format(end.getTime()));
+
+                        taskBeginTime.setText(getTimeFormat(begin.getTime().getHours(), begin.getTime().getMinutes()));
+                        taskEndTime.setText(getTimeFormat(end.getTime().getHours(), end.getTime().getMinutes()));*/
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EventResponse> call, Throwable t) {
+
+            }
+        });
     }
 
-    private void initFields() {
-        taskName.setText(task.getName());
-        taskDetails.setText(task.getDetails());
-
-        begin = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), task.getBeginDay(), task.getBeginHour(), task.getBeginMinute());
-        end = new GregorianCalendar(task.getEndYear(), task.getEndMonth(), task.getEndDay(), task.getEndHour(), task.getEndMinute());
-
-        taskBeginDate.setText(simpleDateFormat.format(begin.getTime()));
-        taskEndDate.setText(simpleDateFormat.format(end.getTime()));
-
-        taskBeginTime.setText(getTimeFormat(begin.getTime().getHours(), begin.getTime().getMinutes()));
-        taskEndTime.setText(getTimeFormat(end.getTime().getHours(), end.getTime().getMinutes()));
-    }
-
-    private void deleteTask(int id) {
-        mockUpTaskService.delete(id);
-        //eventService.delete(id);
+    private void deleteTask(Long id) {
+        eventService.delete(id);
 
         Intent intent = new Intent();
         setResult(RESULT_OK, intent);
@@ -164,7 +182,6 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
         }
 
         updateTask();
-        mockUpTaskService.update(task.getId(), task);
 
         Intent intent = new Intent();
         setResult(RESULT_OK, intent);
@@ -174,6 +191,8 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
     private void updateTask() {
         task.setName(taskName.getText().toString());
         task.setDetails(taskDetails.getText().toString());
+        //mockUpTaskService.update(task.getId(), task);
+        //eventService.update(eventInstance.getEventId(), );
     }
 
     private void setTaskBeginDateListener() {
@@ -207,7 +226,7 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
                 return true;
 
             case R.id.delete_event:
-                deleteTask(task.getId());
+                deleteTask(eventInstance.getEventId());
                 return true;
 
             default:

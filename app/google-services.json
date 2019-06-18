@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "683480740903",
+    "firebase_url": "https://test-calendar-241815.firebaseio.com",
+    "project_id": "test-calendar-241815",
+    "storage_bucket": "test-calendar-241815.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:683480740903:android:c09352641f3c8f5b",
+        "android_client_info": {
+          "package_name": "com.github.royalstorm.android_task_manager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "683480740903-6nc8b9i26p091ntf92ctoqvp2klkangu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.github.royalstorm.android_task_manager",
+            "certificate_hash": "c35b6bb888ebb0fa9a4aa76ccf8ce2a5993dc239"
+          }
+        },
+        {
+          "client_id": "683480740903-atpdqv9v1sk69uimo07gcjj5jgq55pf5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvNdaSteCev6lptLb_wnf0L1FSk9-ePjo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "683480740903-atpdqv9v1sk69uimo07gcjj5jgq55pf5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
