@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
+import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -20,6 +21,9 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class WeekFragment extends Fragment {
+
+    private RetrofitClient retrofitClient = RetrofitClient.getInstance();
+
     private GregorianCalendar gregorianCalendar;
 
     private TextView currentWeek;
@@ -53,7 +57,6 @@ public class WeekFragment extends Fragment {
         gregorianCalendar.setFirstDayOfWeek(Calendar.MONDAY);
         gregorianCalendar.set(Calendar.DAY_OF_WEEK, gregorianCalendar.getFirstDayOfWeek());
 
-        //This "if" maybe useless cause bundle local variable
         if (bundle != null) {
             day = bundle.getInt("day");
             month = bundle.getInt("month");

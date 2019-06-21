@@ -17,7 +17,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.github.royalstorm.android_task_manager.R;
+import com.github.royalstorm.android_task_manager.dao.Event;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
+import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dao.Task;
 import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
@@ -42,6 +44,8 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
     private EventService eventService = new EventService();
 
     private EventInstance eventInstance;
+    private Event event;
+    private EventPattern eventPattern;
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM yyyy (E)", Locale.getDefault());
 
@@ -83,6 +87,7 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
 
             Bundle bundle = new Bundle();
             bundle.putSerializable(Task.class.getSimpleName(), task);
+            bundle.putSerializable(EventInstance.class.getSimpleName(), eventInstance);
             bundle.putBoolean("IS_BEGIN_DATE", IS_BEGIN_DATE);
             picker = new DatePickerFragment();
             picker.setArguments(bundle);
@@ -116,20 +121,16 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
 
+        ButterKnife.bind(this);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
         setTitle("Редактирование события");
 
         Bundle bundle = getIntent().getExtras();
         eventInstance = (EventInstance) bundle.getSerializable(EventInstance.class.getSimpleName());
+        event = new Event();
 
-        ButterKnife.bind(this);
         initFields(eventInstance);
-
-        setTaskBeginDateListener();
-        setTaskBeginTime();
-
-        setTaskEndDateListener();
-        setTaskEndTime();
+        setListeners();
     }
 
     private void initFields(EventInstance eventInstance) {
@@ -141,14 +142,16 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
                         taskName.setText(response.body().getData()[0].getName());
                         taskDetails.setText(response.body().getData()[0].getDetails());
 
-                        /*begin = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), task.getBeginDay(), task.getBeginHour(), task.getBeginMinute());
-                        end = new GregorianCalendar(task.getEndYear(), task.getEndMonth(), task.getEndDay(), task.getEndHour(), task.getEndMinute());
+                        begin = new GregorianCalendar();
+                        begin.setTimeInMillis(eventInstance.getStartedAt());
+                        end = new GregorianCalendar();
+                        end.setTimeInMillis(eventInstance.getEndedAt());
 
                         taskBeginDate.setText(simpleDateFormat.format(begin.getTime()));
                         taskEndDate.setText(simpleDateFormat.format(end.getTime()));
 
                         taskBeginTime.setText(getTimeFormat(begin.getTime().getHours(), begin.getTime().getMinutes()));
-                        taskEndTime.setText(getTimeFormat(end.getTime().getHours(), end.getTime().getMinutes()));*/
+                        taskEndTime.setText(getTimeFormat(end.getTime().getHours(), end.getTime().getMinutes()));
                     }
                 }
             }
@@ -168,7 +171,7 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
         finish();
     }
 
-    private void editTask(Task task) {
+    private void editTask() {
         if (taskName.getText().toString().trim().isEmpty()) {
             Snackbar.make(getWindow().getDecorView().
                     getRootView(), "Заголовок не может быть пустым", Snackbar.LENGTH_LONG).show();
@@ -181,33 +184,19 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
             }
         }
 
-        updateTask();
+        event.setName(taskName.getText().toString().trim());
+        event.setDetails(taskDetails.getText().toString().trim());
+        eventService.update(eventInstance.getEventId(), event);
 
         Intent intent = new Intent();
         setResult(RESULT_OK, intent);
         finish();
     }
 
-    private void updateTask() {
-        task.setName(taskName.getText().toString());
-        task.setDetails(taskDetails.getText().toString());
-        //mockUpTaskService.update(task.getId(), task);
-        //eventService.update(eventInstance.getEventId(), );
-    }
-
-    private void setTaskBeginDateListener() {
+    private void setListeners() {
         taskBeginDate.setOnClickListener(dateListener);
-    }
-
-    private void setTaskEndDateListener() {
         taskEndDate.setOnClickListener(dateListener);
-    }
-
-    private void setTaskBeginTime() {
         taskBeginTime.setOnClickListener(timeListener);
-    }
-
-    private void setTaskEndTime() {
         taskEndTime.setOnClickListener(timeListener);
     }
 
@@ -222,7 +211,7 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_event:
-                editTask(task);
+                editTask();
                 return true;
 
             case R.id.delete_event:

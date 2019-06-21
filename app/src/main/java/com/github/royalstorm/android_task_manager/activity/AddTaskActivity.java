@@ -18,6 +18,7 @@ import android.widget.TimePicker;
 
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.Event;
+import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dao.Task;
 import com.github.royalstorm.android_task_manager.dto.EventResponse;
@@ -58,6 +59,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     private EventPatternService eventPatternService = new EventPatternService();
     private Event event = new Event();
     private EventPattern eventPattern = new EventPattern();
+    private EventInstance eventInstance = new EventInstance();
 
     private GregorianCalendar gregorianCalendar;
 
@@ -84,6 +86,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
             Bundle bundle = new Bundle();
             bundle.putSerializable(Task.class.getSimpleName(), task);
+            bundle.putSerializable(EventInstance.class.getSimpleName(), eventInstance);
             bundle.putBoolean("IS_BEGIN_DATE", IS_BEGIN_DATE);
             picker = new DatePickerFragment();
             picker.setArguments(bundle);
@@ -143,6 +146,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     private void initDateFields() {
         Bundle bundle = getIntent().getExtras();
         task = (Task) bundle.getSerializable(Task.class.getSimpleName());
+        eventInstance = (EventInstance) bundle.getSerializable(EventInstance.class.getSimpleName());
 
         gregorianCalendar = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), task.getBeginDay(), task.getBeginHour(), task.getBeginMinute());
 

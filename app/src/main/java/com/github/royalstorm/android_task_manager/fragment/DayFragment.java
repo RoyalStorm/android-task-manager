@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
@@ -155,6 +156,10 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
 
     private void createTask() {
         Intent intent = new Intent(getActivity(), AddTaskActivity.class);
+        EventInstance eventInstance = new EventInstance();
+        eventInstance.setStartedAt(calendarToMillis(new GregorianCalendar(year, month, day)));
+        eventInstance.setEndedAt(calendarToMillis(new GregorianCalendar(year, month, day)));
+
         Task task = new Task();
         task.setBeginMinute(new GregorianCalendar().getTime().getMinutes());
         task.setBeginHour(new GregorianCalendar().getTime().getHours());
@@ -166,6 +171,7 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
         task.setEndMonth(month);
         task.setEndYear(year);
 
+        intent.putExtra(EventInstance.class.getSimpleName(), eventInstance);
         intent.putExtra(Task.class.getSimpleName(), task);
 
         startActivity(intent);
@@ -178,6 +184,7 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
                         eventInstances = Arrays.asList(response.body().getData());
+                        Collections.sort(eventInstances, (a, b) -> a.getStartedAt().compareTo(b.getStartedAt()));
                         eventAdapter.setItems(eventInstances);
                         recyclerView.setAdapter(eventAdapter);
                     }
@@ -219,5 +226,9 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
         Intent intent = new Intent(getActivity(), EditTaskActivity.class);
         intent.putExtra(EventInstance.class.getSimpleName(), eventInstances.get(position));
         startActivity(intent);
+    }
+
+    private Long calendarToMillis(GregorianCalendar calendar) {
+        return calendar.getTimeInMillis();
     }
 }

@@ -24,12 +24,24 @@ public class EventInstance implements Serializable {
         return startedAt;
     }
 
+    public void setStartedAt(Long startedAt) {
+        this.startedAt = startedAt;
+    }
+
     public Long getEndedAt() {
         return endedAt;
     }
 
+    public void setEndedAt(Long endedAt) {
+        this.endedAt = endedAt;
+    }
+
     public Long getEventId() {
         return eventId;
+    }
+
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
     }
 
     public Long getPatternId() {
