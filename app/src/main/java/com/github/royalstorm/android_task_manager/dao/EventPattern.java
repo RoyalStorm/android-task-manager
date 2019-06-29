@@ -3,7 +3,9 @@ package com.github.royalstorm.android_task_manager.dao;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class EventPattern {
+import java.io.Serializable;
+
+public class EventPattern implements Serializable {
     /*Readonly fields*/
     @Expose
     private Long id;

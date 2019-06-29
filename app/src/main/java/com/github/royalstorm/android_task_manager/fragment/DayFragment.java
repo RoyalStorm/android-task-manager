@@ -17,10 +17,14 @@ import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.activity.AddTaskActivity;
 import com.github.royalstorm.android_task_manager.activity.EditTaskActivity;
 import com.github.royalstorm.android_task_manager.adapter.EventAdapter;
+import com.github.royalstorm.android_task_manager.dao.Event;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
+import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dao.Task;
 import com.github.royalstorm.android_task_manager.dto.EventInstanceResponse;
+import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectDayDialog;
+import com.github.royalstorm.android_task_manager.service.EventPatternService;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
 import java.text.SimpleDateFormat;
@@ -174,7 +178,56 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
         intent.putExtra(EventInstance.class.getSimpleName(), eventInstance);
         intent.putExtra(Task.class.getSimpleName(), task);
 
-        startActivity(intent);
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (data == null)
+            return;
+
+        if (requestCode == 1) {
+
+            EventPatternService eventPatternService = new EventPatternService();
+
+            retrofitClient.getEventRepository().save((Event) data.getSerializableExtra(Event.class.getSimpleName())).enqueue(new Callback<EventResponse>() {
+                @Override
+                public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+                    if (response.isSuccessful()) {
+                        if (response.body() != null) {
+                            eventPatternService.save(response.body().getData()[0].getId(), (EventPattern) data.getSerializableExtra(EventPattern.class.getSimpleName()));
+
+                            getEvents(
+                                    new GregorianCalendar(year, month, day, 0, 0),
+                                    new GregorianCalendar(year, month, day, 23, 59)
+                            );
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<EventResponse> call, Throwable t) {
+
+                }
+            });
+        } else {
+            retrofitClient.getEventRepository().delete(data.getLongExtra("id", 0)).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful())
+                        getEvents(
+                                new GregorianCalendar(year, month, day, 0, 0),
+                                new GregorianCalendar(year, month, day, 23, 59)
+                        );
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable throwable) {
+                }
+            });
+        }
     }
 
     private void getEvents(GregorianCalendar from, GregorianCalendar to) {
@@ -225,7 +278,7 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
     public void onEventClick(int position) {
         Intent intent = new Intent(getActivity(), EditTaskActivity.class);
         intent.putExtra(EventInstance.class.getSimpleName(), eventInstances.get(position));
-        startActivity(intent);
+        startActivityForResult(intent, 2);
     }
 
     private Long calendarToMillis(GregorianCalendar calendar) {

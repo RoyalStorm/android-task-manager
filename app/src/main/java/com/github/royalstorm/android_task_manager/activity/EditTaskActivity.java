@@ -164,9 +164,9 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
     }
 
     private void deleteTask(Long id) {
-        eventService.delete(id);
-
+        //eventService.delete(id);
         Intent intent = new Intent();
+        intent.putExtra("id", id);
         setResult(RESULT_OK, intent);
         finish();
     }

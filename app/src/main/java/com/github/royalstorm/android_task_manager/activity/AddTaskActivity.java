@@ -21,11 +21,8 @@ import com.github.royalstorm.android_task_manager.dao.Event;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dao.Task;
-import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.TimePickerFragment;
-import com.github.royalstorm.android_task_manager.service.EventPatternService;
-import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -35,9 +32,6 @@ import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class AddTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     @BindView(R.id.task_name)
@@ -56,7 +50,6 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     @BindView(R.id.task_repeat_mode)
     TextView taskRepeatMode;
 
-    private EventPatternService eventPatternService = new EventPatternService();
     private Event event = new Event();
     private EventPattern eventPattern = new EventPattern();
     private EventInstance eventInstance = new EventInstance();
@@ -126,19 +119,11 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         ButterKnife.bind(this);
 
         initDateFields();
+        setListeners();
 
-        setTaskBeginDateListener();
-        setTaskBeginTime();
-
-        setTaskEndDateListener();
-        setTaskEndTime();
-
-        taskRepeatMode = findViewById(R.id.task_repeat_mode);
         taskRepeatMode.setOnClickListener(v -> {
             Intent intent = new Intent(AddTaskActivity.this, RepeatModeActivity.class);
-
             intent.putExtra(Task.class.getSimpleName(), task);
-
             startActivity(intent);
         });
     }
@@ -185,51 +170,27 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
             eventPattern.setStartedAt(begin.getTimeInMillis());
             eventPattern.setEndedAt(end.getTimeInMillis());
             eventPattern.setTimezone(TimeZone.getDefault().getID());
-            eventPattern.setRrule("FREQ=DAILY;INTERVAL=1");
+            eventPattern.setRrule("FREQ=DAILY;INTERVAL=1;COUNT=1");
             eventPattern.setExrule("FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH");
             eventPattern.setDuration(end.getTimeInMillis() - begin.getTimeInMillis());
         }
-
-        Intent intent = new Intent();
 
         event.setDetails(taskDetails.getText().toString().trim());
         event.setLocation("Тест");
         event.setName(taskName.getText().toString().trim());
         event.setStatus("Busy");
 
-        RetrofitClient retrofitClient = RetrofitClient.getInstance();
-
-        retrofitClient.getEventRepository().save(event).enqueue(new Callback<EventResponse>() {
-            @Override
-            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
-                if (response.isSuccessful()) {
-                    eventPatternService.save(response.body().getData()[0].getId(), eventPattern);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<EventResponse> call, Throwable t) {
-
-            }
-        });
-
+        Intent intent = new Intent();
+        intent.putExtra(Event.class.getSimpleName(), event);
+        intent.putExtra(EventPattern.class.getSimpleName(), eventPattern);
         setResult(RESULT_OK, intent);
         finish();
     }
 
-    private void setTaskBeginDateListener() {
+    private void setListeners() {
         taskBeginDate.setOnClickListener(dateListener);
-    }
-
-    private void setTaskEndDateListener() {
         taskEndDate.setOnClickListener(dateListener);
-    }
-
-    private void setTaskBeginTime() {
         taskBeginTime.setOnClickListener(timeListener);
-    }
-
-    private void setTaskEndTime() {
         taskEndTime.setOnClickListener(timeListener);
     }
 

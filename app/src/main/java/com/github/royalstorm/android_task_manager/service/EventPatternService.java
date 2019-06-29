@@ -38,7 +38,7 @@ public class EventPatternService {
         retrofitClient.getEventPatternRepository().save(eventId, eventPattern).enqueue(new Callback<EventPatternResponse>() {
             @Override
             public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
-                Log.d("_POST Pattern Response", response.code() + "");
+                Log.d("POST", response.code() + "");
 
                 if (response.isSuccessful())
                     eventPatternResponse = response.body();
