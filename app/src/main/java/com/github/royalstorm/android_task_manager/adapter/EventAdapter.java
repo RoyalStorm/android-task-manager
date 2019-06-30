@@ -66,7 +66,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 @Override
                 public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
                     if (response.isSuccessful()) {
-                        if (response.body() != null) {
+                        if (response.body().getData() != null) {
                             /*Get by 0 index, cause in data array only 1 object*/
                             eventName.setText(response.body().getData()[0].getName());
                             eventOwner.setText(response.body().getData()[0].getOwnerId().toString());

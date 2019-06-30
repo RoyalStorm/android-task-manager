@@ -105,7 +105,9 @@ public class EventProxyService implements CachedEventRepository {
 
     @Override
     public void addEvent(Event event) {
-
+        events.add(event);
+        eventService.save(event);
+        //TODO: update cache
     }
 
     @Override
@@ -130,11 +132,13 @@ public class EventProxyService implements CachedEventRepository {
 
     @Override
     public void deleteEventInstance(Long id) {
-
     }
 
     @Override
     public void deleteEvent(Long id) {
+        events.remove(getEvent(id));
+        eventService.delete(id);
+        //TODO: update cache
     }
 
     @Override
@@ -152,6 +156,14 @@ public class EventProxyService implements CachedEventRepository {
 
     public int getEventInstanceCount() {
         return eventInstances.size();
+    }
+
+    private Event getEvent(Long id) {
+        for (Event event : events)
+            if (event.getId().equals(id))
+                return event;
+
+        return null;
     }
 
     private boolean isWithinRange(GregorianCalendar begin, GregorianCalendar now, GregorianCalendar end) {

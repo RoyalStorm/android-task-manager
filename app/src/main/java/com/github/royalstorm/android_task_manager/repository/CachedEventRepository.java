@@ -7,7 +7,6 @@ import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import java.util.List;
 
 public interface CachedEventRepository {
-
     //Find all methods
     List<EventInstance> findAllEventInstances();
     List<Event> findAllEvents();
