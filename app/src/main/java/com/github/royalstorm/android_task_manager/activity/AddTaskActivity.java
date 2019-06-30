@@ -20,7 +20,6 @@ import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.Event;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
-import com.github.royalstorm.android_task_manager.dao.Task;
 import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.TimePickerFragment;
 
@@ -54,13 +53,12 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     private EventPattern eventPattern = new EventPattern();
     private EventInstance eventInstance = new EventInstance();
 
-    private GregorianCalendar gregorianCalendar;
+    private GregorianCalendar start;
+    private GregorianCalendar end;
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM yyyy (E)", Locale.getDefault());
 
     private DialogFragment picker;
-
-    private Task task;
 
     private boolean IS_BEGIN_DATE = true;
     private boolean IS_BEGIN_TIME = true;
@@ -68,17 +66,18 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     private View.OnClickListener dateListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            Bundle bundle = new Bundle();
             switch (v.getId()) {
                 case R.id.task_begin_date:
                     IS_BEGIN_DATE = true;
+                    bundle.putSerializable(GregorianCalendar.class.getSimpleName(), start);
                     break;
                 case R.id.task_end_date:
                     IS_BEGIN_DATE = false;
+                    bundle.putSerializable(GregorianCalendar.class.getSimpleName(), end);
                     break;
             }
 
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(EventInstance.class.getSimpleName(), eventInstance);
             bundle.putBoolean("IS_BEGIN_DATE", IS_BEGIN_DATE);
             picker = new DatePickerFragment();
             picker.setArguments(bundle);
@@ -89,17 +88,18 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     private View.OnClickListener timeListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            Bundle bundle = new Bundle();
             switch (v.getId()) {
                 case R.id.task_begin_time:
                     IS_BEGIN_TIME = true;
+                    bundle.putSerializable(GregorianCalendar.class.getSimpleName(), start);
                     break;
                 case R.id.task_end_time:
                     IS_BEGIN_TIME = false;
+                    bundle.putSerializable(GregorianCalendar.class.getSimpleName(), end);
                     break;
             }
 
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(EventInstance.class.getSimpleName(), eventInstance);
             bundle.putBoolean("IS_BEGIN_TIME", IS_BEGIN_TIME);
             picker = new TimePickerFragment();
             picker.setArguments(bundle);
@@ -122,33 +122,31 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
         taskRepeatMode.setOnClickListener(v -> {
             Intent intent = new Intent(AddTaskActivity.this, RepeatModeActivity.class);
-            intent.putExtra(Task.class.getSimpleName(), task);
+            intent.putExtra(EventPattern.class.getSimpleName(), eventPattern);
             startActivity(intent);
         });
     }
 
     private void initDateFields() {
         Bundle bundle = getIntent().getExtras();
-        task = (Task) bundle.getSerializable(Task.class.getSimpleName());
         eventInstance = (EventInstance) bundle.getSerializable(EventInstance.class.getSimpleName());
 
-        gregorianCalendar = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), task.getBeginDay(), task.getBeginHour(), task.getBeginMinute());
+        start = timestampToGregorian(eventInstance.getStartedAt());
+        end = timestampToGregorian(eventInstance.getEndedAt());
 
-        gregorianCalendar.add(Calendar.HOUR, 1);
+        start.add(Calendar.HOUR, 1);
 
-        taskBeginDate.setText(simpleDateFormat.format(gregorianCalendar.getTime()));
-        taskBeginTime.setText(getTimeFormat(gregorianCalendar.getTime().getHours(), 0));
+        taskBeginDate.setText(simpleDateFormat.format(start.getTime()));
+        taskBeginTime.setText(getTimeFormat(start.getTime().getHours(), 0));
 
-        task.setBeginHour(gregorianCalendar.getTime().getHours());
-        task.setBeginMinute(0);
+        start.set(Calendar.MINUTE, 0);
 
-        gregorianCalendar.add(Calendar.HOUR, 1);
+        end.add(Calendar.HOUR_OF_DAY, 2);
 
-        taskEndDate.setText(simpleDateFormat.format(gregorianCalendar.getTime()));
-        taskEndTime.setText(getTimeFormat(gregorianCalendar.getTime().getHours(), 0));
+        taskEndDate.setText(simpleDateFormat.format(end.getTime()));
+        taskEndTime.setText(getTimeFormat(end.getTime().getHours(), 0));
 
-        task.setEndHour(gregorianCalendar.getTime().getHours());
-        task.setEndMinute(0);
+        end.set(Calendar.MINUTE, 0);
     }
 
     private void createTask() {
@@ -157,21 +155,18 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
                     getRootView(), "Заголовок не может быть пустым", Snackbar.LENGTH_LONG).show();
             return;
         } else {
-            GregorianCalendar begin = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), task.getBeginDay(), task.getBeginHour(), task.getBeginMinute());
-            GregorianCalendar end = new GregorianCalendar(task.getEndYear(), task.getEndMonth(), task.getEndDay(), task.getEndHour(), task.getEndMinute());
-
-            if (begin.after(end)) {
+            if (start.after(end)) {
                 Snackbar.make(getWindow().getDecorView().
                         getRootView(), "Событие не может завершиться раньше, чем начаться", Snackbar.LENGTH_LONG).show();
                 return;
             }
 
-            eventPattern.setStartedAt(begin.getTimeInMillis());
+            eventPattern.setStartedAt(start.getTimeInMillis());
             eventPattern.setEndedAt(end.getTimeInMillis());
             eventPattern.setTimezone(TimeZone.getDefault().getID());
             eventPattern.setRrule("FREQ=DAILY;INTERVAL=1;COUNT=1");
             eventPattern.setExrule("FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH");
-            eventPattern.setDuration(end.getTimeInMillis() - begin.getTimeInMillis());
+            eventPattern.setDuration(end.getTimeInMillis() - start.getTimeInMillis());
         }
 
         event.setDetails(taskDetails.getText().toString().trim());
@@ -212,37 +207,31 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        gregorianCalendar.set(Calendar.YEAR, year);
-        gregorianCalendar.set(Calendar.MONTH, month);
-        gregorianCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-        String date = simpleDateFormat.format(gregorianCalendar.getTime());
-
         if (IS_BEGIN_DATE) {
-            task.setBeginYear(year);
-            task.setBeginMonth(month);
-            task.setBeginDay(dayOfMonth);
+            start.set(Calendar.YEAR, year);
+            start.set(Calendar.MONTH, month);
+            start.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-            taskBeginDate.setText(date);
+            taskBeginDate.setText(simpleDateFormat.format(start.getTime()));
         } else {
-            task.setEndYear(year);
-            task.setEndMonth(month);
-            task.setEndDay(dayOfMonth);
+            end.set(Calendar.YEAR, year);
+            end.set(Calendar.MONTH, month);
+            end.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-            taskEndDate.setText(date);
+            taskEndDate.setText(simpleDateFormat.format(end.getTime()));
         }
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         if (IS_BEGIN_TIME) {
-            task.setBeginHour(hourOfDay);
-            task.setBeginMinute(minute);
+            start.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            start.set(Calendar.MINUTE, minute);
 
             taskBeginTime.setText(getTimeFormat(hourOfDay, minute));
         } else {
-            task.setEndHour(hourOfDay);
-            task.setEndMinute(minute);
+            end.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            end.set(Calendar.MINUTE, minute);
 
             taskEndTime.setText(getTimeFormat(hourOfDay, minute));
         }
@@ -250,5 +239,12 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
     private String getTimeFormat(int hourOfDay, int minute) {
         return hourOfDay + ":" + (minute < 10 ? ("0" + minute) : minute);
+    }
+
+    private GregorianCalendar timestampToGregorian(Long millis) {
+        GregorianCalendar gregorianCalendar = new GregorianCalendar();
+        gregorianCalendar.setTimeInMillis(millis);
+
+        return gregorianCalendar;
     }
 }

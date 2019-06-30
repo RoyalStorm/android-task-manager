@@ -20,7 +20,6 @@ import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.Event;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
-import com.github.royalstorm.android_task_manager.dao.Task;
 import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.TimePickerFragment;
@@ -49,7 +48,7 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM yyyy (E)", Locale.getDefault());
 
-    private GregorianCalendar begin;
+    private GregorianCalendar start;
     private GregorianCalendar end;
 
     @BindView(R.id.task_name)
@@ -74,17 +73,18 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
     private View.OnClickListener dateListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            Bundle bundle = new Bundle();
             switch (v.getId()) {
                 case R.id.task_begin_date:
                     IS_BEGIN_DATE = true;
+                    bundle.putSerializable(GregorianCalendar.class.getSimpleName(), start);
                     break;
                 case R.id.task_end_date:
                     IS_BEGIN_DATE = false;
+                    bundle.putSerializable(GregorianCalendar.class.getSimpleName(), end);
                     break;
             }
 
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(EventInstance.class.getSimpleName(), eventInstance);
             bundle.putBoolean("IS_BEGIN_DATE", IS_BEGIN_DATE);
             picker = new DatePickerFragment();
             picker.setArguments(bundle);
@@ -95,17 +95,18 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
     private View.OnClickListener timeListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            Bundle bundle = new Bundle();
             switch (v.getId()) {
                 case R.id.task_begin_time:
                     IS_BEGIN_TIME = true;
+                    bundle.putSerializable(GregorianCalendar.class.getSimpleName(), start);
                     break;
                 case R.id.task_end_time:
                     IS_BEGIN_TIME = false;
+                    bundle.putSerializable(GregorianCalendar.class.getSimpleName(), end);
                     break;
             }
 
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(EventInstance.class.getSimpleName(), eventInstance);
             bundle.putBoolean("IS_BEGIN_TIME", IS_BEGIN_TIME);
             picker = new TimePickerFragment();
             picker.setArguments(bundle);
@@ -139,15 +140,15 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
                         taskName.setText(response.body().getData()[0].getName());
                         taskDetails.setText(response.body().getData()[0].getDetails());
 
-                        begin = new GregorianCalendar();
-                        begin.setTimeInMillis(eventInstance.getStartedAt());
+                        start = new GregorianCalendar();
+                        start.setTimeInMillis(eventInstance.getStartedAt());
                         end = new GregorianCalendar();
                         end.setTimeInMillis(eventInstance.getEndedAt());
 
-                        taskBeginDate.setText(simpleDateFormat.format(begin.getTime()));
+                        taskBeginDate.setText(simpleDateFormat.format(start.getTime()));
                         taskEndDate.setText(simpleDateFormat.format(end.getTime()));
 
-                        taskBeginTime.setText(getTimeFormat(begin.getTime().getHours(), begin.getTime().getMinutes()));
+                        taskBeginTime.setText(getTimeFormat(start.getTime().getHours(), start.getTime().getMinutes()));
                         taskEndTime.setText(getTimeFormat(end.getTime().getHours(), end.getTime().getMinutes()));
                     }
                 }
@@ -173,7 +174,7 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
                     getRootView(), "Заголовок не может быть пустым", Snackbar.LENGTH_LONG).show();
             return;
         } else {
-            if (begin.after(end)) {
+            if (start.after(end)) {
                 Snackbar.make(getWindow().getDecorView().
                         getRootView(), "Событие не может завершиться раньше, чем начаться", Snackbar.LENGTH_LONG).show();
                 return;
@@ -222,11 +223,11 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         if (IS_BEGIN_DATE) {
-            begin.set(Calendar.YEAR, year);
-            begin.set(Calendar.MONTH, month);
-            begin.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            start.set(Calendar.YEAR, year);
+            start.set(Calendar.MONTH, month);
+            start.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-            String date = simpleDateFormat.format(begin.getTime());
+            String date = simpleDateFormat.format(start.getTime());
 
             taskBeginDate.setText(date);
         } else {
@@ -243,8 +244,8 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         if (IS_BEGIN_TIME) {
-            begin.set(Calendar.HOUR, hourOfDay);
-            begin.set(Calendar.MINUTE, minute);
+            start.set(Calendar.HOUR, hourOfDay);
+            start.set(Calendar.MINUTE, minute);
 
             taskBeginTime.setText(getTimeFormat(hourOfDay, minute));
         } else {

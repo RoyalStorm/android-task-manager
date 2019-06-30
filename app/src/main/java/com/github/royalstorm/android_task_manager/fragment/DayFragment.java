@@ -162,21 +162,9 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
     private void createTask() {
         EventInstance eventInstance = new EventInstance();
         eventInstance.setStartedAt(calendarToMillis(new GregorianCalendar(year, month, day, new GregorianCalendar().getTime().getHours(), new GregorianCalendar().getTime().getMinutes())));
-        eventInstance.setEndedAt(calendarToMillis(new GregorianCalendar(year, month, day)));
-
-        Task task = new Task();
-        task.setBeginMinute(new GregorianCalendar().getTime().getMinutes());
-        task.setBeginHour(new GregorianCalendar().getTime().getHours());
-        task.setBeginDay(day);
-        task.setBeginMonth(month);
-        task.setBeginYear(year);
-
-        task.setEndDay(day);
-        task.setEndMonth(month);
-        task.setEndYear(year);
+        eventInstance.setEndedAt(calendarToMillis(new GregorianCalendar(year, month, day, new GregorianCalendar().getTime().getHours(), new GregorianCalendar().getTime().getMinutes())));
 
         Intent intent = new Intent(getActivity(), AddTaskActivity.class);
-        intent.putExtra(Task.class.getSimpleName(), task);
         intent.putExtra(EventInstance.class.getSimpleName(), eventInstance);
         startActivityForResult(intent, 1);
     }
