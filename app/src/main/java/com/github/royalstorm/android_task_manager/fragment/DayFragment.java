@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -159,9 +160,8 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
     }
 
     private void createTask() {
-        Intent intent = new Intent(getActivity(), AddTaskActivity.class);
         EventInstance eventInstance = new EventInstance();
-        eventInstance.setStartedAt(calendarToMillis(new GregorianCalendar(year, month, day)));
+        eventInstance.setStartedAt(calendarToMillis(new GregorianCalendar(year, month, day, new GregorianCalendar().getTime().getHours(), new GregorianCalendar().getTime().getMinutes())));
         eventInstance.setEndedAt(calendarToMillis(new GregorianCalendar(year, month, day)));
 
         Task task = new Task();
@@ -175,9 +175,9 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
         task.setEndMonth(month);
         task.setEndYear(year);
 
-        intent.putExtra(EventInstance.class.getSimpleName(), eventInstance);
+        Intent intent = new Intent(getActivity(), AddTaskActivity.class);
         intent.putExtra(Task.class.getSimpleName(), task);
-
+        intent.putExtra(EventInstance.class.getSimpleName(), eventInstance);
         startActivityForResult(intent, 1);
     }
 

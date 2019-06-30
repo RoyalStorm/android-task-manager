@@ -37,7 +37,7 @@ public class RulesSharingFragment extends Fragment {
 
         super.onCreate(savedInstanceState);
 
-        recyclerView = view.findViewById(R.id.recycler);
+        /*recyclerView = view.findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         //eventAdapter = new EventAdapter();
@@ -59,7 +59,7 @@ public class RulesSharingFragment extends Fragment {
             public void onFailure(Call<EventInstanceResponse> call, Throwable t) {
 
             }
-        });
+        });*/
 
         return view;
     }

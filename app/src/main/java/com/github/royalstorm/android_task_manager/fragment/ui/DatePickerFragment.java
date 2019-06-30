@@ -12,11 +12,11 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class DatePickerFragment extends DialogFragment {
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle bundle = getArguments();
-        //Task task = (Task) bundle.getSerializable(Task.class.getSimpleName());
         EventInstance eventInstance = (EventInstance) bundle.getSerializable(EventInstance.class.getSimpleName());
         boolean IS_BEGIN_DATE = bundle.getBoolean("IS_BEGIN_DATE");
 

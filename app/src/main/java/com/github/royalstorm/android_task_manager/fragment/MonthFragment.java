@@ -10,10 +10,9 @@ import android.view.ViewGroup;
 
 import com.applandeo.materialcalendarview.EventDay;
 import com.github.royalstorm.android_task_manager.R;
-import com.github.royalstorm.android_task_manager.dao.Event;
-import com.github.royalstorm.android_task_manager.dao.EventPattern;
+import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.dao.Task;
-import com.github.royalstorm.android_task_manager.service.EventService;
+import com.github.royalstorm.android_task_manager.service.EventProxyService;
 import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
 
 import java.util.ArrayList;
@@ -24,6 +23,7 @@ import java.util.List;
 public class MonthFragment extends Fragment {
     private com.applandeo.materialcalendarview.CalendarView calendar;
 
+    private EventProxyService eventProxyService = new EventProxyService();
     private MockUpTaskService mockUpTaskService = new MockUpTaskService();
 
     private List<EventDay> events = new ArrayList<>();
@@ -54,16 +54,27 @@ public class MonthFragment extends Fragment {
     }
 
     private void showTasks() {
-        tasks = mockUpTaskService.findAll();
+        //tasks = mockUpTaskService.findAll();
+        List<EventInstance> eventInstances = eventProxyService.findAllEventInstances();
 
-        for (Task task : tasks) {
-            GregorianCalendar beginEventCalendar = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), task.getBeginDay());
-            GregorianCalendar currentEventCalendar = beginEventCalendar;
-            GregorianCalendar endEventCalendar = new GregorianCalendar(task.getEndYear(), task.getEndMonth(), task.getEndDay());
+        for (EventInstance eventInstance : eventInstances) {
+            //GregorianCalendar beginEventCalendar = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), task.getBeginDay());
+            //GregorianCalendar currentEventCalendar = beginEventCalendar;
+            //GregorianCalendar endEventCalendar = new GregorianCalendar(task.getEndYear(), task.getEndMonth(), task.getEndDay());
+            GregorianCalendar begin = new GregorianCalendar();
+            begin.setTimeInMillis(eventInstance.getStartedAt());
+            GregorianCalendar now = begin;
+            GregorianCalendar end = new GregorianCalendar();
+            end.setTimeInMillis(eventInstance.getEndedAt());
 
-            while (!(currentEventCalendar.before(beginEventCalendar) || currentEventCalendar.after(endEventCalendar))) {
+            /*while (!(currentEventCalendar.before(beginEventCalendar) || currentEventCalendar.after(endEventCalendar))) {
                 events.add(new EventDay(new GregorianCalendar(currentEventCalendar.get(Calendar.YEAR), currentEventCalendar.get(Calendar.MONTH), currentEventCalendar.get(Calendar.DAY_OF_MONTH)), R.drawable.ic_star));
                 currentEventCalendar.add(Calendar.DAY_OF_MONTH, 1);
+            }*/
+
+            while (!(now.before(begin) || now.after(end))) {
+                events.add(new EventDay(new GregorianCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH)), R.drawable.ic_star));
+                now.add(Calendar.DAY_OF_MONTH, 1);
             }
         }
 

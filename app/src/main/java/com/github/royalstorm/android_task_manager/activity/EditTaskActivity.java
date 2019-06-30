@@ -52,8 +52,6 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
     private GregorianCalendar begin;
     private GregorianCalendar end;
 
-    private Task task;
-
     @BindView(R.id.task_name)
     EditText taskName;
     @BindView(R.id.task_details)
@@ -86,7 +84,6 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
             }
 
             Bundle bundle = new Bundle();
-            bundle.putSerializable(Task.class.getSimpleName(), task);
             bundle.putSerializable(EventInstance.class.getSimpleName(), eventInstance);
             bundle.putBoolean("IS_BEGIN_DATE", IS_BEGIN_DATE);
             picker = new DatePickerFragment();
@@ -108,7 +105,7 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
             }
 
             Bundle bundle = new Bundle();
-            bundle.putSerializable(Task.class.getSimpleName(), task);
+            bundle.putSerializable(EventInstance.class.getSimpleName(), eventInstance);
             bundle.putBoolean("IS_BEGIN_TIME", IS_BEGIN_TIME);
             picker = new TimePickerFragment();
             picker.setArguments(bundle);
@@ -164,7 +161,6 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
     }
 
     private void deleteTask(Long id) {
-        //eventService.delete(id);
         Intent intent = new Intent();
         intent.putExtra("id", id);
         setResult(RESULT_OK, intent);
@@ -226,10 +222,6 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         if (IS_BEGIN_DATE) {
-            task.setBeginYear(year);
-            task.setBeginMonth(month);
-            task.setBeginDay(dayOfMonth);
-
             begin.set(Calendar.YEAR, year);
             begin.set(Calendar.MONTH, month);
             begin.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -238,10 +230,6 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
 
             taskBeginDate.setText(date);
         } else {
-            task.setEndYear(year);
-            task.setEndMonth(month);
-            task.setEndDay(dayOfMonth);
-
             end.set(Calendar.YEAR, year);
             end.set(Calendar.MONTH, month);
             end.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -258,16 +246,10 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
             begin.set(Calendar.HOUR, hourOfDay);
             begin.set(Calendar.MINUTE, minute);
 
-            task.setBeginHour(hourOfDay);
-            task.setBeginMinute(minute);
-
             taskBeginTime.setText(getTimeFormat(hourOfDay, minute));
         } else {
             end.set(Calendar.HOUR, hourOfDay);
             end.set(Calendar.MINUTE, minute);
-
-            task.setEndHour(hourOfDay);
-            task.setEndMinute(minute);
 
             taskEndTime.setText(getTimeFormat(hourOfDay, minute));
         }

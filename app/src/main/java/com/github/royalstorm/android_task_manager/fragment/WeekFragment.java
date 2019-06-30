@@ -107,51 +107,45 @@ public class WeekFragment extends Fragment {
 
     private void setPrevWeekListener(View view) {
         prevWeek = view.findViewById(R.id.prev_week);
-        prevWeek.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gregorianCalendar.add(Calendar.DAY_OF_MONTH, -13);
+        prevWeek.setOnClickListener(v -> {
+            gregorianCalendar.add(Calendar.DAY_OF_MONTH, -13);
 
-                day = gregorianCalendar.get(Calendar.DAY_OF_MONTH);
-                month = gregorianCalendar.get(Calendar.MONTH);
-                year = gregorianCalendar.get(Calendar.YEAR);
+            day = gregorianCalendar.get(Calendar.DAY_OF_MONTH);
+            month = gregorianCalendar.get(Calendar.MONTH);
+            year = gregorianCalendar.get(Calendar.YEAR);
 
-                Bundle bundle = new Bundle();
-                bundle.putInt("day", day);
-                bundle.putInt("month", month);
-                bundle.putInt("year", year);
+            Bundle bundle = new Bundle();
+            bundle.putInt("day", day);
+            bundle.putInt("month", month);
+            bundle.putInt("year", year);
 
-                WeekFragment weekFragment = new WeekFragment();
-                weekFragment.setArguments(bundle);
+            WeekFragment weekFragment = new WeekFragment();
+            weekFragment.setArguments(bundle);
 
-                getFragmentManager().beginTransaction().replace(R.id.calendarContainer,
-                        weekFragment).commit();
-            }
+            getFragmentManager().beginTransaction().replace(R.id.calendarContainer,
+                    weekFragment).commit();
         });
     }
 
     private void setNextWeekListener(View view) {
         nextWeek = view.findViewById(R.id.next_week);
-        nextWeek.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gregorianCalendar.add(Calendar.DAY_OF_MONTH, 1);
+        nextWeek.setOnClickListener(v -> {
+            gregorianCalendar.add(Calendar.DAY_OF_MONTH, 1);
 
-                day = gregorianCalendar.get(Calendar.DAY_OF_MONTH);
-                month = gregorianCalendar.get(Calendar.MONTH);
-                year = gregorianCalendar.get(Calendar.YEAR);
+            day = gregorianCalendar.get(Calendar.DAY_OF_MONTH);
+            month = gregorianCalendar.get(Calendar.MONTH);
+            year = gregorianCalendar.get(Calendar.YEAR);
 
-                Bundle bundle = new Bundle();
-                bundle.putInt("day", day);
-                bundle.putInt("month", month);
-                bundle.putInt("year", year);
+            Bundle bundle = new Bundle();
+            bundle.putInt("day", day);
+            bundle.putInt("month", month);
+            bundle.putInt("year", year);
 
-                WeekFragment weekFragment = new WeekFragment();
-                weekFragment.setArguments(bundle);
+            WeekFragment weekFragment = new WeekFragment();
+            weekFragment.setArguments(bundle);
 
-                getFragmentManager().beginTransaction().replace(R.id.calendarContainer,
-                        weekFragment).commit();
-            }
+            getFragmentManager().beginTransaction().replace(R.id.calendarContainer,
+                    weekFragment).commit();
         });
     }
 
@@ -177,22 +171,19 @@ public class WeekFragment extends Fragment {
                 if (mockUpTaskService.findByDateAndTime(year, month, day + j, i, 0).size() > 0)
                     days[j].setBackground(days[j].getContext().getDrawable(R.drawable.side_nav_bar));
 
-                days[j].setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        day += ((v.getId()) / 100);
+                days[j].setOnClickListener(v -> {
+                    day += ((v.getId()) / 100);
 
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("day", day);
-                        bundle.putInt("month", month);
-                        bundle.putInt("year", year);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("day", day);
+                    bundle.putInt("month", month);
+                    bundle.putInt("year", year);
 
-                        DayFragment dayFragment = new DayFragment();
-                        dayFragment.setArguments(bundle);
+                    DayFragment dayFragment = new DayFragment();
+                    dayFragment.setArguments(bundle);
 
-                        getFragmentManager().beginTransaction().replace(R.id.calendarContainer,
-                                dayFragment).commit();
-                    }
+                    getFragmentManager().beginTransaction().replace(R.id.calendarContainer,
+                            dayFragment).commit();
                 });
             }
 

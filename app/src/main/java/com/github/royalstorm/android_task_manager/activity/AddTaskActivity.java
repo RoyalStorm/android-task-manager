@@ -78,7 +78,6 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
             }
 
             Bundle bundle = new Bundle();
-            bundle.putSerializable(Task.class.getSimpleName(), task);
             bundle.putSerializable(EventInstance.class.getSimpleName(), eventInstance);
             bundle.putBoolean("IS_BEGIN_DATE", IS_BEGIN_DATE);
             picker = new DatePickerFragment();
@@ -100,7 +99,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
             }
 
             Bundle bundle = new Bundle();
-            bundle.putSerializable(Task.class.getSimpleName(), task);
+            bundle.putSerializable(EventInstance.class.getSimpleName(), eventInstance);
             bundle.putBoolean("IS_BEGIN_TIME", IS_BEGIN_TIME);
             picker = new TimePickerFragment();
             picker.setArguments(bundle);
