@@ -21,9 +21,9 @@ import com.github.royalstorm.android_task_manager.dao.Event;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dto.EventInstanceResponse;
+import com.github.royalstorm.android_task_manager.dto.EventPatternResponse;
 import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectDayDialog;
-import com.github.royalstorm.android_task_manager.service.EventPatternService;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
 import java.text.SimpleDateFormat;
@@ -175,20 +175,25 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
             return;
 
         if (requestCode == 1) {
-
-            EventPatternService eventPatternService = new EventPatternService();
-
             retrofitClient.getEventRepository().save((Event) data.getSerializableExtra(Event.class.getSimpleName())).enqueue(new Callback<EventResponse>() {
                 @Override
                 public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
                     if (response.isSuccessful()) {
                         if (response.body() != null) {
-                            eventPatternService.save(response.body().getData()[0].getId(), (EventPattern) data.getSerializableExtra(EventPattern.class.getSimpleName()));
+                            retrofitClient.getEventPatternRepository().save(response.body().getData()[0].getId(), (EventPattern) data.getSerializableExtra(EventPattern.class.getSimpleName())).enqueue(new Callback<EventPatternResponse>() {
+                                @Override
+                                public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
+                                    getEvents(
+                                            new GregorianCalendar(year, month, day, 0, 0),
+                                            new GregorianCalendar(year, month, day, 23, 59)
+                                    );
+                                }
 
-                            getEvents(
-                                    new GregorianCalendar(year, month, day, 0, 0),
-                                    new GregorianCalendar(year, month, day, 23, 59)
-                            );
+                                @Override
+                                public void onFailure(Call<EventPatternResponse> call, Throwable t) {
+
+                                }
+                            });
                         }
                     }
                 }
