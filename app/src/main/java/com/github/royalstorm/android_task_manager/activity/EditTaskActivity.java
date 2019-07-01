@@ -23,13 +23,13 @@ import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.TimePickerFragment;
-import com.github.royalstorm.android_task_manager.service.EventService;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,8 +39,6 @@ import retrofit2.Response;
 
 public class EditTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private RetrofitClient retrofitClient = RetrofitClient.getInstance();
-
-    private EventService eventService = new EventService();
 
     private EventInstance eventInstance;
     private Event event;
@@ -126,6 +124,7 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
         Bundle bundle = getIntent().getExtras();
         eventInstance = (EventInstance) bundle.getSerializable(EventInstance.class.getSimpleName());
         event = new Event();
+        eventPattern = new EventPattern();
 
         initFields(eventInstance);
         setListeners();
@@ -164,6 +163,7 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
     private void deleteTask(Long id) {
         Intent intent = new Intent();
         intent.putExtra("id", id);
+        intent.putExtra("Action", "Delete");
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -181,11 +181,21 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
             }
         }
 
+        eventPattern.setStartedAt(start.getTimeInMillis());
+        eventPattern.setEndedAt(end.getTimeInMillis());
+        eventPattern.setTimezone(TimeZone.getDefault().getID());
+        eventPattern.setRrule("FREQ=DAILY;INTERVAL=1;COUNT=1");
+        eventPattern.setExrule("FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH;COUNT=1");
+        eventPattern.setDuration(end.getTimeInMillis() - start.getTimeInMillis());
         event.setName(taskName.getText().toString().trim());
         event.setDetails(taskDetails.getText().toString().trim());
-        eventService.update(eventInstance.getEventId(), event);
 
         Intent intent = new Intent();
+        intent.putExtra(EventPattern.class.getSimpleName(), eventPattern);
+        intent.putExtra(Event.class.getSimpleName(), event);
+        intent.putExtra("eventId", eventInstance.getEventId());
+        intent.putExtra("patternId", eventInstance.getPatternId());
+        intent.putExtra("Action", "Update");
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -244,12 +254,12 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         if (IS_BEGIN_TIME) {
-            start.set(Calendar.HOUR, hourOfDay);
+            start.set(Calendar.HOUR_OF_DAY, hourOfDay);
             start.set(Calendar.MINUTE, minute);
 
             taskBeginTime.setText(getTimeFormat(hourOfDay, minute));
         } else {
-            end.set(Calendar.HOUR, hourOfDay);
+            end.set(Calendar.HOUR_OF_DAY, hourOfDay);
             end.set(Calendar.MINUTE, minute);
 
             taskEndTime.setText(getTimeFormat(hourOfDay, minute));

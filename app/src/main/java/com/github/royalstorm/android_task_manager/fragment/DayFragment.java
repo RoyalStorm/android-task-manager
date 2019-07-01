@@ -57,6 +57,9 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
     private int month;
     private int year;
 
+    private static final int ADD = 1;
+    private static final int EDIT = 2;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -164,7 +167,7 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
 
         Intent intent = new Intent(getActivity(), AddTaskActivity.class);
         intent.putExtra(EventInstance.class.getSimpleName(), eventInstance);
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, ADD);
     }
 
     @Override
@@ -174,7 +177,7 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
         if (data == null)
             return;
 
-        if (requestCode == 1) {
+        if (requestCode == ADD) {
             retrofitClient.getEventRepository().save((Event) data.getSerializableExtra(Event.class.getSimpleName())).enqueue(new Callback<EventResponse>() {
                 @Override
                 public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
@@ -204,20 +207,54 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
                 }
             });
         } else {
-            retrofitClient.getEventRepository().delete(data.getLongExtra("id", 0)).enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful())
-                        getEvents(
-                                new GregorianCalendar(year, month, day, 0, 0),
-                                new GregorianCalendar(year, month, day, 23, 59)
-                        );
-                }
+            if (data.getStringExtra("Action").equals("Delete"))
+                retrofitClient.getEventRepository().delete(data.getLongExtra("id", 0)).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful())
+                            getEvents(
+                                    new GregorianCalendar(year, month, day, 0, 0),
+                                    new GregorianCalendar(year, month, day, 23, 59)
+                            );
+                    }
 
-                @Override
-                public void onFailure(Call<Void> call, Throwable throwable) {
-                }
-            });
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable throwable) {
+                    }
+                });
+            else {
+                Event event = (Event) data.getSerializableExtra(Event.class.getSimpleName());
+                EventPattern eventPattern = (EventPattern) data.getSerializableExtra(EventPattern.class.getSimpleName());
+                Long eventId = data.getLongExtra("eventId", 0);
+                Long patternId = data.getLongExtra("patternId", 0);
+
+                retrofitClient.getEventPatternRepository().update(patternId, eventPattern).enqueue(new Callback<EventPatternResponse>() {
+                    @Override
+                    public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
+                        if (response.isSuccessful())
+                            retrofitClient.getEventRepository().update(eventId, event).enqueue(new Callback<EventResponse>() {
+                                @Override
+                                public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+                                    if (response.isSuccessful())
+                                        getEvents(
+                                                new GregorianCalendar(year, month, day, 0, 0),
+                                                new GregorianCalendar(year, month, day, 23, 59)
+                                        );
+                                }
+
+                                @Override
+                                public void onFailure(Call<EventResponse> call, Throwable t) {
+
+                                }
+                            });
+                    }
+
+                    @Override
+                    public void onFailure(Call<EventPatternResponse> call, Throwable t) {
+
+                    }
+                });
+            }
         }
     }
 
@@ -269,7 +306,7 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
     public void onEventClick(int position) {
         Intent intent = new Intent(getActivity(), EditTaskActivity.class);
         intent.putExtra(EventInstance.class.getSimpleName(), eventInstances.get(position));
-        startActivityForResult(intent, 2);
+        startActivityForResult(intent, EDIT);
     }
 
     private Long calendarToMillis(GregorianCalendar calendar) {

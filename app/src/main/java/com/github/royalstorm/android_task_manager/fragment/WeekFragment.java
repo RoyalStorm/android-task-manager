@@ -4,19 +4,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.service.EventService;
-import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -132,8 +129,6 @@ public class WeekFragment extends Fragment {
         gregorianCalendar.set(Calendar.MINUTE, 59);
         gregorianCalendar.set(Calendar.SECOND, 59);
         Long to = gregorianCalendar.getTimeInMillis();
-
-        Log.d("FROM, TO", from + ", " + to + "");
 
         EventService eventService = new EventService();
         eventService.getEventInstancesByInterval(from, to);
