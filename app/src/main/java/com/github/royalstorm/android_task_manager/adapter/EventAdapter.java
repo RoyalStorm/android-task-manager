@@ -65,13 +65,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             retrofitClient.getEventRepository().getEventsById(new Long[]{eventInstance.getEventId()}).enqueue(new Callback<EventResponse>() {
                 @Override
                 public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
-                    if (response.isSuccessful()) {
-                        if (response.body().getData() != null) {
-                            /*Get by 0 index, cause in data array only 1 object*/
-                            eventName.setText(response.body().getData()[0].getName());
-                            eventOwner.setText(response.body().getData()[0].getOwnerId().toString());
-                            eventDetails.setText(response.body().getData()[0].getDetails());
-                        }
+                    if (response.isSuccessful() && response.body().getCount() != 0) {
+                        /*Get by 0 index, cause in data array only 1 object*/
+                        eventName.setText(response.body().getData()[0].getName());
+                        eventOwner.setText(response.body().getData()[0].getOwnerId().toString());
+                        eventDetails.setText(response.body().getData()[0].getDetails());
                     }
                 }
 

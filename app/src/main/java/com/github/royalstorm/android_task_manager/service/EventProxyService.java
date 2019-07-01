@@ -10,6 +10,8 @@ import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.repository.CachedEventRepository;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
@@ -34,8 +36,10 @@ public class EventProxyService implements CachedEventRepository {
         retrofitClient.getEventRepository().getAllEventInstances().enqueue(new Callback<EventInstanceResponse>() {
             @Override
             public void onResponse(Call<EventInstanceResponse> call, Response<EventInstanceResponse> response) {
-                if (response.isSuccessful() && response.body() != null)
+                if (response.isSuccessful() && response.body() != null) {
                     eventInstances.addAll(Arrays.asList(response.body().getData()));
+                    EventBus.getDefault().post(response.body());
+                }
             }
 
             @Override
@@ -100,7 +104,7 @@ public class EventProxyService implements CachedEventRepository {
 
     @Override
     public void addEventInstance(EventInstance eventInstance) {
-
+        eventInstances.add(eventInstance);
     }
 
     @Override

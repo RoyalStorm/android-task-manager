@@ -10,10 +10,17 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.royalstorm.android_task_manager.R;
+import com.github.royalstorm.android_task_manager.dao.Event;
+import com.github.royalstorm.android_task_manager.dto.EventInstanceResponse;
+import com.github.royalstorm.android_task_manager.service.EventProxyService;
 import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,7 +28,6 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class WeekFragment extends Fragment {
-
     private RetrofitClient retrofitClient = RetrofitClient.getInstance();
 
     private GregorianCalendar gregorianCalendar;
@@ -40,12 +46,27 @@ public class WeekFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_week,
                 container, false);
 
+        EventBus.getDefault().register(this);
+
         setDays(view);
         setPrevWeekListener(view);
         setNextWeekListener(view);
         createScheduleGrid(view);
 
+        EventProxyService eventProxyService = new EventProxyService();
+
         return view;
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void onEvent(EventInstanceResponse eventInstanceResponse) {
+        Toast.makeText(getActivity(), eventInstanceResponse.getCount() + "", Toast.LENGTH_SHORT).show();
     }
 
     private void setDays(View view) {
