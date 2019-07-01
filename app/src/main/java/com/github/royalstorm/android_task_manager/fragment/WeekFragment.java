@@ -66,7 +66,6 @@ public class WeekFragment extends Fragment {
 
     @Subscribe
     public void onEventsInstancesByInterval(List<EventInstance> eventInstances) {
-        Log.d("_______________", "LOADED");
         this.eventInstances = eventInstances;
         createScheduleGrid(view);
     }
@@ -92,8 +91,7 @@ public class WeekFragment extends Fragment {
 
         gregorianCalendar.set(year, month, day);
 
-        SimpleDateFormat month = new SimpleDateFormat("MMM", Locale.getDefault());
-        String date = month.format(gregorianCalendar.getTime());
+        currentWeek.setText(new SimpleDateFormat("MMM", Locale.getDefault()).format(gregorianCalendar.getTime()));
 
         TextView monNumber = view.findViewById(R.id.monNumber);
         TextView tueNumber = view.findViewById(R.id.tueNumber);
@@ -104,8 +102,10 @@ public class WeekFragment extends Fragment {
         TextView sunNumber = view.findViewById(R.id.sunNumber);
 
         SimpleDateFormat day = new SimpleDateFormat("d", Locale.getDefault());
-        gregorianCalendar.set(Calendar.MINUTE, 0);
 
+        gregorianCalendar.set(Calendar.SECOND, 0);
+        gregorianCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        gregorianCalendar.set(Calendar.MINUTE, 0);
         Long from = gregorianCalendar.getTimeInMillis();
 
         monNumber.setText(day.format(gregorianCalendar.getTime()));
@@ -130,12 +130,13 @@ public class WeekFragment extends Fragment {
 
         gregorianCalendar.set(Calendar.HOUR_OF_DAY, 23);
         gregorianCalendar.set(Calendar.MINUTE, 59);
+        gregorianCalendar.set(Calendar.SECOND, 59);
         Long to = gregorianCalendar.getTimeInMillis();
+
+        Log.d("FROM, TO", from + ", " + to + "");
 
         EventService eventService = new EventService();
         eventService.getEventInstancesByInterval(from, to);
-
-        currentWeek.setText(date);
     }
 
     private void setPrevWeekListener(View view) {
@@ -231,7 +232,6 @@ public class WeekFragment extends Fragment {
         List<EventInstance> foundEvents = new ArrayList<>();
 
         GregorianCalendar now = new GregorianCalendar(year, month, day, hour, 0);
-        Log.d("_________________", "FOUNDED");
 
         for (EventInstance eventInstance : eventInstances) {
             GregorianCalendar start = new GregorianCalendar();
