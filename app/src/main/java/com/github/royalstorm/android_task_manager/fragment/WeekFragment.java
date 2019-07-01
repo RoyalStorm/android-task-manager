@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,23 +14,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.royalstorm.android_task_manager.R;
-import com.github.royalstorm.android_task_manager.dao.Event;
-import com.github.royalstorm.android_task_manager.dto.EventInstanceResponse;
-import com.github.royalstorm.android_task_manager.service.EventProxyService;
+import com.github.royalstorm.android_task_manager.dao.EventInstance;
+import com.github.royalstorm.android_task_manager.service.EventService;
 import com.github.royalstorm.android_task_manager.service.MockUpTaskService;
-import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 public class WeekFragment extends Fragment {
-    private RetrofitClient retrofitClient = RetrofitClient.getInstance();
-
     private GregorianCalendar gregorianCalendar;
 
     private TextView currentWeek;
@@ -40,10 +39,14 @@ public class WeekFragment extends Fragment {
     private int month;
     private int year;
 
+    private List<EventInstance> eventInstances = new ArrayList<>();
+
+    private View view;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_week,
+        view = inflater.inflate(R.layout.fragment_week,
                 container, false);
 
         EventBus.getDefault().register(this);
@@ -51,9 +54,6 @@ public class WeekFragment extends Fragment {
         setDays(view);
         setPrevWeekListener(view);
         setNextWeekListener(view);
-        createScheduleGrid(view);
-
-        EventProxyService eventProxyService = new EventProxyService();
 
         return view;
     }
@@ -65,8 +65,10 @@ public class WeekFragment extends Fragment {
     }
 
     @Subscribe
-    public void onEvent(EventInstanceResponse eventInstanceResponse) {
-        Toast.makeText(getActivity(), eventInstanceResponse.getCount() + "", Toast.LENGTH_SHORT).show();
+    public void onEventsInstancesByInterval(List<EventInstance> eventInstances) {
+        Log.d("_______________", "LOADED");
+        this.eventInstances = eventInstances;
+        createScheduleGrid(view);
     }
 
     private void setDays(View view) {
@@ -102,6 +104,9 @@ public class WeekFragment extends Fragment {
         TextView sunNumber = view.findViewById(R.id.sunNumber);
 
         SimpleDateFormat day = new SimpleDateFormat("d", Locale.getDefault());
+        gregorianCalendar.set(Calendar.MINUTE, 0);
+
+        Long from = gregorianCalendar.getTimeInMillis();
 
         monNumber.setText(day.format(gregorianCalendar.getTime()));
 
@@ -122,6 +127,13 @@ public class WeekFragment extends Fragment {
 
         gregorianCalendar.add(Calendar.DAY_OF_WEEK, 1);
         sunNumber.setText(day.format(gregorianCalendar.getTime()));
+
+        gregorianCalendar.set(Calendar.HOUR_OF_DAY, 23);
+        gregorianCalendar.set(Calendar.MINUTE, 59);
+        Long to = gregorianCalendar.getTimeInMillis();
+
+        EventService eventService = new EventService();
+        eventService.getEventInstancesByInterval(from, to);
 
         currentWeek.setText(date);
     }
@@ -171,7 +183,6 @@ public class WeekFragment extends Fragment {
     }
 
     private void createScheduleGrid(View view) {
-        MockUpTaskService mockUpTaskService = new MockUpTaskService();
         TableLayout tableLayout = view.findViewById(R.id.scheduleTable);
         TableRow row;
 
@@ -189,7 +200,7 @@ public class WeekFragment extends Fragment {
 
                 row.addView(days[j]);
 
-                if (mockUpTaskService.findByDateAndTime(year, month, day + j, i, 0).size() > 0)
+                if (findByMoment(year, month, day + j, i).size() > 0)
                     days[j].setBackground(days[j].getContext().getDrawable(R.drawable.side_nav_bar));
 
                 days[j].setOnClickListener(v -> {
@@ -214,5 +225,28 @@ public class WeekFragment extends Fragment {
 
     private int dpToPix() {
         return 60 * (int) getContext().getResources().getDisplayMetrics().density;
+    }
+
+    private List<EventInstance> findByMoment(int year, int month, int day, int hour) {
+        List<EventInstance> foundEvents = new ArrayList<>();
+
+        GregorianCalendar now = new GregorianCalendar(year, month, day, hour, 0);
+        Log.d("_________________", "FOUNDED");
+
+        for (EventInstance eventInstance : eventInstances) {
+            GregorianCalendar start = new GregorianCalendar();
+            start.setTimeInMillis(eventInstance.getStartedAt());
+            GregorianCalendar end = new GregorianCalendar();
+            end.setTimeInMillis(eventInstance.getEndedAt());
+
+            if (isWithinRange(start, now, end))
+                foundEvents.add(eventInstance);
+        }
+
+        return foundEvents;
+    }
+
+    private boolean isWithinRange(GregorianCalendar start, GregorianCalendar now, GregorianCalendar end) {
+        return !(now.before(start) || now.after(end));
     }
 }

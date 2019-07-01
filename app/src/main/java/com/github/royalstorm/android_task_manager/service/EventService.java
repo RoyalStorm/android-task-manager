@@ -1,8 +1,13 @@
 package com.github.royalstorm.android_task_manager.service;
 
 import com.github.royalstorm.android_task_manager.dao.Event;
+import com.github.royalstorm.android_task_manager.dto.EventInstanceResponse;
 import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.Arrays;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,6 +49,21 @@ public class EventService {
 
             @Override
             public void onFailure(Call<Void> call, Throwable throwable) {
+            }
+        });
+    }
+
+    public void getEventInstancesByInterval(Long from, Long to) {
+        retrofitClient.getEventRepository().getEventInstancesByInterval(from, to).enqueue(new Callback<EventInstanceResponse>() {
+            @Override
+            public void onResponse(Call<EventInstanceResponse> call, Response<EventInstanceResponse> response) {
+                if (response.isSuccessful() && response.body().getCount() != 0)
+                    EventBus.getDefault().post(Arrays.asList(response.body().getData()));
+            }
+
+            @Override
+            public void onFailure(Call<EventInstanceResponse> call, Throwable t) {
+
             }
         });
     }
