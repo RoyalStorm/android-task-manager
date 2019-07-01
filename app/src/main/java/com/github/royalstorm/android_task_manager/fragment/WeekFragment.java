@@ -226,22 +226,14 @@ public class WeekFragment extends Fragment {
     private List<EventInstance> findByMoment(int year, int month, int day, int hour) {
         List<EventInstance> foundEvents = new ArrayList<>();
 
-        GregorianCalendar now = new GregorianCalendar(year, month, day, hour, 0);
+        GregorianCalendar start = new GregorianCalendar(year, month, day, hour, 0);
+        GregorianCalendar end = new GregorianCalendar(year, month, day, hour, 59);
 
         for (EventInstance eventInstance : eventInstances) {
-            GregorianCalendar start = new GregorianCalendar();
-            start.setTimeInMillis(eventInstance.getStartedAt());
-            GregorianCalendar end = new GregorianCalendar();
-            end.setTimeInMillis(eventInstance.getEndedAt());
-
-            if (isWithinRange(start, now, end))
+            if (eventInstance.getStartedAt() <= end.getTimeInMillis() && eventInstance.getEndedAt() >= start.getTimeInMillis())
                 foundEvents.add(eventInstance);
         }
 
         return foundEvents;
-    }
-
-    private boolean isWithinRange(GregorianCalendar start, GregorianCalendar now, GregorianCalendar end) {
-        return !(now.before(start) || now.after(end));
     }
 }
