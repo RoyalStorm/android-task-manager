@@ -62,13 +62,17 @@ public class MonthFragment extends Fragment {
         EventInstance[] eventInstances = eventInstanceResponse.getData();
 
         for (EventInstance eventInstance : eventInstances) {
-            GregorianCalendar begin = new GregorianCalendar();
-            begin.setTimeInMillis(eventInstance.getStartedAt());
-            GregorianCalendar now = begin;
+            GregorianCalendar start = new GregorianCalendar();
+            start.setTimeInMillis(eventInstance.getStartedAt());
+            GregorianCalendar now = start;
+            start.set(Calendar.HOUR_OF_DAY, 0);
+            start.set(Calendar.MINUTE, 0);
             GregorianCalendar end = new GregorianCalendar();
             end.setTimeInMillis(eventInstance.getEndedAt());
+            end.set(Calendar.HOUR_OF_DAY, 0);
+            end.set(Calendar.MINUTE, 0);
 
-            while (!(now.before(begin) || now.after(end))) {
+            while (isWithinRange(start, now, end)) {
                 events.add(new EventDay(new GregorianCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH)), R.drawable.ic_star));
                 now.add(Calendar.DAY_OF_MONTH, 1);
             }
@@ -81,5 +85,9 @@ public class MonthFragment extends Fragment {
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
+    }
+
+    private boolean isWithinRange(GregorianCalendar start, GregorianCalendar now, GregorianCalendar end) {
+        return !(now.before(start) || now.after(end));
     }
 }

@@ -57,7 +57,7 @@ public class EventService {
         retrofitClient.getEventRepository().getEventInstancesByInterval(from, to).enqueue(new Callback<EventInstanceResponse>() {
             @Override
             public void onResponse(Call<EventInstanceResponse> call, Response<EventInstanceResponse> response) {
-                if (response.isSuccessful() && response.body().getCount() != 0)
+                if (response.isSuccessful())
                     EventBus.getDefault().post(Arrays.asList(response.body().getData()));
             }
 
