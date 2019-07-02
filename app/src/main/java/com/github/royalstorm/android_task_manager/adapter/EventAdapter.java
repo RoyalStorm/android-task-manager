@@ -1,5 +1,6 @@
 package com.github.royalstorm.android_task_manager.adapter;
 
+import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,6 +29,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     private List<EventInstance> eventInstances;
 
     private OnEventListener onEventListener;
+
+    private View view;
 
     public EventAdapter(List<EventInstance> eventInstances, OnEventListener onEventListener) {
         this.eventInstances = eventInstances;
@@ -67,9 +70,15 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
                     if (response.isSuccessful() && response.body().getCount() != 0) {
                         /*Get by 0 index, cause in data array only 1 object*/
-                        eventName.setText(response.body().getData()[0].getName());
-                        eventOwner.setText(response.body().getData()[0].getOwnerId().toString());
-                        eventDetails.setText(response.body().getData()[0].getDetails());
+                        if (isPortraitOrientation()) {
+                            eventName.setText(response.body().getData()[0].getName().length() < 29 ? response.body().getData()[0].getName() : (response.body().getData()[0].getName().substring(0, 27) + "..."));
+                            eventOwner.setText(response.body().getData()[0].getOwnerId().toString());
+                            eventDetails.setText(response.body().getData()[0].getDetails().length() < 29 ? response.body().getData()[0].getDetails() : (response.body().getData()[0].getDetails().substring(0, 27) + "..."));
+                        } else {
+                            eventName.setText(response.body().getData()[0].getName().length() < 58 ? response.body().getData()[0].getName() : (response.body().getData()[0].getName().substring(0, 58) + "..."));
+                            eventOwner.setText(response.body().getData()[0].getOwnerId().toString());
+                            eventDetails.setText(response.body().getData()[0].getDetails().length() < 58 ? response.body().getData()[0].getDetails() : (response.body().getData()[0].getDetails().substring(0, 58) + "..."));
+                        }
                     }
                 }
 
@@ -78,6 +87,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
                 }
             });
+        }
+
+        private boolean isPortraitOrientation() {
+            return view.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
         }
 
         private String timestampToDate(Long millis) {
@@ -107,7 +120,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.event_item, viewGroup, false);
+        view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.event_item, viewGroup, false);
         return new EventViewHolder(view, onEventListener);
     }
 
