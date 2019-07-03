@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="15dp"
+    android:layout_margin="10dp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -22,11 +21,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/repeat_number"
+                android:id="@+id/repeat_per_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="0.1"
@@ -64,7 +63,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <CheckBox
@@ -123,32 +122,55 @@
             android:layout_marginTop="5dp"
             android:background="?android:attr/listDivider" />
 
-        <!--<TextView
+        <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Заканчивается:"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <RadioGroup
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
 
             <RadioButton
-                android:id="@+id/radioButton"
+                android:id="@+id/never"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Никогда" />
 
             <RadioButton
-                android:id="@+id/radioButton2"
+                android:id="@+id/selected_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
                 android:layout_weight="1"
-                android:text="RadioButton" />
-        </RadioGroup>-->
+                android:text="" />
 
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="55dp"
+                android:layout_marginTop="-25dp" />
+
+            <RadioButton
+                android:id="@+id/times"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Повторить раз" />
+
+            <EditText
+                android:id="@+id/repeat_times"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="142dp"
+                android:layout_marginTop="-42dp"
+                android:inputType="numberSigned" />
+        </RadioGroup>
     </LinearLayout>
 </RelativeLayout>

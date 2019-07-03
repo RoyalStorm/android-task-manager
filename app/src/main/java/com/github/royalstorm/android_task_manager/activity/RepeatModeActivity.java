@@ -7,11 +7,23 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
+import com.github.royalstorm.android_task_manager.dao.EventPattern;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class RepeatModeActivity extends AppCompatActivity {
-    String[] modes = {"День", "Неделя", "Месяц", "Год"};
+
+    @BindView(R.id.date)
+    TextView date;
+
+    private String[] modes = {"День", "Неделя", "Месяц", "Год"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,11 +32,17 @@ public class RepeatModeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_repeat_mode);
         setTitle("Повтор события");
 
+        ButterKnife.bind(this);
+
         Spinner spinner = findViewById(R.id.repeat_mode);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, modes);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
+        //Bundle bundle = getIntent().getExtras();
+        //EventPattern eventPattern = (EventPattern) bundle.getSerializable(EventPattern.class.getSimpleName());
+        //date.setText(new SimpleDateFormat("d MMMM yyyy (E)", Locale.getDefault()).format(eventPattern.getEndedAt()));
     }
 
     @Override
@@ -39,7 +57,6 @@ public class RepeatModeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.save_event:
-                //createTask();
                 return true;
 
             default:
