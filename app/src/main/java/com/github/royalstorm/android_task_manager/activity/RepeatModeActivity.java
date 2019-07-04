@@ -10,12 +10,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
-import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.google.ical.values.RRule;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

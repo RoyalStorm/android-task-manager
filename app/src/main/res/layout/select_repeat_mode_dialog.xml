@@ -16,7 +16,7 @@
             android:textSize="18sp" />
 
         <RadioButton
-            android:id="@+id/every_day"
+            android:id="@+id/daily"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -24,7 +24,7 @@
             android:textSize="18sp" />
 
         <RadioButton
-            android:id="@+id/every_week"
+            android:id="@+id/weekly"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -32,7 +32,7 @@
             android:textSize="18sp" />
 
         <RadioButton
-            android:id="@+id/every_month"
+            android:id="@+id/monthly"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -40,7 +40,7 @@
             android:textSize="18sp" />
 
         <RadioButton
-            android:id="@+id/every_year"
+            android:id="@+id/yearly"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

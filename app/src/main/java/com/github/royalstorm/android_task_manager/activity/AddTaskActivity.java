@@ -153,6 +153,14 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         taskEndTime.setText(getTimeFormat(end.getTime().getHours(), 0));
 
         end.set(Calendar.MINUTE, 0);
+
+        //Init event pattern
+        eventPattern.setStartedAt(start.getTimeInMillis());
+        eventPattern.setEndedAt(end.getTimeInMillis());
+        eventPattern.setRrule(null);
+        eventPattern.setTimezone(TimeZone.getDefault().getID());
+        eventPattern.setDuration(end.getTimeInMillis() - start.getTimeInMillis());
+
     }
 
     private void createTask() {

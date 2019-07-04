@@ -22,11 +22,17 @@ public class SelectRepeatModeDialog extends AppCompatDialogFragment {
     private EventPattern eventPattern;
 
     private RadioButton never;
-    private RadioButton everyDay;
-    private RadioButton everyWeek;
-    private RadioButton everyMonth;
-    private RadioButton everyYear;
+    private RadioButton daily;
+    private RadioButton weekly;
+    private RadioButton monthly;
+    private RadioButton yearly;
     private RadioButton other;
+
+    private static final String NEVER = null;
+    private static final String DAILY = "FREQ=DAILY;INTERVAL=1";
+    private static final String WEEKLY = "FREQ=WEEKLY;INTERVAL=1";
+    private static final String MONTHLY = "FREQ=MONTHLY;INTERVAL=1";
+    private static final String YEARLY = "FREQ=YEARLY;INTERVAL=1";
 
     private View.OnClickListener modeListener = new View.OnClickListener() {
         @Override
@@ -34,23 +40,23 @@ public class SelectRepeatModeDialog extends AppCompatDialogFragment {
             switch (v.getId()) {
                 case R.id.never:
                     listener.applyMode("Не повторяется");
-                    eventPattern.setRrule(null);
+                    eventPattern.setRrule(NEVER);
                     break;
-                case R.id.every_day:
+                case R.id.daily:
                     listener.applyMode("Каждый день");
-                    eventPattern.setRrule("FREQ=DAILY;INTERVAL=1");
+                    eventPattern.setRrule(DAILY);
                     break;
-                case R.id.every_week:
+                case R.id.weekly:
                     listener.applyMode("Каждую неделю");
-                    eventPattern.setRrule("FREQ=WEEKLY;INTERVAL=1");
+                    eventPattern.setRrule(WEEKLY);
                     break;
-                case R.id.every_month:
+                case R.id.monthly:
                     listener.applyMode("Каждый месяц");
-                    eventPattern.setRrule("FREQ=MONTHLY;INTERVAL=1");
+                    eventPattern.setRrule(MONTHLY);
                     break;
-                case R.id.every_year:
+                case R.id.yearly:
                     listener.applyMode("Каждый год");
-                    eventPattern.setRrule("FREQ=YEARLY;INTERVAL =1");
+                    eventPattern.setRrule(YEARLY);
                     break;
                 case R.id.other:
                     Intent intent = new Intent(getContext(), RepeatModeActivity.class);
@@ -75,18 +81,20 @@ public class SelectRepeatModeDialog extends AppCompatDialogFragment {
         eventPattern = (EventPattern) this.getArguments().getSerializable(EventPattern.class.getSimpleName());
 
         never = view.findViewById(R.id.never);
-        everyDay = view.findViewById(R.id.every_day);
-        everyWeek = view.findViewById(R.id.every_week);
-        everyMonth = view.findViewById(R.id.every_month);
-        everyYear = view.findViewById(R.id.every_year);
+        daily = view.findViewById(R.id.daily);
+        weekly = view.findViewById(R.id.weekly);
+        monthly = view.findViewById(R.id.monthly);
+        yearly = view.findViewById(R.id.yearly);
         other = view.findViewById(R.id.other);
 
         never.setOnClickListener(modeListener);
-        everyDay.setOnClickListener(modeListener);
-        everyWeek.setOnClickListener(modeListener);
-        everyMonth.setOnClickListener(modeListener);
-        everyYear.setOnClickListener(modeListener);
+        daily.setOnClickListener(modeListener);
+        weekly.setOnClickListener(modeListener);
+        monthly.setOnClickListener(modeListener);
+        yearly.setOnClickListener(modeListener);
         other.setOnClickListener(modeListener);
+
+        initRepeatMode(eventPattern);
 
         return builder.create();
     }
@@ -105,5 +113,28 @@ public class SelectRepeatModeDialog extends AppCompatDialogFragment {
 
     public interface SelectRepeatModeDialogListener {
         void applyMode(String mode);
+    }
+
+    private void initRepeatMode(EventPattern eventPattern) {
+        if (eventPattern.getRrule() == NEVER)
+            never.setChecked(true);
+        else
+            switch (eventPattern.getRrule()) {
+                case DAILY:
+                    daily.setChecked(true);
+                    break;
+                case WEEKLY:
+                    weekly.setChecked(true);
+                    break;
+                case MONTHLY:
+                    monthly.setChecked(true);
+                    break;
+                case YEARLY:
+                    yearly.setChecked(true);
+                    break;
+                default:
+                    other.setChecked(true);
+                    break;
+            }
     }
 }
