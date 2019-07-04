@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="230dp">
+
+        <RadioButton
+            android:id="@+id/never"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Не повторяется"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/every_day"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Каждый день"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/every_week"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Каждую неделю"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/every_month"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Каждый месяц"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/every_year"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Каждый год"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/other"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Другое"
+            android:textSize="18sp" />
+    </RadioGroup>
+</RelativeLayout>

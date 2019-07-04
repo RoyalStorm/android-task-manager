@@ -23,12 +23,18 @@
             android:title="Месяц" />
     </group>
 
-    <item android:title="Настройки прав доступа">
+    <item android:title="Кастомизация">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_sharing"
-                android:title="Права доступа" />
+                android:id="@+id/dark"
+                android:icon="@drawable/ic_dark_theme"
+                android:title="Темная тема"
+                app:actionLayout="@layout/nav_header_switch_dark_theme" />
+
+            <item
+                android:id="@+id/nav_theme"
+                android:icon="@drawable/ic_palette"
+                android:title="Настройка темы" />
         </menu>
     </item>
 

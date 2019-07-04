@@ -14,7 +14,7 @@ import android.widget.DatePicker;
 
 import com.github.royalstorm.android_task_manager.R;
 
-public class SelectDayDialog extends AppCompatDialogFragment {
+public class SelectDateDialog extends AppCompatDialogFragment {
     private DatePicker datePicker;
 
     private SelectDayDialogListener selectDayDialogListener;

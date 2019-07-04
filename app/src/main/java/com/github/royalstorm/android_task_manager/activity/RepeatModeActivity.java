@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
+import com.google.ical.values.RRule;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -24,6 +26,8 @@ public class RepeatModeActivity extends AppCompatActivity {
     TextView date;
 
     private String[] modes = {"День", "Неделя", "Месяц", "Год"};
+
+    private RRule rRule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,9 @@ public class RepeatModeActivity extends AppCompatActivity {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
+        rRule = new RRule();
+        rRule.setCount(1);
 
         //Bundle bundle = getIntent().getExtras();
         //EventPattern eventPattern = (EventPattern) bundle.getSerializable(EventPattern.class.getSimpleName());

@@ -6,13 +6,14 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.fragment.DayFragment;
 import com.github.royalstorm.android_task_manager.fragment.MonthFragment;
-import com.github.royalstorm.android_task_manager.fragment.RulesSharingFragment;
 import com.github.royalstorm.android_task_manager.fragment.WeekFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -73,9 +74,15 @@ public class MainActivity extends AppCompatActivity
                         new MonthFragment()).commit();
                 break;
 
-            case R.id.nav_share:
-                getSupportFragmentManager().beginTransaction().replace(R.id.calendarContainer,
-                        new RulesSharingFragment()).commit();
+            case R.id.dark:
+                SwitchCompat darkTheme = findViewById(R.id.dark_theme);
+                darkTheme.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    if (isChecked)
+                        getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    else
+                        getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                });
+                break;
         }
 
         drawer.closeDrawer(GravityCompat.START);

@@ -22,6 +22,7 @@ import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.TimePickerFragment;
+import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectRepeatModeDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,7 +33,8 @@ import java.util.TimeZone;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AddTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class AddTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener,
+        TimePickerDialog.OnTimeSetListener, SelectRepeatModeDialog.SelectRepeatModeDialogListener {
     @BindView(R.id.task_name)
     EditText taskName;
     @BindView(R.id.task_details)
@@ -47,7 +49,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     @BindView(R.id.task_end_time)
     TextView taskEndTime;
     @BindView(R.id.task_repeat_mode)
-    TextView taskRepeatMode;
+    TextView eventRepeatMode;
 
     private Event event = new Event();
     private EventPattern eventPattern = new EventPattern();
@@ -120,10 +122,14 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         initDateFields();
         setListeners();
 
-        taskRepeatMode.setOnClickListener(v -> {
-            Intent intent = new Intent(AddTaskActivity.this, RepeatModeActivity.class);
-            intent.putExtra(EventPattern.class.getSimpleName(), eventPattern);
-            startActivity(intent);
+        eventRepeatMode.setOnClickListener(v -> {
+            SelectRepeatModeDialog selectRepeatModeDialog = new SelectRepeatModeDialog();
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(EventPattern.class.getSimpleName(), eventPattern);
+
+            selectRepeatModeDialog.setArguments(bundle);
+            selectRepeatModeDialog.show(getSupportFragmentManager(), "Select repeat mode dialog");
         });
     }
 
@@ -246,5 +252,10 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         gregorianCalendar.setTimeInMillis(millis);
 
         return gregorianCalendar;
+    }
+
+    @Override
+    public void applyMode(String mode) {
+        eventRepeatMode.setText(mode);
     }
 }

@@ -23,7 +23,7 @@ import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dto.EventInstanceResponse;
 import com.github.royalstorm.android_task_manager.dto.EventPatternResponse;
 import com.github.royalstorm.android_task_manager.dto.EventResponse;
-import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectDayDialog;
+import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectDateDialog;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
 import java.text.SimpleDateFormat;
@@ -39,7 +39,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDialogListener, EventAdapter.OnEventListener {
+public class DayFragment extends Fragment implements SelectDateDialog.SelectDayDialogListener, EventAdapter.OnEventListener {
     private RetrofitClient retrofitClient = RetrofitClient.getInstance();
 
     private RecyclerView recyclerView;
@@ -103,16 +103,16 @@ public class DayFragment extends Fragment implements SelectDayDialog.SelectDayDi
     private void setCurrentDayListener(View view) {
         currentDay = view.findViewById(R.id.current_day);
         currentDay.setOnClickListener(v -> {
-            SelectDayDialog selectDayDialog = new SelectDayDialog();
+            SelectDateDialog selectDateDialog = new SelectDateDialog();
 
             Bundle bundle = new Bundle();
             bundle.putInt("day", day);
             bundle.putInt("month", month);
             bundle.putInt("year", year);
 
-            selectDayDialog.setTargetFragment(DayFragment.this, 1);
-            selectDayDialog.setArguments(bundle);
-            selectDayDialog.show(getFragmentManager(), "Select day dialog");
+            selectDateDialog.setTargetFragment(DayFragment.this, 1);
+            selectDateDialog.setArguments(bundle);
+            selectDateDialog.show(getFragmentManager(), "Select day dialog");
         });
     }
 
