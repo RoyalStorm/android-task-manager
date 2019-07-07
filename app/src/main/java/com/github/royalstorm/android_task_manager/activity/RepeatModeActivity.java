@@ -164,26 +164,26 @@ public class RepeatModeActivity extends AppCompatActivity {
 
                 for (WeekdayNum day : rRule.getByDay()) {
                     switch (day.num) {
-                        case 0:
-                            MO.toggle();
-                            break;
                         case 1:
-                            TU.toggle();
+                            SU.toggle();
                             break;
                         case 2:
-                            WE.toggle();
+                            MO.toggle();
                             break;
                         case 3:
-                            TH.toggle();
+                            TU.toggle();
                             break;
                         case 4:
-                            FR.toggle();
+                            WE.toggle();
                             break;
                         case 5:
-                            SA.toggle();
+                            TH.toggle();
                             break;
                         case 6:
-                            SU.toggle();
+                            FR.toggle();
+                            break;
+                        case 7:
+                            SA.toggle();
                             break;
                     }
                 }
@@ -248,7 +248,7 @@ public class RepeatModeActivity extends AppCompatActivity {
             }};
 
             rRule.setByDay(new ArrayList<WeekdayNum>() {{
-                add(new WeekdayNum(weekDay - 2, weekdays.get(weekDay)));
+                add(new WeekdayNum(weekDay, weekdays.get(weekDay)));
             }});
         } else { //If event was created
             try {
