@@ -11,8 +11,7 @@ import android.view.ViewGroup;
 import com.applandeo.materialcalendarview.EventDay;
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
-import com.github.royalstorm.android_task_manager.dto.EventInstanceResponse;
-import com.github.royalstorm.android_task_manager.service.EventProxyService;
+import com.github.royalstorm.android_task_manager.service.EventService;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -25,8 +24,7 @@ import java.util.List;
 public class MonthFragment extends Fragment {
     private com.applandeo.materialcalendarview.CalendarView calendar;
 
-    private EventProxyService eventProxyService;
-
+    private EventService eventService = new EventService();
     private List<EventDay> events = new ArrayList<>();
 
     @Nullable
@@ -50,17 +48,49 @@ public class MonthFragment extends Fragment {
                     dayFragment).commit();
         });
 
-        eventProxyService = new EventProxyService();
-
         EventBus.getDefault().register(this);
+
+        GregorianCalendar beginOfYear = new GregorianCalendar();
+        beginOfYear.set(Calendar.MONTH, Calendar.JANUARY);
+        beginOfYear.set(Calendar.DAY_OF_MONTH, 1);
+        beginOfYear.set(Calendar.HOUR_OF_DAY, 0);
+        beginOfYear.set(Calendar.MINUTE, 0);
+
+        GregorianCalendar now = new GregorianCalendar();
+
+        GregorianCalendar endOfYear = new GregorianCalendar();
+        endOfYear.set(Calendar.MONTH, Calendar.DECEMBER);
+        endOfYear.set(Calendar.DAY_OF_MONTH, 31);
+        beginOfYear.set(Calendar.HOUR_OF_DAY, 23);
+        beginOfYear.set(Calendar.MINUTE, 59);
+
+        eventService.getEventInstancesByInterval(beginOfYear.getTimeInMillis(), endOfYear.getTimeInMillis());
+
+        calendar.setOnPreviousPageChangeListener(() -> {
+            now.add(Calendar.MONTH, -1);
+            if (now.get(Calendar.YEAR) != beginOfYear.get(Calendar.YEAR)) {
+                beginOfYear.add(Calendar.YEAR, -1);
+                endOfYear.add(Calendar.YEAR, -1);
+
+                eventService.getEventInstancesByInterval(beginOfYear.getTimeInMillis(), endOfYear.getTimeInMillis());
+            }
+        });
+
+        calendar.setOnForwardPageChangeListener(() -> {
+            now.add(Calendar.MONTH, 1);
+            if (now.get(Calendar.YEAR) != endOfYear.get(Calendar.YEAR)) {
+                beginOfYear.add(Calendar.YEAR, 1);
+                endOfYear.add(Calendar.YEAR, 1);
+
+                eventService.getEventInstancesByInterval(beginOfYear.getTimeInMillis(), endOfYear.getTimeInMillis());
+            }
+        });
 
         return view;
     }
 
     @Subscribe
-    public void onEventInstanceResponse(EventInstanceResponse eventInstanceResponse) {
-        EventInstance[] eventInstances = eventInstanceResponse.getData();
-
+    public void onEventInstanceResponse(List<EventInstance> eventInstances) {
         for (EventInstance eventInstance : eventInstances) {
             GregorianCalendar start = new GregorianCalendar();
             start.setTimeInMillis(eventInstance.getStartedAt());

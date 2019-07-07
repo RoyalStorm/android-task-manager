@@ -23,6 +23,7 @@ import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.TimePickerFragment;
+import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectRepeatModeDialog;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
 import java.text.SimpleDateFormat;
@@ -37,7 +38,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EditTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class EditTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener,
+        TimePickerDialog.OnTimeSetListener, SelectRepeatModeDialog.SelectRepeatModeDialogListener {
     private RetrofitClient retrofitClient = RetrofitClient.getInstance();
 
     private EventInstance eventInstance;
@@ -62,6 +64,8 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
     TextView taskBeginTime;
     @BindView(R.id.task_end_time)
     TextView taskEndTime;
+    @BindView(R.id.task_repeat_mode)
+    TextView eventRepeatMode;
 
     private DialogFragment picker;
 
@@ -126,6 +130,16 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
         event = new Event();
         eventPattern = new EventPattern();
 
+        eventRepeatMode.setOnClickListener(v -> {
+            SelectRepeatModeDialog selectRepeatModeDialog = new SelectRepeatModeDialog();
+
+            Bundle eventPatternBundle = new Bundle();
+            eventPatternBundle.putSerializable(EventPattern.class.getSimpleName(), eventPattern);
+
+            selectRepeatModeDialog.setArguments(eventPatternBundle);
+            selectRepeatModeDialog.show(getSupportFragmentManager(), "Select repeat mode dialog");
+        });
+
         initFields(eventInstance);
         setListeners();
     }
@@ -179,14 +193,15 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
                         getRootView(), "Событие не может завершиться раньше, чем начаться", Snackbar.LENGTH_LONG).show();
                 return;
             }
+
+            eventPattern.setStartedAt(start.getTimeInMillis());
+            //If selected never repeat
+            if (eventPattern.getRrule() == null)
+                eventPattern.setEndedAt(end.getTimeInMillis());
+            eventPattern.setTimezone(TimeZone.getDefault().getID());
+            eventPattern.setDuration(end.getTimeInMillis() - start.getTimeInMillis());
         }
 
-        eventPattern.setStartedAt(start.getTimeInMillis());
-        eventPattern.setEndedAt(end.getTimeInMillis());
-        eventPattern.setTimezone(TimeZone.getDefault().getID());
-        eventPattern.setRrule("FREQ=DAILY;INTERVAL=1;COUNT=1");
-        eventPattern.setExrule("FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH;COUNT=1");
-        eventPattern.setDuration(end.getTimeInMillis() - start.getTimeInMillis());
         event.setName(taskName.getText().toString().trim());
         event.setDetails(taskDetails.getText().toString().trim());
 
@@ -268,5 +283,13 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
 
     private String getTimeFormat(int hourOfDay, int minute) {
         return hourOfDay + ":" + (minute < 10 ? ("0" + minute) : minute);
+    }
+
+    @Override
+    public void applyMode(String mode, String rRule, Long endedAt) {
+        eventRepeatMode.setText(mode);
+        eventPattern.setRrule(rRule);
+        if (rRule != null)
+            eventPattern.setEndedAt(endedAt);
     }
 }

@@ -34,29 +34,24 @@ public class SelectRepeatModeDialog extends AppCompatDialogFragment {
     private static final String MONTHLY = "FREQ=MONTHLY;INTERVAL=1";
     private static final String YEARLY = "FREQ=YEARLY;INTERVAL=1";
 
-    private View.OnClickListener modeListener = new View.OnClickListener() {
+    private View.OnClickListener repeatModeListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.never:
-                    listener.applyMode("Не повторяется");
-                    eventPattern.setRrule(NEVER);
+                    listener.applyMode("Не повторяется", NEVER, eventPattern.getEndedAt());
                     break;
                 case R.id.daily:
-                    listener.applyMode("Каждый день");
-                    eventPattern.setRrule(DAILY);
+                    listener.applyMode("Каждый день", DAILY, Long.MAX_VALUE - 1);
                     break;
                 case R.id.weekly:
-                    listener.applyMode("Каждую неделю");
-                    eventPattern.setRrule(WEEKLY);
+                    listener.applyMode("Каждую неделю", WEEKLY, Long.MAX_VALUE - 1);
                     break;
                 case R.id.monthly:
-                    listener.applyMode("Каждый месяц");
-                    eventPattern.setRrule(MONTHLY);
+                    listener.applyMode("Каждый месяц", MONTHLY, Long.MAX_VALUE - 1);
                     break;
                 case R.id.yearly:
-                    listener.applyMode("Каждый год");
-                    eventPattern.setRrule(YEARLY);
+                    listener.applyMode("Каждый год", YEARLY, Long.MAX_VALUE - 1);
                     break;
                 case R.id.other:
                     Intent intent = new Intent(getContext(), RepeatModeActivity.class);
@@ -87,12 +82,12 @@ public class SelectRepeatModeDialog extends AppCompatDialogFragment {
         yearly = view.findViewById(R.id.yearly);
         other = view.findViewById(R.id.other);
 
-        never.setOnClickListener(modeListener);
-        daily.setOnClickListener(modeListener);
-        weekly.setOnClickListener(modeListener);
-        monthly.setOnClickListener(modeListener);
-        yearly.setOnClickListener(modeListener);
-        other.setOnClickListener(modeListener);
+        never.setOnClickListener(repeatModeListener);
+        daily.setOnClickListener(repeatModeListener);
+        weekly.setOnClickListener(repeatModeListener);
+        monthly.setOnClickListener(repeatModeListener);
+        yearly.setOnClickListener(repeatModeListener);
+        other.setOnClickListener(repeatModeListener);
 
         initRepeatMode(eventPattern);
 
@@ -112,7 +107,7 @@ public class SelectRepeatModeDialog extends AppCompatDialogFragment {
     }
 
     public interface SelectRepeatModeDialogListener {
-        void applyMode(String mode);
+        void applyMode(String mode, String rRule, Long endedAt);
     }
 
     private void initRepeatMode(EventPattern eventPattern) {

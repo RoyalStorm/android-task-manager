@@ -157,10 +157,10 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         //Init event pattern
         eventPattern.setStartedAt(start.getTimeInMillis());
         eventPattern.setEndedAt(end.getTimeInMillis());
+        //Default never repeat
         eventPattern.setRrule(null);
         eventPattern.setTimezone(TimeZone.getDefault().getID());
         eventPattern.setDuration(end.getTimeInMillis() - start.getTimeInMillis());
-
     }
 
     private void createTask() {
@@ -176,17 +176,15 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
             }
 
             eventPattern.setStartedAt(start.getTimeInMillis());
-            eventPattern.setEndedAt(end.getTimeInMillis());
+            //If selected never repeat
+            if (eventPattern.getRrule() == null)
+                eventPattern.setEndedAt(end.getTimeInMillis());
             eventPattern.setTimezone(TimeZone.getDefault().getID());
-            eventPattern.setRrule("FREQ=DAILY;INTERVAL=1;COUNT=1");
-            eventPattern.setExrule("FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH");
             eventPattern.setDuration(end.getTimeInMillis() - start.getTimeInMillis());
         }
 
         event.setDetails(taskDetails.getText().toString().trim());
-        event.setLocation("Тест");
         event.setName(taskName.getText().toString().trim());
-        event.setStatus("Busy");
 
         Intent intent = new Intent();
         intent.putExtra(Event.class.getSimpleName(), event);
@@ -263,7 +261,10 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     }
 
     @Override
-    public void applyMode(String mode) {
+    public void applyMode(String mode, String rRule, Long endedAt) {
         eventRepeatMode.setText(mode);
+        eventPattern.setRrule(rRule);
+        if (rRule != null)
+            eventPattern.setEndedAt(endedAt);
     }
 }

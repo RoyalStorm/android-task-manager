@@ -99,4 +99,19 @@ public class EventPattern implements Serializable {
     public void setTimezone(String timezone) {
         this.timezone = timezone;
     }
+
+    @Override
+    public String toString() {
+        return "EventPattern{" +
+                "id=" + id +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", duration=" + duration +
+                ", endedAt=" + endedAt +
+                ", exrule='" + exrule + '\'' +
+                ", rrule='" + rrule + '\'' +
+                ", startedAt=" + startedAt +
+                ", timezone='" + timezone + '\'' +
+                '}';
+    }
 }

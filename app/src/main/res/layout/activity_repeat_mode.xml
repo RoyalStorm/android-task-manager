@@ -33,7 +33,7 @@
                 android:textColor="@color/elegant_color" />
 
             <Spinner
-                android:id="@+id/repeat_mode"
+                android:id="@+id/repeat_period"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent" />
 
@@ -67,52 +67,59 @@
             android:orientation="horizontal">
 
             <CheckBox
-                android:id="@+id/mon_checkbox"
+                android:id="@+id/MO"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onCheckboxClicked"
                 android:text="ПН" />
 
             <CheckBox
-                android:id="@+id/tue_checkbox"
+                android:id="@+id/TU"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onCheckboxClicked"
                 android:text="ВТ" />
 
             <CheckBox
-                android:id="@+id/wed_checkbox"
+                android:id="@+id/WE"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onCheckboxClicked"
                 android:text="СР" />
 
             <CheckBox
-                android:id="@+id/thu_checkbox"
+                android:id="@+id/TH"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onCheckboxClicked"
                 android:text="ЧТ" />
 
             <CheckBox
-                android:id="@+id/fri_checkbox"
+                android:id="@+id/FR"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onCheckboxClicked"
                 android:text="ПТ" />
 
             <CheckBox
-                android:id="@+id/sat_checkbox"
+                android:id="@+id/SA"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onCheckboxClicked"
                 android:text="СБ" />
 
             <CheckBox
-                android:id="@+id/sun_checkbox"
+                android:id="@+id/SU"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onCheckboxClicked"
                 android:text="ВС" />
         </LinearLayout>
 
@@ -131,6 +138,7 @@
             android:textStyle="bold" />
 
         <RadioGroup
+            android:id="@+id/ending_case"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp">
@@ -152,9 +160,9 @@
 
             <TextView
                 android:id="@+id/date"
-                android:layout_width="120dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="55dp"
+                android:layout_marginStart="35dp"
                 android:layout_marginTop="-25dp" />
 
             <RadioButton
@@ -168,8 +176,8 @@
                 android:id="@+id/repeat_times"
                 android:layout_width="30dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="142dp"
-                android:layout_marginTop="-42dp"
+                android:layout_marginStart="145dp"
+                android:layout_marginTop="-40dp"
                 android:inputType="numberSigned" />
         </RadioGroup>
     </LinearLayout>
