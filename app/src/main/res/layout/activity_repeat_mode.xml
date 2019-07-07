@@ -25,7 +25,7 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/repeat_per_time"
+                android:id="@+id/interval"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="0.1"
@@ -33,7 +33,7 @@
                 android:textColor="@color/elegant_color" />
 
             <Spinner
-                android:id="@+id/repeat_period"
+                android:id="@+id/frequency"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent" />
 
@@ -130,7 +130,6 @@
             android:background="?android:attr/listDivider" />
 
         <TextView
-            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Заканчивается:"
@@ -173,8 +172,8 @@
                 android:text="Повторить раз" />
 
             <EditText
-                android:id="@+id/repeat_times"
-                android:layout_width="30dp"
+                android:id="@+id/count"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="145dp"
                 android:layout_marginTop="-40dp"

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -120,85 +119,8 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
         ButterKnife.bind(this);
 
-        initDateFields();
+        initActivity();
         setListeners();
-
-        eventRepeatMode.setOnClickListener(v -> {
-            SelectRepeatModeDialog selectRepeatModeDialog = new SelectRepeatModeDialog();
-
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(EventPattern.class.getSimpleName(), eventPattern);
-
-            selectRepeatModeDialog.setArguments(bundle);
-            selectRepeatModeDialog.show(getSupportFragmentManager(), "Select repeat mode dialog");
-        });
-    }
-
-    private void initDateFields() {
-        Bundle bundle = getIntent().getExtras();
-        eventInstance = (EventInstance) bundle.getSerializable(EventInstance.class.getSimpleName());
-
-        start = timestampToGregorian(eventInstance.getStartedAt());
-        end = timestampToGregorian(eventInstance.getEndedAt());
-
-        start.add(Calendar.HOUR, 1);
-
-        taskBeginDate.setText(simpleDateFormat.format(start.getTime()));
-        taskBeginTime.setText(getTimeFormat(start.getTime().getHours(), 0));
-
-        start.set(Calendar.MINUTE, 0);
-
-        end.add(Calendar.HOUR_OF_DAY, 2);
-
-        taskEndDate.setText(simpleDateFormat.format(end.getTime()));
-        taskEndTime.setText(getTimeFormat(end.getTime().getHours(), 0));
-
-        end.set(Calendar.MINUTE, 0);
-
-        //Init event pattern
-        eventPattern.setStartedAt(start.getTimeInMillis());
-        eventPattern.setEndedAt(end.getTimeInMillis());
-        //Default never repeat
-        eventPattern.setRrule(null);
-        eventPattern.setTimezone(TimeZone.getDefault().getID());
-        eventPattern.setDuration(end.getTimeInMillis() - start.getTimeInMillis());
-    }
-
-    private void createTask() {
-        if (taskName.getText().toString().trim().isEmpty()) {
-            Snackbar.make(getWindow().getDecorView().
-                    getRootView(), "Заголовок не может быть пустым", Snackbar.LENGTH_LONG).show();
-            return;
-        } else {
-            if (start.after(end)) {
-                Snackbar.make(getWindow().getDecorView().
-                        getRootView(), "Событие не может завершиться раньше, чем начаться", Snackbar.LENGTH_LONG).show();
-                return;
-            }
-
-            eventPattern.setStartedAt(start.getTimeInMillis());
-            //If selected never repeat
-            if (eventPattern.getRrule() == null)
-                eventPattern.setEndedAt(end.getTimeInMillis());
-            eventPattern.setTimezone(TimeZone.getDefault().getID());
-            eventPattern.setDuration(end.getTimeInMillis() - start.getTimeInMillis());
-        }
-
-        event.setDetails(taskDetails.getText().toString().trim());
-        event.setName(taskName.getText().toString().trim());
-
-        Intent intent = new Intent();
-        intent.putExtra(Event.class.getSimpleName(), event);
-        intent.putExtra(EventPattern.class.getSimpleName(), eventPattern);
-        setResult(RESULT_OK, intent);
-        finish();
-    }
-
-    private void setListeners() {
-        taskBeginDate.setOnClickListener(dateListener);
-        taskEndDate.setOnClickListener(dateListener);
-        taskBeginTime.setOnClickListener(timeListener);
-        taskEndTime.setOnClickListener(timeListener);
     }
 
     @Override
@@ -250,6 +172,92 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         }
     }
 
+    @Override
+    public void applyMode(String mode, String rRule, Long endedAt) {
+        eventRepeatMode.setText(mode);
+        eventPattern.setRrule(rRule);
+        if (rRule != null)
+            eventPattern.setEndedAt(endedAt);
+    }
+
+    private void initActivity() {
+        Bundle bundle = getIntent().getExtras();
+        eventInstance = (EventInstance) bundle.getSerializable(EventInstance.class.getSimpleName());
+
+        start = timestampToGregorian(eventInstance.getStartedAt());
+        end = timestampToGregorian(eventInstance.getEndedAt());
+
+        start.add(Calendar.HOUR, 1);
+
+        taskBeginDate.setText(simpleDateFormat.format(start.getTime()));
+        taskBeginTime.setText(getTimeFormat(start.getTime().getHours(), 0));
+
+        start.set(Calendar.MINUTE, 0);
+
+        end.add(Calendar.HOUR_OF_DAY, 2);
+
+        taskEndDate.setText(simpleDateFormat.format(end.getTime()));
+        taskEndTime.setText(getTimeFormat(end.getTime().getHours(), 0));
+
+        end.set(Calendar.MINUTE, 0);
+
+        eventRepeatMode.setText("Не повторяется");
+
+        //Init event pattern
+        eventPattern.setStartedAt(start.getTimeInMillis());
+        eventPattern.setEndedAt(end.getTimeInMillis());
+        //Default never repeat
+        eventPattern.setRrule(null);
+        eventPattern.setTimezone(TimeZone.getDefault().getID());
+        eventPattern.setDuration(end.getTimeInMillis() - start.getTimeInMillis());
+    }
+
+    private void setListeners() {
+        taskBeginDate.setOnClickListener(dateListener);
+        taskEndDate.setOnClickListener(dateListener);
+        taskBeginTime.setOnClickListener(timeListener);
+        taskEndTime.setOnClickListener(timeListener);
+        eventRepeatMode.setOnClickListener(v -> {
+            SelectRepeatModeDialog selectRepeatModeDialog = new SelectRepeatModeDialog();
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(EventPattern.class.getSimpleName(), eventPattern);
+
+            selectRepeatModeDialog.setArguments(bundle);
+            selectRepeatModeDialog.show(getSupportFragmentManager(), "Select repeat mode dialog");
+        });
+    }
+
+    private void createTask() {
+        if (taskName.getText().toString().trim().isEmpty()) {
+            Snackbar.make(getWindow().getDecorView().
+                    getRootView(), "Заголовок не может быть пустым", Snackbar.LENGTH_LONG).show();
+            return;
+        } else {
+            if (start.after(end)) {
+                Snackbar.make(getWindow().getDecorView().
+                        getRootView(), "Событие не может завершиться раньше, чем начаться", Snackbar.LENGTH_LONG).show();
+                return;
+            }
+
+            eventPattern.setStartedAt(start.getTimeInMillis());
+            //If selected never repeat
+            if (eventPattern.getRrule() == null)
+                eventPattern.setEndedAt(end.getTimeInMillis());
+            eventPattern.setTimezone(TimeZone.getDefault().getID());
+            eventPattern.setDuration(end.getTimeInMillis() - start.getTimeInMillis());
+        }
+
+        event.setDetails(taskDetails.getText().toString().trim());
+        event.setName(taskName.getText().toString().trim());
+
+        Intent intent = new Intent();
+        intent.putExtra(Event.class.getSimpleName(), event);
+        intent.putExtra(EventPattern.class.getSimpleName(), eventPattern);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
     private String getTimeFormat(int hourOfDay, int minute) {
         return hourOfDay + ":" + (minute < 10 ? ("0" + minute) : minute);
     }
@@ -259,13 +267,5 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         gregorianCalendar.setTimeInMillis(millis);
 
         return gregorianCalendar;
-    }
-
-    @Override
-    public void applyMode(String mode, String rRule, Long endedAt) {
-        eventRepeatMode.setText(mode);
-        eventPattern.setRrule(rRule);
-        if (rRule != null)
-            eventPattern.setEndedAt(endedAt);
     }
 }

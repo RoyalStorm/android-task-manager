@@ -2,10 +2,11 @@ package com.github.royalstorm.android_task_manager.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
+import com.github.royalstorm.android_task_manager.filters.InputFilterMinMax;
 import com.google.ical.values.Frequency;
 import com.google.ical.values.RRule;
 import com.google.ical.values.Weekday;
@@ -27,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -35,10 +36,10 @@ import butterknife.ButterKnife;
 
 public class RepeatModeActivity extends AppCompatActivity {
 
-    @BindView(R.id.repeat_per_time)
-    EditText repeatPerTime;
-    @BindView(R.id.repeat_period)
-    Spinner repeatPeriod;
+    @BindView(R.id.interval)
+    EditText interval;
+    @BindView(R.id.frequency)
+    Spinner frequency;
 
     @BindView(R.id.MO)
     CheckBox MO;
@@ -55,7 +56,6 @@ public class RepeatModeActivity extends AppCompatActivity {
     @BindView(R.id.SU)
     CheckBox SU;
 
-
     @BindView(R.id.ending_case)
     RadioGroup endingCase;
 
@@ -69,10 +69,8 @@ public class RepeatModeActivity extends AppCompatActivity {
 
     @BindView(R.id.times)
     RadioButton times;
-    @BindView(R.id.repeat_times)
-    EditText repeatTimes;
-
-    private String[] periods = {"День", "Неделя", "Месяц", "Год"};
+    @BindView(R.id.count)
+    EditText count;
 
     private EventPattern eventPattern;
 
@@ -85,12 +83,16 @@ public class RepeatModeActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, periods);
-
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                new String[]{"День", "Неделя", "Месяц", "Год"}
+        );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        repeatPeriod.setAdapter(adapter);
+        frequency.setAdapter(adapter);
 
         initActivity();
+        setListeners();
     }
 
     @Override
@@ -110,40 +112,13 @@ public class RepeatModeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public List<Weekday> onCheckboxClicked(View view) {
-        CheckBox day = (CheckBox) view;
-        List<Weekday> weekdays = new ArrayList<>();
-        switch (view.getId()) {
-            case R.id.MO:
-                if (day.isChecked())
-                    weekdays.add(Weekday.MO);
-                break;
-            case R.id.TU:
-                if (day.isChecked())
-                    weekdays.add(Weekday.TU);
-                break;
-            case R.id.WE:
-                if (day.isChecked())
-                    weekdays.add(Weekday.WE);
-                break;
-            case R.id.TH:
-                if (day.isChecked())
-                    weekdays.add(Weekday.TH);
-                break;
-            case R.id.FR:
-                if (day.isChecked())
-                    weekdays.add(Weekday.FR);
-                break;
-            case R.id.SA:
-                if (day.isChecked())
-                    weekdays.add(Weekday.SA);
-                break;
-            case R.id.SU:
-                if (day.isChecked())
-                    weekdays.add(Weekday.SU);
-                break;
-        }
-        return weekdays;
+    public interface SelectRRuleListener {
+        void applyRRule(RRule rRule, Long endedAt);
+    }
+
+    private void setListeners() {
+        interval.setFilters(new InputFilter[]{new InputFilter.LengthFilter(2), new InputFilterMinMax(1, 99)});
+        count.setFilters(new InputFilter[]{new InputFilter.LengthFilter(2), new InputFilterMinMax(1, 99)});
     }
 
     private void initActivity() {
@@ -152,15 +127,15 @@ public class RepeatModeActivity extends AppCompatActivity {
         RRule rRule = initRRule();
 
         //Setup repeat per time (first EditText)
-        repeatPerTime.setText(Integer.toString(rRule.getInterval()));
+        interval.setText(Integer.toString(rRule.getInterval()));
 
         //Setup values for spinner and checkboxes
         switch (rRule.getFreq()) {
             case DAILY:
-                repeatPeriod.setSelection(0);
+                frequency.setSelection(0);
                 break;
             case WEEKLY:
-                repeatPeriod.setSelection(1);
+                frequency.setSelection(1);
 
                 for (WeekdayNum day : rRule.getByDay()) {
                     switch (day.num) {
@@ -189,10 +164,10 @@ public class RepeatModeActivity extends AppCompatActivity {
                 }
                 break;
             case MONTHLY:
-                repeatPeriod.setSelection(2);
+                frequency.setSelection(2);
                 break;
             case YEARLY:
-                repeatPeriod.setSelection(3);
+                frequency.setSelection(3);
                 break;
         }
 
@@ -207,14 +182,15 @@ public class RepeatModeActivity extends AppCompatActivity {
         } else {
             ((RadioButton) endingCase.getChildAt(3)).setChecked(true);
             times.setSelected(true);
-            repeatTimes.setText(Integer.toString(rRule.getCount()));
+            count.setText(Integer.toString(rRule.getCount()));
         }
 
-        if (eventPattern.getId() == null) {
+        if (eventPattern.getId() == null || eventPattern.getRrule().isEmpty() || eventPattern.getRrule() == null) {
             ((RadioButton) endingCase.getChildAt(0)).setChecked(true);
             never.setSelected(true);
 
             GregorianCalendar gregorianCalendar = new GregorianCalendar();
+            gregorianCalendar.setTimeInMillis(eventPattern.getEndedAt());
             gregorianCalendar.add(Calendar.MONTH, 1);
             selectedDate.setText(sdf.format(gregorianCalendar.getTimeInMillis()));
         }
@@ -227,7 +203,7 @@ public class RepeatModeActivity extends AppCompatActivity {
         RRule rRule = new RRule();
 
         //If event is being created
-        if (eventPattern.getId() == null) {
+        if (eventPattern.getId() == null || eventPattern.getRrule().isEmpty() || eventPattern.getRrule() == null) {
             rRule.setInterval(1);
             rRule.setFreq(Frequency.WEEKLY);
             rRule.setUntil(null);
@@ -257,7 +233,6 @@ public class RepeatModeActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
         return rRule;
     }
 
@@ -267,11 +242,18 @@ public class RepeatModeActivity extends AppCompatActivity {
         rRule.setCount(getCount());
         rRule.setInterval(getInterval());
 
-        eventPattern.setRrule(rRule.toString());
+        eventPattern.setRrule(rRule.toIcal().substring(6));
+        Log.d("________________", eventPattern.getRrule());
+    }
+
+    private int getInterval() {
+        return interval.getText().toString().isEmpty() ?
+                1 : interval.getText().toString().length() > 2 ?
+                99 : Integer.parseInt(interval.getText().toString());
     }
 
     private Frequency getFrequency() {
-        switch (repeatPeriod.getSelectedItemPosition()) {
+        switch (frequency.getSelectedItemPosition()) {
             case 0:
                 return Frequency.DAILY;
             case 1:
@@ -286,10 +268,11 @@ public class RepeatModeActivity extends AppCompatActivity {
     }
 
     private int getCount() {
-        return Integer.parseInt(repeatTimes.getText().toString());
-    }
+        if (((RadioButton) endingCase.getChildAt(3)).isChecked())
+            return count.getText().toString().isEmpty() ?
+                    1 : count.getText().toString().length() > 2 ?
+                    99 : Integer.parseInt(count.getText().toString());
 
-    private int getInterval() {
-        return Integer.parseInt(repeatPerTime.getText().toString());
+        return 0;
     }
 }
