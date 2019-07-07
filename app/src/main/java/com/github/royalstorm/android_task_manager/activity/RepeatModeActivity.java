@@ -24,6 +24,9 @@ import com.google.ical.values.WeekdayNum;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -206,6 +209,15 @@ public class RepeatModeActivity extends AppCompatActivity {
             times.setSelected(true);
             repeatTimes.setText(Integer.toString(rRule.getCount()));
         }
+
+        if (eventPattern.getId() == null) {
+            ((RadioButton) endingCase.getChildAt(0)).setChecked(true);
+            never.setSelected(true);
+
+            GregorianCalendar gregorianCalendar = new GregorianCalendar();
+            gregorianCalendar.add(Calendar.MONTH, 1);
+            selectedDate.setText(sdf.format(gregorianCalendar.getTimeInMillis()));
+        }
     }
 
     private RRule initRRule() {
@@ -221,14 +233,23 @@ public class RepeatModeActivity extends AppCompatActivity {
             rRule.setUntil(null);
             rRule.setCount(1);
 
-            /*GregorianCalendar start = new GregorianCalendar();
+            GregorianCalendar start = new GregorianCalendar();
             start.setTimeInMillis(eventPattern.getStartedAt());
             int weekDay = start.get(Calendar.DAY_OF_WEEK);
 
+            HashMap<Integer, Weekday> weekdays = new HashMap<Integer, Weekday>() {{
+                put(1, Weekday.SU);
+                put(2, Weekday.MO);
+                put(3, Weekday.TU);
+                put(4, Weekday.WE);
+                put(5, Weekday.TH);
+                put(6, Weekday.FR);
+                put(7, Weekday.SA);
+            }};
 
-            List<WeekdayNum> weekdayNums = new ArrayList<>();
-            weekdayNums.add(new WeekdayNum(5, Weekday.FR));
-            rRule.setByDay(weekdayNums);*/
+            rRule.setByDay(new ArrayList<WeekdayNum>() {{
+                add(new WeekdayNum(weekDay - 2, weekdays.get(weekDay)));
+            }});
         } else { //If event was created
             try {
                 rRule = new RRule("RRULE:" + eventPattern.getRrule());
@@ -245,7 +266,6 @@ public class RepeatModeActivity extends AppCompatActivity {
         rRule.setFreq(getFrequency());
         rRule.setCount(getCount());
         rRule.setInterval(getInterval());
-        //rRule.set
 
         eventPattern.setRrule(rRule.toString());
     }

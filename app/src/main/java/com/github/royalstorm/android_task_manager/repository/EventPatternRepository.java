@@ -2,7 +2,6 @@ package com.github.royalstorm.android_task_manager.repository;
 
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dto.EventPatternResponse;
-import com.github.royalstorm.android_task_manager.dto.EventResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -18,28 +17,22 @@ public interface EventPatternRepository {
     @Headers({
             "X-Firebase-Auth: serega_mem"
     })
-    @GET("/api/v1/events")
-    Call<EventResponse> getPatternsById(@Query("id") Long id);
+    @GET("/api/v1/patterns/{id}")
+    Call<EventPatternResponse> getPatternsById(@Path("id") Long id);
 
     @Headers({
-            "Accept: application/json",
-            "Content-Type: application/json",
             "X-Firebase-Auth: serega_mem"
     })
     @POST("/api/v1/patterns")
     Call<EventPatternResponse> save(@Query("event_id") Long eventId, @Body EventPattern eventPattern);
 
     @Headers({
-            "Accept: application/json",
-            "Content-Type: application/json",
             "X-Firebase-Auth: serega_mem"
     })
     @PATCH("/api/v1/patterns/{id}")
     Call<EventPatternResponse> update(@Path("id") Long id, @Body EventPattern eventPattern);
 
     @Headers({
-            "Accept: application/json",
-            "Content-Type: application/json",
             "X-Firebase-Auth: serega_mem"
     })
     @DELETE("/api/v1/patterns/{id}")

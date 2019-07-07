@@ -20,6 +20,7 @@ import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.Event;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
+import com.github.royalstorm.android_task_manager.dto.EventPatternResponse;
 import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.TimePickerFragment;
@@ -71,6 +72,12 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
 
     private boolean IS_BEGIN_DATE = true;
     private boolean IS_BEGIN_TIME = true;
+
+    private static final String NEVER = null;
+    private static final String DAILY = "FREQ=DAILY;INTERVAL=1";
+    private static final String WEEKLY = "FREQ=WEEKLY;INTERVAL=1";
+    private static final String MONTHLY = "FREQ=MONTHLY;INTERVAL=1";
+    private static final String YEARLY = "FREQ=YEARLY;INTERVAL=1";
 
     private View.OnClickListener dateListener = new View.OnClickListener() {
         @Override
@@ -148,22 +155,54 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
         retrofitClient.getEventRepository().getEventsById(new Long[]{eventInstance.getEventId()}).enqueue(new Callback<EventResponse>() {
             @Override
             public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        taskName.setText(response.body().getData()[0].getName());
-                        taskDetails.setText(response.body().getData()[0].getDetails());
+                if (response.isSuccessful() && response.body() != null) {
+                    taskName.setText(response.body().getData()[0].getName());
+                    taskDetails.setText(response.body().getData()[0].getDetails());
 
-                        start = new GregorianCalendar();
-                        start.setTimeInMillis(eventInstance.getStartedAt());
-                        end = new GregorianCalendar();
-                        end.setTimeInMillis(eventInstance.getEndedAt());
+                    start = new GregorianCalendar();
+                    start.setTimeInMillis(eventInstance.getStartedAt());
+                    end = new GregorianCalendar();
+                    end.setTimeInMillis(eventInstance.getEndedAt());
 
-                        taskBeginDate.setText(simpleDateFormat.format(start.getTime()));
-                        taskEndDate.setText(simpleDateFormat.format(end.getTime()));
+                    taskBeginDate.setText(simpleDateFormat.format(start.getTime()));
+                    taskEndDate.setText(simpleDateFormat.format(end.getTime()));
 
-                        taskBeginTime.setText(getTimeFormat(start.getTime().getHours(), start.getTime().getMinutes()));
-                        taskEndTime.setText(getTimeFormat(end.getTime().getHours(), end.getTime().getMinutes()));
-                    }
+                    taskBeginTime.setText(getTimeFormat(start.getTime().getHours(), start.getTime().getMinutes()));
+                    taskEndTime.setText(getTimeFormat(end.getTime().getHours(), end.getTime().getMinutes()));
+
+                    retrofitClient.getEventPatternRepository().getPatternsById(eventInstance.getPatternId()).enqueue(new Callback<EventPatternResponse>() {
+                        @Override
+                        public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                eventPattern = response.body().getData()[0];
+
+                                if (eventPattern.getRrule() == NEVER)
+                                    eventRepeatMode.setText("Никогда");
+                                else
+                                    switch (eventPattern.getRrule()) {
+                                        case DAILY:
+                                            eventRepeatMode.setText("Каждый день");
+                                            break;
+                                        case WEEKLY:
+                                            eventRepeatMode.setText("Каждую неделю");
+                                            break;
+                                        case MONTHLY:
+                                            eventRepeatMode.setText("Каждый месяц");
+                                            break;
+                                        case YEARLY:
+                                            eventRepeatMode.setText("Каждый год");
+                                            break;
+                                        default:
+                                            eventRepeatMode.setText("Другое");
+                                    }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<EventPatternResponse> call, Throwable t) {
+
+                        }
+                    });
                 }
             }
 
