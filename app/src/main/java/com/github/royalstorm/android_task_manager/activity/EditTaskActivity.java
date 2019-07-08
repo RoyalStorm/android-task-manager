@@ -39,6 +39,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.github.royalstorm.android_task_manager.shared.Frequency.DAILY;
+import static com.github.royalstorm.android_task_manager.shared.Frequency.MONTHLY;
+import static com.github.royalstorm.android_task_manager.shared.Frequency.NEVER;
+import static com.github.royalstorm.android_task_manager.shared.Frequency.WEEKLY;
+import static com.github.royalstorm.android_task_manager.shared.Frequency.YEARLY;
+
 public class EditTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener, SelectRepeatModeDialog.SelectRepeatModeDialogListener {
     private RetrofitClient retrofitClient = RetrofitClient.getInstance();
@@ -72,12 +78,6 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
 
     private boolean IS_BEGIN_DATE = true;
     private boolean IS_BEGIN_TIME = true;
-
-    private static final String NEVER = null;
-    private static final String DAILY = "FREQ=DAILY;INTERVAL=1";
-    private static final String WEEKLY = "FREQ=WEEKLY;INTERVAL=1";
-    private static final String MONTHLY = "FREQ=MONTHLY;INTERVAL=1";
-    private static final String YEARLY = "FREQ=YEARLY;INTERVAL=1";
 
     private View.OnClickListener dateListener = new View.OnClickListener() {
         @Override
@@ -177,7 +177,7 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
                                 eventPattern = response.body().getData()[0];
 
                                 if (eventPattern.getRrule() == NEVER)
-                                    eventRepeatMode.setText("Никогда");
+                                    eventRepeatMode.setText("Не повторяется");
                                 else
                                     switch (eventPattern.getRrule()) {
                                         case DAILY:

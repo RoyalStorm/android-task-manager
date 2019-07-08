@@ -1,5 +1,6 @@
 package com.github.royalstorm.android_task_manager.shared;
 
+import com.github.royalstorm.android_task_manager.repository.CalendarRepository;
 import com.github.royalstorm.android_task_manager.repository.EventPatternRepository;
 import com.github.royalstorm.android_task_manager.repository.EventRepository;
 import com.google.gson.Gson;
@@ -40,5 +41,9 @@ public class RetrofitClient {
 
     public EventPatternRepository getEventPatternRepository() {
         return retrofit.create(EventPatternRepository.class);
+    }
+
+    public CalendarRepository getCalendarRepository() {
+        return retrofit.create(CalendarRepository.class);
     }
 }

@@ -34,7 +34,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class AddTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener,
-        TimePickerDialog.OnTimeSetListener, SelectRepeatModeDialog.SelectRepeatModeDialogListener {
+        TimePickerDialog.OnTimeSetListener, SelectRepeatModeDialog.SelectRepeatModeDialogListener,
+        RepeatModeActivity.SelectRRuleListener {
     @BindView(R.id.task_name)
     EditText taskName;
     @BindView(R.id.task_details)
@@ -178,6 +179,12 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         eventPattern.setRrule(rRule);
         if (rRule != null)
             eventPattern.setEndedAt(endedAt);
+    }
+
+    @Override
+    public void applyRRule(String rRule, Long endedAt) {
+        eventPattern.setRrule(rRule);
+        eventPattern.setEndedAt(endedAt);
     }
 
     private void initActivity() {

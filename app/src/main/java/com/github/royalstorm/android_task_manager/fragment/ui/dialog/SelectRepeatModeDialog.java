@@ -15,6 +15,12 @@ import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.activity.RepeatModeActivity;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
 
+import static com.github.royalstorm.android_task_manager.shared.Frequency.DAILY;
+import static com.github.royalstorm.android_task_manager.shared.Frequency.MONTHLY;
+import static com.github.royalstorm.android_task_manager.shared.Frequency.NEVER;
+import static com.github.royalstorm.android_task_manager.shared.Frequency.WEEKLY;
+import static com.github.royalstorm.android_task_manager.shared.Frequency.YEARLY;
+
 public class SelectRepeatModeDialog extends AppCompatDialogFragment {
 
     private SelectRepeatModeDialogListener listener;
@@ -27,12 +33,6 @@ public class SelectRepeatModeDialog extends AppCompatDialogFragment {
     private RadioButton monthly;
     private RadioButton yearly;
     private RadioButton other;
-
-    private static final String NEVER = null;
-    private static final String DAILY = "FREQ=DAILY;INTERVAL=1";
-    private static final String WEEKLY = "FREQ=WEEKLY;INTERVAL=1";
-    private static final String MONTHLY = "FREQ=MONTHLY;INTERVAL=1";
-    private static final String YEARLY = "FREQ=YEARLY;INTERVAL=1";
 
     private View.OnClickListener repeatModeListener = new View.OnClickListener() {
         @Override

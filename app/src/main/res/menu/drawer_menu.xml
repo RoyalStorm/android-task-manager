@@ -23,7 +23,7 @@
             android:title="Месяц" />
     </group>
 
-    <item android:title="Кастомизация">
+    <!--<item android:title="Кастомизация">
         <menu>
             <item
                 android:id="@+id/dark"
@@ -36,6 +36,6 @@
                 android:icon="@drawable/ic_palette"
                 android:title="Настройка темы" />
         </menu>
-    </item>
+    </item>-->
 
 </menu>

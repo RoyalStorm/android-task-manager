@@ -74,6 +74,8 @@ public class RepeatModeActivity extends AppCompatActivity {
 
     private EventPattern eventPattern;
 
+    private SelectRRuleListener listener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,7 +115,7 @@ public class RepeatModeActivity extends AppCompatActivity {
     }
 
     public interface SelectRRuleListener {
-        void applyRRule(RRule rRule, Long endedAt);
+        void applyRRule(String rRule, Long endedAt);
     }
 
     private void setListeners() {
@@ -185,7 +187,8 @@ public class RepeatModeActivity extends AppCompatActivity {
             count.setText(Integer.toString(rRule.getCount()));
         }
 
-        if (eventPattern.getId() == null || eventPattern.getRrule().isEmpty() || eventPattern.getRrule() == null) {
+        //Special condition for radio buttons init (count = 1, until = null)
+        if (eventPattern.getId() == null || eventPattern.getRrule() == null) {
             ((RadioButton) endingCase.getChildAt(0)).setChecked(true);
             never.setSelected(true);
 
@@ -203,11 +206,10 @@ public class RepeatModeActivity extends AppCompatActivity {
         RRule rRule = new RRule();
 
         //If event is being created
-        if (eventPattern.getId() == null || eventPattern.getRrule().isEmpty() || eventPattern.getRrule() == null) {
+        if (eventPattern.getId() == null || eventPattern.getRrule() == null) {
             rRule.setInterval(1);
             rRule.setFreq(Frequency.WEEKLY);
             rRule.setUntil(null);
-            rRule.setCount(1);
 
             GregorianCalendar start = new GregorianCalendar();
             start.setTimeInMillis(eventPattern.getStartedAt());
@@ -243,6 +245,7 @@ public class RepeatModeActivity extends AppCompatActivity {
         rRule.setInterval(getInterval());
 
         eventPattern.setRrule(rRule.toIcal().substring(6));
+        //listener.applyRRule(eventPattern.getRrule(), eventPattern.getEndedAt());
         Log.d("________________", eventPattern.getRrule());
     }
 
