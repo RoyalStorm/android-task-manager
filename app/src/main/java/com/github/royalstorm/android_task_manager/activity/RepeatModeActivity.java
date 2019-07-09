@@ -1,10 +1,10 @@
 package com.github.royalstorm.android_task_manager.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -74,8 +74,6 @@ public class RepeatModeActivity extends AppCompatActivity {
     EditText count;
 
     private EventPattern eventPattern;
-
-    private SelectRRuleListener listener;
 
     private List<String> byDay;
 
@@ -170,10 +168,6 @@ public class RepeatModeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public interface SelectRRuleListener {
-        void applyRRule(String rRule, Long endedAt);
-    }
-
     private void setListeners() {
         interval.setFilters(new InputFilter[]{new InputFilter.LengthFilter(2), new InputFilterMinMax(1, 99)});
         count.setFilters(new InputFilter[]{new InputFilter.LengthFilter(2), new InputFilterMinMax(1, 99)});
@@ -194,7 +188,6 @@ public class RepeatModeActivity extends AppCompatActivity {
                 break;
             case WEEKLY:
                 frequency.setSelection(1);
-
                 for (WeekdayNum day : rRule.getByDay()) {
                     switch (day.wday) {
                         case SU:
@@ -266,8 +259,6 @@ public class RepeatModeActivity extends AppCompatActivity {
         if (eventPattern.getId() == null || eventPattern.getRrule() == null) {
             rRule.setInterval(1);
             rRule.setFreq(Frequency.WEEKLY);
-            rRule.setUntil(null);
-            rRule.setCount(1);
 
             GregorianCalendar start = new GregorianCalendar();
             start.setTimeInMillis(eventPattern.getStartedAt());
@@ -283,11 +274,13 @@ public class RepeatModeActivity extends AppCompatActivity {
                 put(7, Weekday.SA);
             }};
 
+            byDay.add(weekdays.get(weekDay).name());
+
             rRule.setByDay(new ArrayList<WeekdayNum>() {{
                 add(new WeekdayNum(weekDay, weekdays.get(weekDay)));
             }});
-
-            byDay.add(weekdays.get(weekDay).name());
+            rRule.setUntil(null);
+            rRule.setCount(1);
         } else { //If event was created
             try {
                 rRule = new RRule("RRULE:" + eventPattern.getRrule());
@@ -321,13 +314,10 @@ public class RepeatModeActivity extends AppCompatActivity {
         else
             eventPattern.setEndedAt(endedAt);
 
-        Log.d("________________", eventPattern.getRrule());
-        Log.d("________________", eventPattern.getEndedAt() + "");
-
-        /*Intent intent = new Intent();
+        Intent intent = new Intent();
         intent.putExtra(EventPattern.class.getSimpleName(), eventPattern);
         setResult(RESULT_OK, intent);
-        finish();*/
+        finish();
     }
 
     private int getInterval() {
