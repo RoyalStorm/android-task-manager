@@ -1,6 +1,7 @@
 package com.github.royalstorm.android_task_manager.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.util.Log;
@@ -13,7 +14,6 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -62,10 +63,10 @@ public class RepeatModeActivity extends AppCompatActivity {
     @BindView(R.id.never)
     RadioButton never;
 
-    @BindView(R.id.selected_date)
+    /*@BindView(R.id.selected_date)
     RadioButton selectedDate;
     @BindView(R.id.date)
-    TextView date;
+    TextView date;*/
 
     @BindView(R.id.times)
     RadioButton times;
@@ -75,6 +76,10 @@ public class RepeatModeActivity extends AppCompatActivity {
     private EventPattern eventPattern;
 
     private SelectRRuleListener listener;
+
+    private List<String> byDay;
+
+    private Long endedAt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +97,57 @@ public class RepeatModeActivity extends AppCompatActivity {
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         frequency.setAdapter(adapter);
+
+        byDay = new ArrayList<>();
+
+        SU.setOnClickListener(v -> {
+            if (SU.isChecked())
+                byDay.add("SU");
+            else
+                byDay.remove("SU");
+        });
+
+        MO.setOnClickListener(v -> {
+            if (MO.isChecked())
+                byDay.add("MO");
+            else
+                byDay.remove("MO");
+        });
+
+        TU.setOnClickListener(v -> {
+            if (TU.isChecked())
+                byDay.add("TU");
+            else
+                byDay.remove("TU");
+        });
+
+        WE.setOnClickListener(v -> {
+            if (WE.isChecked())
+                byDay.add("WE");
+            else
+                byDay.remove("WE");
+        });
+
+        TH.setOnClickListener(v -> {
+            if (TH.isChecked())
+                byDay.add("TH");
+            else
+                byDay.remove("TH");
+        });
+
+        FR.setOnClickListener(v -> {
+            if (FR.isChecked())
+                byDay.add("FR");
+            else
+                byDay.remove("FR");
+        });
+
+        SA.setOnClickListener(v -> {
+            if (SA.isChecked())
+                byDay.add("SA");
+            else
+                byDay.remove("SA");
+        });
 
         initActivity();
         setListeners();
@@ -140,26 +196,26 @@ public class RepeatModeActivity extends AppCompatActivity {
                 frequency.setSelection(1);
 
                 for (WeekdayNum day : rRule.getByDay()) {
-                    switch (day.num) {
-                        case 1:
+                    switch (day.wday) {
+                        case SU:
                             SU.toggle();
                             break;
-                        case 2:
+                        case MO:
                             MO.toggle();
                             break;
-                        case 3:
+                        case TU:
                             TU.toggle();
                             break;
-                        case 4:
+                        case WE:
                             WE.toggle();
                             break;
-                        case 5:
+                        case TH:
                             TH.toggle();
                             break;
-                        case 6:
+                        case FR:
                             FR.toggle();
                             break;
-                        case 7:
+                        case SA:
                             SA.toggle();
                             break;
                     }
@@ -177,12 +233,12 @@ public class RepeatModeActivity extends AppCompatActivity {
         if (rRule.getCount() == 0 && rRule.getUntil() == null) {
             ((RadioButton) endingCase.getChildAt(0)).setChecked(true);
             never.setSelected(true);
-        } else if (rRule.getUntil() != null) {
+        } /*else if (rRule.getUntil() != null) {
             ((RadioButton) endingCase.getChildAt(1)).setChecked(true);
             selectedDate.setSelected(true);
             date.setText(sdf.format(eventPattern.getEndedAt()));
-        } else {
-            ((RadioButton) endingCase.getChildAt(3)).setChecked(true);
+        }*/ else {
+            ((RadioButton) endingCase.getChildAt(1)).setChecked(true);
             times.setSelected(true);
             count.setText(Integer.toString(rRule.getCount()));
         }
@@ -192,16 +248,17 @@ public class RepeatModeActivity extends AppCompatActivity {
             ((RadioButton) endingCase.getChildAt(0)).setChecked(true);
             never.setSelected(true);
 
-            GregorianCalendar gregorianCalendar = new GregorianCalendar();
+            /*GregorianCalendar gregorianCalendar = new GregorianCalendar();
             gregorianCalendar.setTimeInMillis(eventPattern.getEndedAt());
             gregorianCalendar.add(Calendar.MONTH, 1);
-            selectedDate.setText(sdf.format(gregorianCalendar.getTimeInMillis()));
+            selectedDate.setText(sdf.format(gregorianCalendar.getTimeInMillis()));*/
         }
     }
 
     private RRule initRRule() {
         Bundle bundle = getIntent().getExtras();
         eventPattern = (EventPattern) bundle.getSerializable(EventPattern.class.getSimpleName());
+        endedAt = eventPattern.getEndedAt();
 
         RRule rRule = new RRule();
 
@@ -210,6 +267,7 @@ public class RepeatModeActivity extends AppCompatActivity {
             rRule.setInterval(1);
             rRule.setFreq(Frequency.WEEKLY);
             rRule.setUntil(null);
+            rRule.setCount(1);
 
             GregorianCalendar start = new GregorianCalendar();
             start.setTimeInMillis(eventPattern.getStartedAt());
@@ -228,6 +286,8 @@ public class RepeatModeActivity extends AppCompatActivity {
             rRule.setByDay(new ArrayList<WeekdayNum>() {{
                 add(new WeekdayNum(weekDay, weekdays.get(weekDay)));
             }});
+
+            byDay.add(weekdays.get(weekDay).name());
         } else { //If event was created
             try {
                 rRule = new RRule("RRULE:" + eventPattern.getRrule());
@@ -244,9 +304,30 @@ public class RepeatModeActivity extends AppCompatActivity {
         rRule.setCount(getCount());
         rRule.setInterval(getInterval());
 
-        eventPattern.setRrule(rRule.toIcal().substring(6));
-        //listener.applyRRule(eventPattern.getRrule(), eventPattern.getEndedAt());
+        StringBuilder byDay = new StringBuilder(";BYDAY=");
+        for (String s : this.byDay)
+            byDay.append(s).append(",");
+
+        eventPattern.setRrule(rRule.toIcal().substring(6) + byDay.substring(0, byDay.length() - 1));
+
+        if (this.byDay.isEmpty()) {
+            Snackbar.make(getWindow().getDecorView().
+                    getRootView(), "Не выбраны дни повторения", Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
+        if (((RadioButton) endingCase.getChildAt(0)).isChecked())
+            eventPattern.setEndedAt(Long.MAX_VALUE - 1);
+        else
+            eventPattern.setEndedAt(endedAt);
+
         Log.d("________________", eventPattern.getRrule());
+        Log.d("________________", eventPattern.getEndedAt() + "");
+
+        /*Intent intent = new Intent();
+        intent.putExtra(EventPattern.class.getSimpleName(), eventPattern);
+        setResult(RESULT_OK, intent);
+        finish();*/
     }
 
     private int getInterval() {
@@ -271,7 +352,7 @@ public class RepeatModeActivity extends AppCompatActivity {
     }
 
     private int getCount() {
-        if (((RadioButton) endingCase.getChildAt(3)).isChecked())
+        if (((RadioButton) endingCase.getChildAt(1)).isChecked())
             return count.getText().toString().isEmpty() ?
                     1 : count.getText().toString().length() > 2 ?
                     99 : Integer.parseInt(count.getText().toString());
