@@ -4,9 +4,11 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,10 +22,12 @@ import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.Event;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
-import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
-import com.github.royalstorm.android_task_manager.fragment.ui.TimePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectRepeatModeDialog;
+import com.github.royalstorm.android_task_manager.fragment.ui.picker.DatePickerFragment;
+import com.github.royalstorm.android_task_manager.fragment.ui.picker.TimePickerFragment;
+import com.google.ical.values.RRule;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -180,6 +184,19 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
             eventPattern.setEndedAt(endedAt);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (data == null)
+            return;
+
+        EventPattern patternFromActivity = (EventPattern) data.getSerializableExtra(EventPattern.class.getSimpleName());
+        eventPattern.setRrule(patternFromActivity.getRrule());
+        eventPattern.setEndedAt(patternFromActivity.getEndedAt());
+        eventRepeatMode.setText("Другое");
+    }
+
     private void initActivity() {
         Bundle bundle = getIntent().getExtras();
         eventInstance = (EventInstance) bundle.getSerializable(EventInstance.class.getSimpleName());
@@ -241,8 +258,16 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
             }
 
             eventPattern.setStartedAt(start.getTimeInMillis());
+
             //If selected never repeat
-            if (eventPattern.getRrule() == null)
+            RRule rRule = null;
+            try {
+                rRule = new RRule("RRULE:" + eventPattern.getRrule());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            if (eventPattern.getRrule() == null || rRule.getCount() != 0)
                 eventPattern.setEndedAt(end.getTimeInMillis());
             eventPattern.setTimezone(TimeZone.getDefault().getID());
             eventPattern.setDuration(end.getTimeInMillis() - start.getTimeInMillis());
@@ -254,6 +279,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         Intent intent = new Intent();
         intent.putExtra(Event.class.getSimpleName(), event);
         intent.putExtra(EventPattern.class.getSimpleName(), eventPattern);
+        Log.d("___________", eventPattern.toString());
         setResult(RESULT_OK, intent);
         finish();
     }

@@ -34,6 +34,8 @@ public class SelectRepeatModeDialog extends AppCompatDialogFragment {
     private RadioButton yearly;
     private RadioButton other;
 
+    private int SELECT_REPEAT_MODE_ACTIVITY = 1;
+
     private View.OnClickListener repeatModeListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -56,7 +58,7 @@ public class SelectRepeatModeDialog extends AppCompatDialogFragment {
                 case R.id.other:
                     Intent intent = new Intent(getContext(), RepeatModeActivity.class);
                     intent.putExtra(EventPattern.class.getSimpleName(), eventPattern);
-                    startActivity(intent);
+                    startActivityForResult(intent, SELECT_REPEAT_MODE_ACTIVITY);
                     break;
             }
             dismiss();

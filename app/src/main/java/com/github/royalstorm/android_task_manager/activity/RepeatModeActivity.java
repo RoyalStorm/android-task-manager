@@ -17,7 +17,7 @@ import android.widget.Spinner;
 
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
-import com.github.royalstorm.android_task_manager.filters.InputFilterMinMax;
+import com.github.royalstorm.android_task_manager.filter.InputFilterMinMax;
 import com.google.ical.values.Frequency;
 import com.google.ical.values.RRule;
 import com.google.ical.values.Weekday;
@@ -98,55 +98,6 @@ public class RepeatModeActivity extends AppCompatActivity {
 
         byDay = new ArrayList<>();
 
-        SU.setOnClickListener(v -> {
-            if (SU.isChecked())
-                byDay.add("SU");
-            else
-                byDay.remove("SU");
-        });
-
-        MO.setOnClickListener(v -> {
-            if (MO.isChecked())
-                byDay.add("MO");
-            else
-                byDay.remove("MO");
-        });
-
-        TU.setOnClickListener(v -> {
-            if (TU.isChecked())
-                byDay.add("TU");
-            else
-                byDay.remove("TU");
-        });
-
-        WE.setOnClickListener(v -> {
-            if (WE.isChecked())
-                byDay.add("WE");
-            else
-                byDay.remove("WE");
-        });
-
-        TH.setOnClickListener(v -> {
-            if (TH.isChecked())
-                byDay.add("TH");
-            else
-                byDay.remove("TH");
-        });
-
-        FR.setOnClickListener(v -> {
-            if (FR.isChecked())
-                byDay.add("FR");
-            else
-                byDay.remove("FR");
-        });
-
-        SA.setOnClickListener(v -> {
-            if (SA.isChecked())
-                byDay.add("SA");
-            else
-                byDay.remove("SA");
-        });
-
         initActivity();
         setListeners();
     }
@@ -171,6 +122,49 @@ public class RepeatModeActivity extends AppCompatActivity {
     private void setListeners() {
         interval.setFilters(new InputFilter[]{new InputFilter.LengthFilter(2), new InputFilterMinMax(1, 99)});
         count.setFilters(new InputFilter[]{new InputFilter.LengthFilter(2), new InputFilterMinMax(1, 99)});
+
+        SU.setOnClickListener(v -> {
+            if (SU.isChecked())
+                byDay.add("SU");
+            else
+                byDay.remove("SU");
+        });
+        MO.setOnClickListener(v -> {
+            if (MO.isChecked())
+                byDay.add("MO");
+            else
+                byDay.remove("MO");
+        });
+        TU.setOnClickListener(v -> {
+            if (TU.isChecked())
+                byDay.add("TU");
+            else
+                byDay.remove("TU");
+        });
+        WE.setOnClickListener(v -> {
+            if (WE.isChecked())
+                byDay.add("WE");
+            else
+                byDay.remove("WE");
+        });
+        TH.setOnClickListener(v -> {
+            if (TH.isChecked())
+                byDay.add("TH");
+            else
+                byDay.remove("TH");
+        });
+        FR.setOnClickListener(v -> {
+            if (FR.isChecked())
+                byDay.add("FR");
+            else
+                byDay.remove("FR");
+        });
+        SA.setOnClickListener(v -> {
+            if (SA.isChecked())
+                byDay.add("SA");
+            else
+                byDay.remove("SA");
+        });
     }
 
     private void initActivity() {

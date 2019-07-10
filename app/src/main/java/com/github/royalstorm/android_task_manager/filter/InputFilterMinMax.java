@@ -1,4 +1,4 @@
-package com.github.royalstorm.android_task_manager.filters;
+package com.github.royalstorm.android_task_manager.filter;
 
 import android.text.InputFilter;
 import android.text.Spanned;

@@ -22,8 +22,8 @@ import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dto.EventPatternResponse;
 import com.github.royalstorm.android_task_manager.dto.EventResponse;
-import com.github.royalstorm.android_task_manager.fragment.ui.DatePickerFragment;
-import com.github.royalstorm.android_task_manager.fragment.ui.TimePickerFragment;
+import com.github.royalstorm.android_task_manager.fragment.ui.picker.DatePickerFragment;
+import com.github.royalstorm.android_task_manager.fragment.ui.picker.TimePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectRepeatModeDialog;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
