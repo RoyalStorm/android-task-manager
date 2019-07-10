@@ -17,7 +17,7 @@ public class EventService {
 
     private RetrofitClient retrofitClient = RetrofitClient.getInstance();
 
-    public void save(Event event) {
+    /*public void save(Event event) {
         retrofitClient.getEventRepository().save(event).enqueue(new Callback<EventResponse>() {
             @Override
             public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
@@ -27,7 +27,7 @@ public class EventService {
             public void onFailure(Call<EventResponse> call, Throwable throwable) {
             }
         });
-    }
+    }*/
 
     public void update(Long id, Event event) {
         retrofitClient.getEventRepository().update(id, event).enqueue(new Callback<EventResponse>() {

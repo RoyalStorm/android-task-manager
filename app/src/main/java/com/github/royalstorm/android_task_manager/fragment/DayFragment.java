@@ -25,6 +25,7 @@ import com.github.royalstorm.android_task_manager.dto.EventPatternResponse;
 import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectDateDialog;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -177,8 +178,10 @@ public class DayFragment extends Fragment implements SelectDateDialog.SelectDayD
         if (data == null)
             return;
 
+        String userToken = FirebaseAuth.getInstance().getCurrentUser().getIdToken(false).getResult().getToken();
+
         if (requestCode == ADD) {
-            retrofitClient.getEventRepository().save((Event) data.getSerializableExtra(Event.class.getSimpleName())).enqueue(new Callback<EventResponse>() {
+            retrofitClient.getEventRepository().save((Event) data.getSerializableExtra(Event.class.getSimpleName()), userToken).enqueue(new Callback<EventResponse>() {
                 @Override
                 public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
                     if (response.isSuccessful()) {

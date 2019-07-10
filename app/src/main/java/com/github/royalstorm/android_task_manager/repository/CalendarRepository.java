@@ -4,6 +4,7 @@ import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -23,5 +24,5 @@ public interface CalendarRepository {
     })
     @POST("/api/v1/import")
     @Multipart
-    Call<Void> importToServer(@Part MultipartBody.Part file);
+    Call<Void> importToServer(@Part MultipartBody.Part file, @Header("X-Firebase-Auth") String token);
 }

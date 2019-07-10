@@ -110,7 +110,7 @@ public class EventProxyService implements CachedEventRepository {
     @Override
     public void addEvent(Event event) {
         events.add(event);
-        eventService.save(event);
+        //eventService.save(event);
         //TODO: update cache
     }
 
