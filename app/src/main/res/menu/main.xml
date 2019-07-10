@@ -2,8 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/export"
+        android:id="@+id/export_from_server"
         android:orderInCategory="100"
-        android:title="@string/export"
+        android:title="@string/export_desc"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/import_to_server"
+        android:orderInCategory="100"
+        android:title="@string/import_desc"
         app:showAsAction="never" />
 </menu>

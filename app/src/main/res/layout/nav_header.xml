@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/nav_header_height"
+    android:layout_height="wrap_content"
     android:background="@drawable/side_nav_bar"
     android:gravity="bottom"
     android:orientation="vertical"
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:src="@mipmap/ic_launcher_round" />
 
-    <TextView
+    <!--<TextView
         android:id="@+id/account_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,11 +28,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:text="8 (914) 736 9914" />
+        android:text="8 (914) 736 9914" />-->
 
-    <!--<com.google.android.gms.common.SignInButton
+    <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />-->
+        android:layout_width="370dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp" />
+
+    <Button
+        android:id="@+id/sign_out_button"
+        android:layout_width="370dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/default_button"
+        android:text="Выход"
+        android:textAllCaps="false"
+        android:textColor="@color/elegant_color" />
 
 </LinearLayout>

@@ -7,4 +7,10 @@ public class CalendarService {
 
     public void exportToICal() {
     }
+
+    public void importToServer() {
+    }
+
+    private void uploadFile() {
+    }
 }

@@ -18,8 +18,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.royalstorm.android_task_manager.R;
@@ -31,8 +32,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -43,7 +49,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import butterknife.BindView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -53,30 +58,23 @@ public class MainActivity extends AppCompatActivity
 
     private RetrofitClient retrofitClient = RetrofitClient.getInstance();
 
-    DrawerLayout drawer;
+    private NavigationView navigationView;
 
-    @BindView(R.id.account_image)
-    ImageView accountImage;
-    @BindView(R.id.account_name)
-    TextView accountName;
-    @BindView(R.id.account_phone)
-    TextView accountPhone;
+    private DrawerLayout drawer;
 
-    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .build();
+    private ImageView accountImage;
+    private SignInButton signInButton;
+    private Button signOutButton;
 
-    GoogleSignInClient mGoogleSignInClient;
+    private GoogleSignInClient mGoogleSignInClient;
+    private GoogleSignInOptions gso;
+
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
+
+    private String userToken = null;
 
     private int RC_SIGN_IN = 0;
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if (account != null)
-            updateUI(account);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,15 +86,24 @@ public class MainActivity extends AppCompatActivity
 
         drawer = findViewById(R.id.drawer_layout);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(null);
+
+        accountImage = navigationView.getHeaderView(0).findViewById(R.id.account_image);
+        signInButton = navigationView.getHeaderView(0).findViewById(R.id.sign_in_button);
+        signOutButton = navigationView.getHeaderView(0).findViewById(R.id.sign_out_button);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.client_secret))
+                .requestEmail()
+                .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        firebaseAuth = FirebaseAuth.getInstance();
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.calendarContainer, new MonthFragment())
@@ -104,11 +111,31 @@ public class MainActivity extends AppCompatActivity
             navigationView.setCheckedItem(R.id.nav_month);
         }
 
-        /*View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header);
-
-        headerLayout.findViewById(R.id.sign_in_button).setOnClickListener(v -> {
+        navigationView.getHeaderView(0).findViewById(R.id.sign_in_button).setOnClickListener(v -> {
             signIn();
-        });*/
+        });
+        navigationView.getHeaderView(0).findViewById(R.id.sign_out_button).setOnClickListener(v -> {
+            signOut();
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+
+        if (account != null) {
+            updateUI(account);
+            firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
+                userToken = task.getResult().getToken();
+                navigationView.setNavigationItemSelectedListener(MainActivity.this);
+            });
+        } else {
+            userToken = null;
+            signInButton.setVisibility(View.VISIBLE);
+            signOutButton.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -130,7 +157,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.export) {
+        if (id == R.id.export_from_server) {
             exportToICal();
             return true;
         }
@@ -175,14 +202,23 @@ public class MainActivity extends AppCompatActivity
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    private void signOut() {
+        firebaseAuth.signOut();
+        userToken = null;
+        mGoogleSignInClient.signOut().addOnCompleteListener(this, task -> {
+            signInButton.setVisibility(View.VISIBLE);
+            signOutButton.setVisibility(View.GONE);
+        });
+
+        if (navigationView.getCheckedItem() != null)
+            navigationView.getCheckedItem().setChecked(true);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
         }
@@ -207,7 +243,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void exportToICal() {
-        retrofitClient.getCalendarRepository().export().enqueue(new retrofit2.Callback<ResponseBody>() {
+        retrofitClient.getCalendarRepository().exportFromServer().enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
@@ -243,31 +279,46 @@ public class MainActivity extends AppCompatActivity
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
-            // Signed in successfully, show authenticated UI.
             updateUI(account);
         } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w("FAILED_SIGNED_IN", "signInResult:failed code=" + e.getStatusCode());
-            updateUI(null);
         }
     }
 
     private void updateUI(GoogleSignInAccount account) {
-        Picasso.with(this).load(account.getPhotoUrl()).into(accountImage, new Callback() {
-            @Override
-            public void onSuccess() {
+        if (account != null) {
+            Picasso.with(this).load(account.getPhotoUrl()).into(accountImage, new Callback() {
+                @Override
+                public void onSuccess() {
 
-            }
+                }
 
-            @Override
-            public void onError() {
+                @Override
+                public void onError() {
 
+                }
+            });
+
+            signInButton.setVisibility(View.GONE);
+            signOutButton.setVisibility(View.VISIBLE);
+            firebaseAuthWithGoogle(account);
+        } else {
+            signInButton.setVisibility(View.VISIBLE);
+            signOutButton.setVisibility(View.GONE);
+        }
+    }
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount googleSignInAccount) {
+        AuthCredential authCredential = GoogleAuthProvider.getCredential(googleSignInAccount.getIdToken(), null);
+        firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(this, task -> {
+            if (task.isSuccessful()) {
+                firebaseUser = firebaseAuth.getCurrentUser();
+                userToken = firebaseUser.getIdToken(false).getResult().getToken();
+
+                navigationView.setNavigationItemSelectedListener(this);
+            } else {
+                userToken = null;
             }
         });
-
-        accountName.setText(account.getDisplayName());
-        accountPhone.setText(account.getEmail());
     }
 }

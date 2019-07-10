@@ -7,7 +7,8 @@
     <string name="nav_header_title">Колот Юрий</string>
     <string name="nav_header_subtitle">8 (914)736 9914</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="export">Экспорт событий в файл .ics</string>
+    <string name="export_desc">Экспорт событий в файл .ics</string>
+    <string name="import_desc">Импорт событий в файл .ics</string>
 
     <string name="material_calendar_monday">Пн</string>
     <string name="material_calendar_tuesday">Вт</string>
@@ -31,6 +32,8 @@
         <item>Ноябрь</item>
         <item>Декабрь</item>
     </string-array>
+
+    <string name="client_secret">683480740903-atpdqv9v1sk69uimo07gcjj5jgq55pf5.apps.googleusercontent.com</string>
 
     <string name="event_details">Описание</string>
     <string name="event_name">Заголовок</string>
