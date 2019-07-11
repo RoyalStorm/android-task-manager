@@ -11,7 +11,7 @@ public class Event implements Serializable {
     private Long id;
     @Expose
     @SerializedName("owner_id")
-    private Long ownerId;
+    private String ownerId;
     @SerializedName("created_at")
     private Long createdAt;
     @SerializedName("updated_at")
@@ -45,7 +45,7 @@ public class Event implements Serializable {
         this.id = id;
     }
 
-    public Long getOwnerId() {
+    public String getOwnerId() {
         return ownerId;
     }
 

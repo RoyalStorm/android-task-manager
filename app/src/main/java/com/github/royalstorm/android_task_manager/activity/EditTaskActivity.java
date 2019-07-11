@@ -152,7 +152,7 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
     }
 
     private void initFields(EventInstance eventInstance) {
-        retrofitClient.getEventRepository().getEventsById(new Long[]{eventInstance.getEventId()}).enqueue(new Callback<EventResponse>() {
+        retrofitClient.getEventRepository().getEventsById(new Long[]{eventInstance.getEventId()}, null).enqueue(new Callback<EventResponse>() {
             @Override
             public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -170,7 +170,7 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
                     taskBeginTime.setText(getTimeFormat(start.getTime().getHours(), start.getTime().getMinutes()));
                     taskEndTime.setText(getTimeFormat(end.getTime().getHours(), end.getTime().getMinutes()));
 
-                    retrofitClient.getEventPatternRepository().getPatternsById(eventInstance.getPatternId()).enqueue(new Callback<EventPatternResponse>() {
+                    retrofitClient.getEventPatternRepository().getPatternsById(eventInstance.getPatternId(), null).enqueue(new Callback<EventPatternResponse>() {
                         @Override
                         public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
                             if (response.isSuccessful() && response.body() != null) {

@@ -1,41 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:itemIconTint="@color/burgundy"
-    app:itemTextColor="@color/burgundy"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_day"
-            android:icon="@drawable/ic_day"
-            android:title="День" />
-
-        <item
-            android:id="@+id/nav_week"
-            android:icon="@drawable/ic_week"
-            android:title="Неделя" />
-
-        <item
-            android:id="@+id/nav_month"
-            android:icon="@drawable/ic_month"
-            android:title="Месяц" />
-    </group>
-
-    <!--<item android:title="Кастомизация">
+    <item android:title="Календарь">
         <menu>
-            <item
-                android:id="@+id/dark"
-                android:icon="@drawable/ic_dark_theme"
-                android:title="Темная тема"
-                app:actionLayout="@layout/nav_header_switch_dark_theme" />
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_day"
+                    android:icon="@drawable/ic_day"
+                    android:title="День" />
 
-            <item
-                android:id="@+id/nav_theme"
-                android:icon="@drawable/ic_palette"
-                android:title="Настройка темы" />
+                <item
+                    android:id="@+id/nav_week"
+                    android:icon="@drawable/ic_week"
+                    android:title="Неделя" />
+
+                <item
+                    android:id="@+id/nav_month"
+                    android:icon="@drawable/ic_month"
+                    android:title="Месяц" />
+            </group>
         </menu>
-    </item>-->
-
+    </item>
 </menu>

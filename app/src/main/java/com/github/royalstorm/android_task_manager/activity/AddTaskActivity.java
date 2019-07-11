@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,9 +21,13 @@ import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.Event;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
+import com.github.royalstorm.android_task_manager.dto.EventPatternResponse;
+import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectRepeatModeDialog;
 import com.github.royalstorm.android_task_manager.fragment.ui.picker.DatePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.picker.TimePickerFragment;
+import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.ical.values.RRule;
 
 import java.text.ParseException;
@@ -36,6 +39,9 @@ import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AddTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener, SelectRepeatModeDialog.SelectRepeatModeDialogListener {
@@ -54,6 +60,11 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     TextView taskEndTime;
     @BindView(R.id.task_repeat_mode)
     TextView eventRepeatMode;
+
+    private RetrofitClient retrofitClient = RetrofitClient.getInstance();
+
+    private FirebaseAuth firebaseAuth;
+    private String userToken;
 
     private Event event = new Event();
     private EventPattern eventPattern = new EventPattern();
@@ -122,6 +133,8 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         setTitle("Новое событие");
 
         ButterKnife.bind(this);
+
+        firebaseAuth = FirebaseAuth.getInstance();
 
         initActivity();
         setListeners();
@@ -276,12 +289,15 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         event.setDetails(taskDetails.getText().toString().trim());
         event.setName(taskName.getText().toString().trim());
 
-        Intent intent = new Intent();
-        intent.putExtra(Event.class.getSimpleName(), event);
-        intent.putExtra(EventPattern.class.getSimpleName(), eventPattern);
-        Log.d("___________", eventPattern.toString());
-        setResult(RESULT_OK, intent);
-        finish();
+        if (userToken == null) {
+            firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
+                userToken = task.getResult().getToken();
+                saveEvent(event, eventPattern, userToken);
+            });
+        } else {
+            userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
+            saveEvent(event, eventPattern, userToken);
+        }
     }
 
     private String getTimeFormat(int hourOfDay, int minute) {
@@ -293,5 +309,32 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         gregorianCalendar.setTimeInMillis(millis);
 
         return gregorianCalendar;
+    }
+
+    private void saveEvent(Event event, EventPattern eventPattern, String userToken) {
+        retrofitClient.getEventRepository().save(event, userToken).enqueue(new Callback<EventResponse>() {
+            @Override
+            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    retrofitClient.getEventPatternRepository().save(response.body().getData()[0].getId(), eventPattern, userToken).enqueue(new Callback<EventPatternResponse>() {
+                        @Override
+                        public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
+                            Intent intent = new Intent();
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailure(Call<EventPatternResponse> call, Throwable t) {
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EventResponse> call, Throwable t) {
+
+            }
+        });
     }
 }

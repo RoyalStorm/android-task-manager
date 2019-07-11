@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -173,7 +174,7 @@ public class DayFragment extends Fragment implements SelectDateDialog.SelectDayD
 
         Intent intent = new Intent(getActivity(), AddTaskActivity.class);
         intent.putExtra(EventInstance.class.getSimpleName(), eventInstance);
-        startActivityForResult(intent, ADD);
+        startActivity(intent);
     }
 
     @Override
@@ -183,89 +184,55 @@ public class DayFragment extends Fragment implements SelectDateDialog.SelectDayD
         if (data == null)
             return;
 
-        if (requestCode == ADD) {
-            if (userToken == null)
-                firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
-                    userToken = task.getResult().getToken();
-                    retrofitClient.getEventRepository().save((Event) data.getSerializableExtra(Event.class.getSimpleName()), userToken).enqueue(new Callback<EventResponse>() {
-                        @Override
-                        public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
-                            if (response.isSuccessful() && response.body() != null) {
-                                retrofitClient.getEventPatternRepository().save(response.body().getData()[0].getId(), (EventPattern) data.getSerializableExtra(EventPattern.class.getSimpleName()), userToken).enqueue(new Callback<EventPatternResponse>() {
-                                    @Override
-                                    public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
-                                        getEvents(
-                                                new GregorianCalendar(year, month, day, 0, 0),
-                                                new GregorianCalendar(year, month, day, 23, 59),
-                                                userToken
-                                        );
-                                    }
+        if (data.getStringExtra("Action").equals("Delete"))
+            retrofitClient.getEventRepository().delete(data.getLongExtra("id", 0), userToken).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful())
+                        getEvents(
+                                new GregorianCalendar(year, month, day, 0, 0),
+                                new GregorianCalendar(year, month, day, 23, 59),
+                                userToken
+                        );
+                }
 
-                                    @Override
-                                    public void onFailure(Call<EventPatternResponse> call, Throwable t) {
+                @Override
+                public void onFailure(Call<Void> call, Throwable throwable) {
+                }
+            });
+        else {
+            Event event = (Event) data.getSerializableExtra(Event.class.getSimpleName());
+            EventPattern eventPattern = (EventPattern) data.getSerializableExtra(EventPattern.class.getSimpleName());
+            Long eventId = data.getLongExtra("eventId", 0);
+            Long patternId = data.getLongExtra("patternId", 0);
 
-                                    }
-                                });
+            retrofitClient.getEventPatternRepository().update(patternId, eventPattern, userToken).enqueue(new Callback<EventPatternResponse>() {
+                @Override
+                public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
+                    if (response.isSuccessful())
+                        retrofitClient.getEventRepository().update(eventId, event, userToken).enqueue(new Callback<EventResponse>() {
+                            @Override
+                            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+                                if (response.isSuccessful())
+                                    getEvents(
+                                            new GregorianCalendar(year, month, day, 0, 0),
+                                            new GregorianCalendar(year, month, day, 23, 59),
+                                            userToken
+                                    );
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<EventResponse> call, Throwable t) {
+                            @Override
+                            public void onFailure(Call<EventResponse> call, Throwable t) {
 
-                        }
-                    });
-                });
-        } else {
-            if (data.getStringExtra("Action").equals("Delete"))
-                retrofitClient.getEventRepository().delete(data.getLongExtra("id", 0)).enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        if (response.isSuccessful())
-                            getEvents(
-                                    new GregorianCalendar(year, month, day, 0, 0),
-                                    new GregorianCalendar(year, month, day, 23, 59),
-                                    userToken
-                            );
-                    }
+                            }
+                        });
+                }
 
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable throwable) {
-                    }
-                });
-            else {
-                Event event = (Event) data.getSerializableExtra(Event.class.getSimpleName());
-                EventPattern eventPattern = (EventPattern) data.getSerializableExtra(EventPattern.class.getSimpleName());
-                Long eventId = data.getLongExtra("eventId", 0);
-                Long patternId = data.getLongExtra("patternId", 0);
+                @Override
+                public void onFailure(Call<EventPatternResponse> call, Throwable t) {
 
-                retrofitClient.getEventPatternRepository().update(patternId, eventPattern).enqueue(new Callback<EventPatternResponse>() {
-                    @Override
-                    public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
-                        if (response.isSuccessful())
-                            retrofitClient.getEventRepository().update(eventId, event).enqueue(new Callback<EventResponse>() {
-                                @Override
-                                public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
-                                    if (response.isSuccessful())
-                                        getEvents(
-                                                new GregorianCalendar(year, month, day, 0, 0),
-                                                new GregorianCalendar(year, month, day, 23, 59),
-                                                userToken
-                                        );
-                                }
-
-                                @Override
-                                public void onFailure(Call<EventResponse> call, Throwable t) {
-
-                                }
-                            });
-                    }
-
-                    @Override
-                    public void onFailure(Call<EventPatternResponse> call, Throwable t) {
-
-                    }
-                });
-            }
+                }
+            });
         }
     }
 

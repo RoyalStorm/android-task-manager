@@ -12,6 +12,7 @@ import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -25,6 +26,9 @@ import retrofit2.Response;
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
     private RetrofitClient retrofitClient = RetrofitClient.getInstance();
+
+    private FirebaseAuth firebaseAuth;
+    private String userToken;
 
     private List<EventInstance> eventInstances;
 
@@ -56,6 +60,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             eventOwner = itemView.findViewById(R.id.event_owner);
             eventDetails = itemView.findViewById(R.id.event_details);
 
+            firebaseAuth = FirebaseAuth.getInstance();
+
             this.onEventListener = onEventListener;
 
             itemView.setOnClickListener(this);
@@ -65,28 +71,32 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             eventStart.setText(timestampToDate(eventInstance.getStartedAt()));
             eventEnd.setText(timestampToDate(eventInstance.getEndedAt()));
 
-            retrofitClient.getEventRepository().getEventsById(new Long[]{eventInstance.getEventId()}).enqueue(new Callback<EventResponse>() {
-                @Override
-                public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
-                    if (response.isSuccessful() && response.body().getCount() != 0) {
-                        /*Get by 0 index, cause in data array only 1 object*/
-                        if (isPortraitOrientation()) {
-                            eventName.setText(response.body().getData()[0].getName().length() < 29 ? response.body().getData()[0].getName() : (response.body().getData()[0].getName().substring(0, 27) + "..."));
-                            eventOwner.setText(response.body().getData()[0].getOwnerId().toString());
-                            eventDetails.setText(response.body().getData()[0].getDetails().length() < 29 ? response.body().getData()[0].getDetails() : (response.body().getData()[0].getDetails().substring(0, 27) + "..."));
-                        } else {
-                            eventName.setText(response.body().getData()[0].getName().length() < 58 ? response.body().getData()[0].getName() : (response.body().getData()[0].getName().substring(0, 58) + "..."));
-                            eventOwner.setText(response.body().getData()[0].getOwnerId().toString());
-                            eventDetails.setText(response.body().getData()[0].getDetails().length() < 58 ? response.body().getData()[0].getDetails() : (response.body().getData()[0].getDetails().substring(0, 58) + "..."));
+            if (userToken == null)
+                firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
+                    userToken = task.getResult().getToken();
+                    retrofitClient.getEventRepository().getEventsById(new Long[]{eventInstance.getEventId()}, userToken).enqueue(new Callback<EventResponse>() {
+                        @Override
+                        public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+                            if (response.isSuccessful() && response.body().getCount() != 0) {
+                                /*Get by 0 index, cause in data array only 1 object*/
+                                if (isPortraitOrientation()) {
+                                    eventName.setText(response.body().getData()[0].getName().length() < 29 ? response.body().getData()[0].getName() : (response.body().getData()[0].getName().substring(0, 27) + "..."));
+                                    eventOwner.setText(response.body().getData()[0].getOwnerId());
+                                    eventDetails.setText(response.body().getData()[0].getDetails().length() < 29 ? response.body().getData()[0].getDetails() : (response.body().getData()[0].getDetails().substring(0, 27) + "..."));
+                                } else {
+                                    eventName.setText(response.body().getData()[0].getName().length() < 58 ? response.body().getData()[0].getName() : (response.body().getData()[0].getName().substring(0, 58) + "..."));
+                                    eventOwner.setText(response.body().getData()[0].getOwnerId());
+                                    eventDetails.setText(response.body().getData()[0].getDetails().length() < 58 ? response.body().getData()[0].getDetails() : (response.body().getData()[0].getDetails().substring(0, 58) + "..."));
+                                }
+                            }
                         }
-                    }
-                }
 
-                @Override
-                public void onFailure(Call<EventResponse> call, Throwable t) {
+                        @Override
+                        public void onFailure(Call<EventResponse> call, Throwable t) {
 
-                }
-            });
+                        }
+                    });
+                });
         }
 
         private boolean isPortraitOrientation() {
