@@ -7,6 +7,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
@@ -20,11 +21,8 @@ public interface EventPatternRepository {
     @GET("/api/v1/patterns/{id}")
     Call<EventPatternResponse> getPatternsById(@Path("id") Long id);
 
-    @Headers({
-            "X-Firebase-Auth: serega_mem"
-    })
     @POST("/api/v1/patterns")
-    Call<EventPatternResponse> save(@Query("event_id") Long eventId, @Body EventPattern eventPattern);
+    Call<EventPatternResponse> save(@Query("event_id") Long eventId, @Body EventPattern eventPattern, @Header("X-Firebase-Auth") String userToken);
 
     @Headers({
             "X-Firebase-Auth: serega_mem"

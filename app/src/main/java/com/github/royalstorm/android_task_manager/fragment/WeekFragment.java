@@ -131,7 +131,7 @@ public class WeekFragment extends Fragment {
         Long to = gregorianCalendar.getTimeInMillis();
 
         EventService eventService = new EventService();
-        eventService.getEventInstancesByInterval(from, to);
+        eventService.getEventInstancesByInterval(from, to, null);
     }
 
     private void setPrevWeekListener(View view) {

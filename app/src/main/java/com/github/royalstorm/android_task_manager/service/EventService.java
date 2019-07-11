@@ -1,5 +1,7 @@
 package com.github.royalstorm.android_task_manager.service;
 
+import android.util.Log;
+
 import com.github.royalstorm.android_task_manager.dao.Event;
 import com.github.royalstorm.android_task_manager.dto.EventInstanceResponse;
 import com.github.royalstorm.android_task_manager.dto.EventResponse;
@@ -53,10 +55,11 @@ public class EventService {
         });
     }
 
-    public void getEventInstancesByInterval(Long from, Long to) {
-        retrofitClient.getEventRepository().getEventInstancesByInterval(from, to).enqueue(new Callback<EventInstanceResponse>() {
+    public void getEventInstancesByInterval(Long from, Long to, String userToken) {
+        retrofitClient.getEventRepository().getEventInstancesByInterval(from, to, userToken).enqueue(new Callback<EventInstanceResponse>() {
             @Override
             public void onResponse(Call<EventInstanceResponse> call, Response<EventInstanceResponse> response) {
+                Log.d("______________", response.body().getCount() + "");
                 if (response.isSuccessful())
                     EventBus.getDefault().post(Arrays.asList(response.body().getData()));
             }

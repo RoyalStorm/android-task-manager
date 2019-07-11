@@ -61,6 +61,9 @@ public class DayFragment extends Fragment implements SelectDateDialog.SelectDayD
     private static final int ADD = 1;
     private static final int EDIT = 2;
 
+    private FirebaseAuth firebaseAuth;
+    private String userToken = null;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -73,6 +76,8 @@ public class DayFragment extends Fragment implements SelectDateDialog.SelectDayD
 
         FloatingActionButton fab = view.findViewById(R.id.add_event);
         fab.setOnClickListener(v -> createTask());
+
+        firebaseAuth = FirebaseAuth.getInstance();
 
         recyclerView = view.findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -178,37 +183,38 @@ public class DayFragment extends Fragment implements SelectDateDialog.SelectDayD
         if (data == null)
             return;
 
-        String userToken = FirebaseAuth.getInstance().getCurrentUser().getIdToken(false).getResult().getToken();
-
         if (requestCode == ADD) {
-            retrofitClient.getEventRepository().save((Event) data.getSerializableExtra(Event.class.getSimpleName()), userToken).enqueue(new Callback<EventResponse>() {
-                @Override
-                public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
-                    if (response.isSuccessful()) {
-                        if (response.body() != null) {
-                            retrofitClient.getEventPatternRepository().save(response.body().getData()[0].getId(), (EventPattern) data.getSerializableExtra(EventPattern.class.getSimpleName())).enqueue(new Callback<EventPatternResponse>() {
-                                @Override
-                                public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
-                                    getEvents(
-                                            new GregorianCalendar(year, month, day, 0, 0),
-                                            new GregorianCalendar(year, month, day, 23, 59)
-                                    );
-                                }
+            if (userToken == null)
+                firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
+                    userToken = task.getResult().getToken();
+                    retrofitClient.getEventRepository().save((Event) data.getSerializableExtra(Event.class.getSimpleName()), userToken).enqueue(new Callback<EventResponse>() {
+                        @Override
+                        public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                retrofitClient.getEventPatternRepository().save(response.body().getData()[0].getId(), (EventPattern) data.getSerializableExtra(EventPattern.class.getSimpleName()), userToken).enqueue(new Callback<EventPatternResponse>() {
+                                    @Override
+                                    public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
+                                        getEvents(
+                                                new GregorianCalendar(year, month, day, 0, 0),
+                                                new GregorianCalendar(year, month, day, 23, 59),
+                                                userToken
+                                        );
+                                    }
 
-                                @Override
-                                public void onFailure(Call<EventPatternResponse> call, Throwable t) {
+                                    @Override
+                                    public void onFailure(Call<EventPatternResponse> call, Throwable t) {
 
-                                }
-                            });
+                                    }
+                                });
+                            }
                         }
-                    }
-                }
 
-                @Override
-                public void onFailure(Call<EventResponse> call, Throwable t) {
+                        @Override
+                        public void onFailure(Call<EventResponse> call, Throwable t) {
 
-                }
-            });
+                        }
+                    });
+                });
         } else {
             if (data.getStringExtra("Action").equals("Delete"))
                 retrofitClient.getEventRepository().delete(data.getLongExtra("id", 0)).enqueue(new Callback<Void>() {
@@ -217,7 +223,8 @@ public class DayFragment extends Fragment implements SelectDateDialog.SelectDayD
                         if (response.isSuccessful())
                             getEvents(
                                     new GregorianCalendar(year, month, day, 0, 0),
-                                    new GregorianCalendar(year, month, day, 23, 59)
+                                    new GregorianCalendar(year, month, day, 23, 59),
+                                    userToken
                             );
                     }
 
@@ -241,7 +248,8 @@ public class DayFragment extends Fragment implements SelectDateDialog.SelectDayD
                                     if (response.isSuccessful())
                                         getEvents(
                                                 new GregorianCalendar(year, month, day, 0, 0),
-                                                new GregorianCalendar(year, month, day, 23, 59)
+                                                new GregorianCalendar(year, month, day, 23, 59),
+                                                userToken
                                         );
                                 }
 
@@ -261,8 +269,8 @@ public class DayFragment extends Fragment implements SelectDateDialog.SelectDayD
         }
     }
 
-    private void getEvents(GregorianCalendar from, GregorianCalendar to) {
-        retrofitClient.getEventRepository().getEventInstancesByInterval(from.getTimeInMillis(), to.getTimeInMillis()).enqueue(new Callback<EventInstanceResponse>() {
+    private void getEvents(GregorianCalendar from, GregorianCalendar to, String userToken) {
+        retrofitClient.getEventRepository().getEventInstancesByInterval(from.getTimeInMillis(), to.getTimeInMillis(), userToken).enqueue(new Callback<EventInstanceResponse>() {
             @Override
             public void onResponse(Call<EventInstanceResponse> call, Response<EventInstanceResponse> response) {
                 if (response.isSuccessful()) {
@@ -287,7 +295,8 @@ public class DayFragment extends Fragment implements SelectDateDialog.SelectDayD
         super.onResume();
         getEvents(
                 new GregorianCalendar(year, month, day, 0, 0),
-                new GregorianCalendar(year, month, day, 23, 59)
+                new GregorianCalendar(year, month, day, 23, 59),
+                userToken
         );
     }
 

@@ -11,8 +11,8 @@ import retrofit2.Response;
 public class EventPatternService {
     private RetrofitClient retrofitClient = RetrofitClient.getInstance();
 
-    public void save(Long eventId, EventPattern eventPattern) {
-        retrofitClient.getEventPatternRepository().save(eventId, eventPattern).enqueue(new Callback<EventPatternResponse>() {
+    public void save(Long eventId, EventPattern eventPattern, String userToken) {
+        retrofitClient.getEventPatternRepository().save(eventId, eventPattern, userToken).enqueue(new Callback<EventPatternResponse>() {
             @Override
             public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
             }

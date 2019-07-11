@@ -12,6 +12,7 @@ import com.applandeo.materialcalendarview.EventDay;
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.service.EventService;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -26,6 +27,9 @@ public class MonthFragment extends Fragment {
 
     private EventService eventService = new EventService();
     private List<EventDay> events = new ArrayList<>();
+
+    private FirebaseAuth firebaseAuth;
+    private String userToken = null;
 
     @Nullable
     @Override
@@ -48,6 +52,8 @@ public class MonthFragment extends Fragment {
                     dayFragment).commit();
         });
 
+        firebaseAuth = FirebaseAuth.getInstance();
+
         EventBus.getDefault().register(this);
 
         GregorianCalendar beginOfYear = new GregorianCalendar();
@@ -64,7 +70,15 @@ public class MonthFragment extends Fragment {
         beginOfYear.set(Calendar.HOUR_OF_DAY, 23);
         beginOfYear.set(Calendar.MINUTE, 59);
 
-        eventService.getEventInstancesByInterval(beginOfYear.getTimeInMillis(), endOfYear.getTimeInMillis());
+        if (userToken == null)
+            firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
+                userToken = task.getResult().getToken();
+                eventService.getEventInstancesByInterval(beginOfYear.getTimeInMillis(), endOfYear.getTimeInMillis(), userToken);
+            });
+        else {
+            userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
+            eventService.getEventInstancesByInterval(beginOfYear.getTimeInMillis(), endOfYear.getTimeInMillis(), userToken);
+        }
 
         calendar.setOnPreviousPageChangeListener(() -> {
             now.add(Calendar.MONTH, -1);
@@ -72,7 +86,15 @@ public class MonthFragment extends Fragment {
                 beginOfYear.add(Calendar.YEAR, -1);
                 endOfYear.add(Calendar.YEAR, -1);
 
-                eventService.getEventInstancesByInterval(beginOfYear.getTimeInMillis(), endOfYear.getTimeInMillis());
+                if (userToken == null) {
+                    firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
+                        userToken = task.getResult().getToken();
+                        eventService.getEventInstancesByInterval(beginOfYear.getTimeInMillis(), endOfYear.getTimeInMillis(), userToken);
+                    });
+                } else {
+                    userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
+                    eventService.getEventInstancesByInterval(beginOfYear.getTimeInMillis(), endOfYear.getTimeInMillis(), userToken);
+                }
             }
         });
 
@@ -82,7 +104,15 @@ public class MonthFragment extends Fragment {
                 beginOfYear.add(Calendar.YEAR, 1);
                 endOfYear.add(Calendar.YEAR, 1);
 
-                eventService.getEventInstancesByInterval(beginOfYear.getTimeInMillis(), endOfYear.getTimeInMillis());
+                if (userToken == null) {
+                    firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
+                        userToken = task.getResult().getToken();
+                        eventService.getEventInstancesByInterval(beginOfYear.getTimeInMillis(), endOfYear.getTimeInMillis(), userToken);
+                    });
+                } else {
+                    userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
+                    eventService.getEventInstancesByInterval(beginOfYear.getTimeInMillis(), endOfYear.getTimeInMillis(), userToken);
+                }
             }
         });
 

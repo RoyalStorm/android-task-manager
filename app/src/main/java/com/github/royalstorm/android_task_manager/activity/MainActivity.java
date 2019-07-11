@@ -8,12 +8,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -48,6 +47,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity
 
     private String userToken = null;
 
-    private int RC_SIGN_IN = 0;
+    private static int RC_SIGN_IN = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         firebaseAuth = FirebaseAuth.getInstance();
 
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null && firebaseAuth.getCurrentUser() != null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.calendarContainer, new MonthFragment())
                     .commit();
             navigationView.setCheckedItem(R.id.nav_month);
@@ -181,15 +181,6 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction().replace(R.id.calendarContainer,
                         new MonthFragment()).commit();
                 break;
-            case R.id.dark:
-                SwitchCompat darkTheme = findViewById(R.id.dark_theme);
-                darkTheme.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    if (isChecked)
-                        getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    else
-                        getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                });
-                break;
         }
 
         drawer.closeDrawer(GravityCompat.START);
@@ -212,6 +203,12 @@ public class MainActivity extends AppCompatActivity
 
         if (navigationView.getCheckedItem() != null)
             navigationView.getCheckedItem().setChecked(true);
+
+        navigationView.setNavigationItemSelectedListener(null);
+
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        for (Fragment fragment : fragments)
+            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
     }
 
     @Override
@@ -305,18 +302,23 @@ public class MainActivity extends AppCompatActivity
         } else {
             signInButton.setVisibility(View.VISIBLE);
             signOutButton.setVisibility(View.GONE);
+            userToken = null;
         }
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount googleSignInAccount) {
         AuthCredential authCredential = GoogleAuthProvider.getCredential(googleSignInAccount.getIdToken(), null);
+
         firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) {
+                Log.d("AUTH DONE", "SUCCESS");
+
                 firebaseUser = firebaseAuth.getCurrentUser();
                 userToken = firebaseUser.getIdToken(false).getResult().getToken();
 
-                navigationView.setNavigationItemSelectedListener(this);
+                navigationView.setNavigationItemSelectedListener(MainActivity.this);
             } else {
+                Log.d("AUTH FAIL", task.getException().toString());
                 userToken = null;
             }
         });
