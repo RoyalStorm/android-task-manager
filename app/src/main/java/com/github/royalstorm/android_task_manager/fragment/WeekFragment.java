@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.service.EventService;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -38,6 +39,9 @@ public class WeekFragment extends Fragment {
 
     private List<EventInstance> eventInstances = new ArrayList<>();
 
+    private FirebaseAuth firebaseAuth;
+    private String userToken;
+
     private View view;
 
     @Nullable
@@ -47,6 +51,9 @@ public class WeekFragment extends Fragment {
                 container, false);
 
         EventBus.getDefault().register(this);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
 
         setDays(view);
         setPrevWeekListener(view);
@@ -131,7 +138,16 @@ public class WeekFragment extends Fragment {
         Long to = gregorianCalendar.getTimeInMillis();
 
         EventService eventService = new EventService();
-        eventService.getEventInstancesByInterval(from, to, null);
+
+        if (userToken == null) {
+            firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
+                userToken = task.getResult().getToken();
+                eventService.getEventInstancesByInterval(from, to, userToken);
+            });
+        } else {
+            userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
+            eventService.getEventInstancesByInterval(from, to, userToken);
+        }
     }
 
     private void setPrevWeekListener(View view) {

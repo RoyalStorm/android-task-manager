@@ -8,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +17,8 @@ import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.activity.AddTaskActivity;
 import com.github.royalstorm.android_task_manager.activity.EditTaskActivity;
 import com.github.royalstorm.android_task_manager.adapter.EventAdapter;
-import com.github.royalstorm.android_task_manager.dao.Event;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
-import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dto.EventInstanceResponse;
-import com.github.royalstorm.android_task_manager.dto.EventPatternResponse;
-import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectDateDialog;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 import com.google.firebase.auth.FirebaseAuth;
@@ -59,11 +54,8 @@ public class DayFragment extends Fragment implements SelectDateDialog.SelectDayD
     private int month;
     private int year;
 
-    private static final int ADD = 1;
-    private static final int EDIT = 2;
-
     private FirebaseAuth firebaseAuth;
-    private String userToken = null;
+    private String userToken;
 
     @Nullable
     @Override
@@ -76,9 +68,10 @@ public class DayFragment extends Fragment implements SelectDateDialog.SelectDayD
         setNextDayListener(view);
 
         FloatingActionButton fab = view.findViewById(R.id.add_event);
-        fab.setOnClickListener(v -> createTask());
+        fab.setOnClickListener(v -> openActivityForAddingEvent());
 
         firebaseAuth = FirebaseAuth.getInstance();
+        userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
 
         recyclerView = view.findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -167,7 +160,7 @@ public class DayFragment extends Fragment implements SelectDateDialog.SelectDayD
         });
     }
 
-    private void createTask() {
+    private void openActivityForAddingEvent() {
         EventInstance eventInstance = new EventInstance();
         eventInstance.setStartedAt(calendarToMillis(new GregorianCalendar(year, month, day, new GregorianCalendar().getTime().getHours(), new GregorianCalendar().getTime().getMinutes())));
         eventInstance.setEndedAt(calendarToMillis(new GregorianCalendar(year, month, day, new GregorianCalendar().getTime().getHours(), new GregorianCalendar().getTime().getMinutes())));
@@ -175,65 +168,6 @@ public class DayFragment extends Fragment implements SelectDateDialog.SelectDayD
         Intent intent = new Intent(getActivity(), AddTaskActivity.class);
         intent.putExtra(EventInstance.class.getSimpleName(), eventInstance);
         startActivity(intent);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (data == null)
-            return;
-
-        if (data.getStringExtra("Action").equals("Delete"))
-            retrofitClient.getEventRepository().delete(data.getLongExtra("id", 0), userToken).enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful())
-                        getEvents(
-                                new GregorianCalendar(year, month, day, 0, 0),
-                                new GregorianCalendar(year, month, day, 23, 59),
-                                userToken
-                        );
-                }
-
-                @Override
-                public void onFailure(Call<Void> call, Throwable throwable) {
-                }
-            });
-        else {
-            Event event = (Event) data.getSerializableExtra(Event.class.getSimpleName());
-            EventPattern eventPattern = (EventPattern) data.getSerializableExtra(EventPattern.class.getSimpleName());
-            Long eventId = data.getLongExtra("eventId", 0);
-            Long patternId = data.getLongExtra("patternId", 0);
-
-            retrofitClient.getEventPatternRepository().update(patternId, eventPattern, userToken).enqueue(new Callback<EventPatternResponse>() {
-                @Override
-                public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
-                    if (response.isSuccessful())
-                        retrofitClient.getEventRepository().update(eventId, event, userToken).enqueue(new Callback<EventResponse>() {
-                            @Override
-                            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
-                                if (response.isSuccessful())
-                                    getEvents(
-                                            new GregorianCalendar(year, month, day, 0, 0),
-                                            new GregorianCalendar(year, month, day, 23, 59),
-                                            userToken
-                                    );
-                            }
-
-                            @Override
-                            public void onFailure(Call<EventResponse> call, Throwable t) {
-
-                            }
-                        });
-                }
-
-                @Override
-                public void onFailure(Call<EventPatternResponse> call, Throwable t) {
-
-                }
-            });
-        }
     }
 
     private void getEvents(GregorianCalendar from, GregorianCalendar to, String userToken) {
@@ -285,7 +219,7 @@ public class DayFragment extends Fragment implements SelectDateDialog.SelectDayD
     public void onEventClick(int position) {
         Intent intent = new Intent(getActivity(), EditTaskActivity.class);
         intent.putExtra(EventInstance.class.getSimpleName(), eventInstances.get(position));
-        startActivityForResult(intent, EDIT);
+        startActivity(intent);
     }
 
     private Long calendarToMillis(GregorianCalendar calendar) {

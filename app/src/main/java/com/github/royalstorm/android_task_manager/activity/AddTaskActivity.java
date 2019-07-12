@@ -66,9 +66,9 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     private FirebaseAuth firebaseAuth;
     private String userToken;
 
-    private Event event = new Event();
-    private EventPattern eventPattern = new EventPattern();
-    private EventInstance eventInstance = new EventInstance();
+    private Event event;
+    private EventPattern eventPattern;
+    private EventInstance eventInstance;
 
     private GregorianCalendar start;
     private GregorianCalendar end;
@@ -134,7 +134,12 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
         ButterKnife.bind(this);
 
+        event = new Event();
+        eventPattern = new EventPattern();
+        eventInstance = new EventInstance();
+
         firebaseAuth = FirebaseAuth.getInstance();
+        userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
 
         initActivity();
         setListeners();
@@ -151,7 +156,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.save_event) {
-            createTask();
+            createEvent();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -258,7 +263,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         });
     }
 
-    private void createTask() {
+    private void createEvent() {
         if (taskName.getText().toString().trim().isEmpty()) {
             Snackbar.make(getWindow().getDecorView().
                     getRootView(), "Заголовок не может быть пустым", Snackbar.LENGTH_LONG).show();
@@ -292,11 +297,11 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         if (userToken == null) {
             firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
                 userToken = task.getResult().getToken();
-                saveEvent(event, eventPattern, userToken);
+                saveRequest(event, eventPattern, userToken);
             });
         } else {
             userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
-            saveEvent(event, eventPattern, userToken);
+            saveRequest(event, eventPattern, userToken);
         }
     }
 
@@ -311,7 +316,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         return gregorianCalendar;
     }
 
-    private void saveEvent(Event event, EventPattern eventPattern, String userToken) {
+    private void saveRequest(Event event, EventPattern eventPattern, String userToken) {
         retrofitClient.getEventRepository().save(event, userToken).enqueue(new Callback<EventResponse>() {
             @Override
             public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
@@ -319,8 +324,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
                     retrofitClient.getEventPatternRepository().save(response.body().getData()[0].getId(), eventPattern, userToken).enqueue(new Callback<EventPatternResponse>() {
                         @Override
                         public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
-                            Intent intent = new Intent();
-                            setResult(RESULT_OK, intent);
+                            setResult(RESULT_OK, new Intent());
                             finish();
                         }
 

@@ -22,10 +22,11 @@ import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dto.EventPatternResponse;
 import com.github.royalstorm.android_task_manager.dto.EventResponse;
+import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectRepeatModeDialog;
 import com.github.royalstorm.android_task_manager.fragment.ui.picker.DatePickerFragment;
 import com.github.royalstorm.android_task_manager.fragment.ui.picker.TimePickerFragment;
-import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectRepeatModeDialog;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -47,7 +48,11 @@ import static com.github.royalstorm.android_task_manager.shared.Frequency.YEARLY
 
 public class EditTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener, SelectRepeatModeDialog.SelectRepeatModeDialogListener {
+
     private RetrofitClient retrofitClient = RetrofitClient.getInstance();
+
+    private FirebaseAuth firebaseAuth;
+    private String userToken;
 
     private EventInstance eventInstance;
     private Event event;
@@ -137,91 +142,38 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
         event = new Event();
         eventPattern = new EventPattern();
 
-        eventRepeatMode.setOnClickListener(v -> {
-            SelectRepeatModeDialog selectRepeatModeDialog = new SelectRepeatModeDialog();
-
-            Bundle eventPatternBundle = new Bundle();
-            eventPatternBundle.putSerializable(EventPattern.class.getSimpleName(), eventPattern);
-
-            selectRepeatModeDialog.setArguments(eventPatternBundle);
-            selectRepeatModeDialog.show(getSupportFragmentManager(), "Select repeat mode dialog");
-        });
+        firebaseAuth = FirebaseAuth.getInstance();
+        userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
 
         initFields(eventInstance);
         setListeners();
     }
 
     private void initFields(EventInstance eventInstance) {
-        retrofitClient.getEventRepository().getEventsById(new Long[]{eventInstance.getEventId()}, null).enqueue(new Callback<EventResponse>() {
-            @Override
-            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    taskName.setText(response.body().getData()[0].getName());
-                    taskDetails.setText(response.body().getData()[0].getDetails());
-
-                    start = new GregorianCalendar();
-                    start.setTimeInMillis(eventInstance.getStartedAt());
-                    end = new GregorianCalendar();
-                    end.setTimeInMillis(eventInstance.getEndedAt());
-
-                    taskBeginDate.setText(simpleDateFormat.format(start.getTime()));
-                    taskEndDate.setText(simpleDateFormat.format(end.getTime()));
-
-                    taskBeginTime.setText(getTimeFormat(start.getTime().getHours(), start.getTime().getMinutes()));
-                    taskEndTime.setText(getTimeFormat(end.getTime().getHours(), end.getTime().getMinutes()));
-
-                    retrofitClient.getEventPatternRepository().getPatternsById(eventInstance.getPatternId(), null).enqueue(new Callback<EventPatternResponse>() {
-                        @Override
-                        public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
-                            if (response.isSuccessful() && response.body() != null) {
-                                eventPattern = response.body().getData()[0];
-
-                                if (eventPattern.getRrule() == NEVER)
-                                    eventRepeatMode.setText("Не повторяется");
-                                else
-                                    switch (eventPattern.getRrule()) {
-                                        case DAILY:
-                                            eventRepeatMode.setText("Каждый день");
-                                            break;
-                                        case WEEKLY:
-                                            eventRepeatMode.setText("Каждую неделю");
-                                            break;
-                                        case MONTHLY:
-                                            eventRepeatMode.setText("Каждый месяц");
-                                            break;
-                                        case YEARLY:
-                                            eventRepeatMode.setText("Каждый год");
-                                            break;
-                                        default:
-                                            eventRepeatMode.setText("Другое");
-                                    }
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<EventPatternResponse> call, Throwable t) {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onFailure(Call<EventResponse> call, Throwable t) {
-
-            }
-        });
+        if (userToken == null) {
+            firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
+                userToken = task.getResult().getToken();
+                initialRequest(eventInstance, userToken);
+            });
+        } else {
+            userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
+            initialRequest(eventInstance, userToken);
+        }
     }
 
-    private void deleteTask(Long id) {
-        Intent intent = new Intent();
-        intent.putExtra("id", id);
-        intent.putExtra("Action", "Delete");
-        setResult(RESULT_OK, intent);
-        finish();
+    private void deleteEvent(Long id) {
+        if (userToken == null) {
+            firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
+                userToken = task.getResult().getToken();
+                deleteRequest(id, userToken);
+            });
+        } else {
+            userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
+            deleteRequest(id, userToken);
+        }
     }
 
-    private void editTask() {
+    private void updateEvent() {
         if (taskName.getText().toString().trim().isEmpty()) {
             Snackbar.make(getWindow().getDecorView().
                     getRootView(), "Заголовок не может быть пустым", Snackbar.LENGTH_LONG).show();
@@ -244,14 +196,15 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
         event.setName(taskName.getText().toString().trim());
         event.setDetails(taskDetails.getText().toString().trim());
 
-        Intent intent = new Intent();
-        intent.putExtra(EventPattern.class.getSimpleName(), eventPattern);
-        intent.putExtra(Event.class.getSimpleName(), event);
-        intent.putExtra("eventId", eventInstance.getEventId());
-        intent.putExtra("patternId", eventInstance.getPatternId());
-        intent.putExtra("Action", "Update");
-        setResult(RESULT_OK, intent);
-        finish();
+        if (userToken == null) {
+            firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
+                userToken = task.getResult().getToken();
+                updateRequest(eventInstance.getPatternId(), eventInstance.getEventId(), userToken);
+            });
+        } else {
+            userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
+            updateRequest(eventInstance.getPatternId(), eventInstance.getEventId(), userToken);
+        }
     }
 
     private void setListeners() {
@@ -259,6 +212,15 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
         taskEndDate.setOnClickListener(dateListener);
         taskBeginTime.setOnClickListener(timeListener);
         taskEndTime.setOnClickListener(timeListener);
+        eventRepeatMode.setOnClickListener(v -> {
+            SelectRepeatModeDialog selectRepeatModeDialog = new SelectRepeatModeDialog();
+
+            Bundle eventPatternBundle = new Bundle();
+            eventPatternBundle.putSerializable(EventPattern.class.getSimpleName(), eventPattern);
+
+            selectRepeatModeDialog.setArguments(eventPatternBundle);
+            selectRepeatModeDialog.show(getSupportFragmentManager(), "Select repeat mode dialog");
+        });
     }
 
     @Override
@@ -272,11 +234,11 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_event:
-                editTask();
+                updateEvent();
                 return true;
 
             case R.id.delete_event:
-                deleteTask(eventInstance.getEventId());
+                deleteEvent(eventInstance.getEventId());
                 return true;
 
             default:
@@ -330,5 +292,111 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
         eventPattern.setRrule(rRule);
         if (rRule != null)
             eventPattern.setEndedAt(endedAt);
+    }
+
+    private void updateRequest(Long patternId, Long eventId, String userToken) {
+        retrofitClient.getEventPatternRepository().update(patternId, eventPattern, userToken).enqueue(new Callback<EventPatternResponse>() {
+            @Override
+            public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
+                if (response.isSuccessful())
+                    retrofitClient.getEventRepository().update(eventId, event, userToken).enqueue(new Callback<EventResponse>() {
+                        @Override
+                        public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+                            if (response.isSuccessful()) {
+                                setResult(RESULT_OK, new Intent());
+                                finish();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<EventResponse> call, Throwable t) {
+
+                        }
+                    });
+            }
+
+            @Override
+            public void onFailure(Call<EventPatternResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void deleteRequest(Long id, String userToken) {
+        retrofitClient.getEventRepository().delete(id, userToken).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    setResult(RESULT_OK, new Intent());
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable throwable) {
+            }
+        });
+    }
+
+    private void initialRequest(EventInstance eventInstance, String userToken) {
+        retrofitClient.getEventRepository().getEventsById(new Long[]{eventInstance.getEventId()}, userToken).enqueue(new Callback<EventResponse>() {
+            @Override
+            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    taskName.setText(response.body().getData()[0].getName());
+                    taskDetails.setText(response.body().getData()[0].getDetails());
+
+                    start = new GregorianCalendar();
+                    start.setTimeInMillis(eventInstance.getStartedAt());
+                    end = new GregorianCalendar();
+                    end.setTimeInMillis(eventInstance.getEndedAt());
+
+                    taskBeginDate.setText(simpleDateFormat.format(start.getTime()));
+                    taskEndDate.setText(simpleDateFormat.format(end.getTime()));
+
+                    taskBeginTime.setText(getTimeFormat(start.getTime().getHours(), start.getTime().getMinutes()));
+                    taskEndTime.setText(getTimeFormat(end.getTime().getHours(), end.getTime().getMinutes()));
+
+                    retrofitClient.getEventPatternRepository().getPatternsById(eventInstance.getPatternId(), userToken).enqueue(new Callback<EventPatternResponse>() {
+                        @Override
+                        public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                eventPattern = response.body().getData()[0];
+
+                                if (eventPattern.getRrule() == NEVER)
+                                    eventRepeatMode.setText("Не повторяется");
+                                else
+                                    switch (eventPattern.getRrule()) {
+                                        case DAILY:
+                                            eventRepeatMode.setText("Каждый день");
+                                            break;
+                                        case WEEKLY:
+                                            eventRepeatMode.setText("Каждую неделю");
+                                            break;
+                                        case MONTHLY:
+                                            eventRepeatMode.setText("Каждый месяц");
+                                            break;
+                                        case YEARLY:
+                                            eventRepeatMode.setText("Каждый год");
+                                            break;
+                                        default:
+                                            eventRepeatMode.setText("Другое");
+                                    }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<EventPatternResponse> call, Throwable t) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EventResponse> call, Throwable t) {
+
+            }
+        });
     }
 }
