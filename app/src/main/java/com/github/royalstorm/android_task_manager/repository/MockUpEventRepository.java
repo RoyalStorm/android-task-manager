@@ -4,7 +4,7 @@ import com.github.royalstorm.android_task_manager.dao.Task;
 
 import java.util.List;
 
-public interface TaskRepository {
+public interface MockUpEventRepository {
 
     List<Task> findAll();
 

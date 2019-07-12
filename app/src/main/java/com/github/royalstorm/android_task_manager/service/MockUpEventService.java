@@ -1,13 +1,13 @@
 package com.github.royalstorm.android_task_manager.service;
 
 import com.github.royalstorm.android_task_manager.dao.Task;
-import com.github.royalstorm.android_task_manager.repository.TaskRepository;
+import com.github.royalstorm.android_task_manager.repository.MockUpEventRepository;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-public class MockUpTaskService implements TaskRepository {
+public class MockUpEventService implements MockUpEventRepository {
 
     private static List<Task> tasks = new ArrayList<>();
     private List<Task> foundTasks;

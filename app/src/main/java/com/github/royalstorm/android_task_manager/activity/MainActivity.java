@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.export_from_server) {
-            exportToICal();
+            exportToICal(userToken);
             return true;
         }
 
@@ -235,8 +235,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void exportToICal() {
-        retrofitClient.getCalendarRepository().exportFromServer().enqueue(new retrofit2.Callback<ResponseBody>() {
+    private void exportToICal(String userToken) {
+        retrofitClient.getCalendarRepository().exportFromServer(userToken).enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
