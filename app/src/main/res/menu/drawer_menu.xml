@@ -26,15 +26,17 @@
 
     <item android:title="Настройки доступа">
         <menu>
-            <item
-                android:id="@+id/nav_sharing"
-                android:icon="@drawable/ic_sharing"
-                android:title="Управление правами" />
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_sharing"
+                    android:icon="@drawable/ic_sharing"
+                    android:title="Управление правами" />
 
-            <item
-                android:id="@+id/nav_activate_token"
-                android:icon="@drawable/ic_activate_token"
-                android:title="Активация токена" />
+                <item
+                    android:id="@+id/nav_activate_token"
+                    android:icon="@drawable/ic_activate_token"
+                    android:title="Активация токена" />
+            </group>
         </menu>
     </item>
 
