@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.royalstorm.android_task_manager.R;
@@ -63,7 +64,8 @@ public class MainActivity extends AppCompatActivity
 
     private DrawerLayout drawer;
 
-    private ImageView accountImage;
+    private de.hdodenhof.circleimageview.CircleImageView accountImage;
+    private TextView accountName;
     private SignInButton signInButton;
     private Button signOutButton;
 
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(null);
 
         accountImage = navigationView.getHeaderView(0).findViewById(R.id.account_image);
+        accountName = navigationView.getHeaderView(0).findViewById(R.id.account_name);
         signInButton = navigationView.getHeaderView(0).findViewById(R.id.sign_in_button);
         signOutButton = navigationView.getHeaderView(0).findViewById(R.id.sign_out_button);
 
@@ -300,6 +303,8 @@ public class MainActivity extends AppCompatActivity
 
                 }
             });
+
+            accountName.setText(account.getDisplayName());
 
             signInButton.setVisibility(View.GONE);
             signOutButton.setVisibility(View.VISIBLE);
