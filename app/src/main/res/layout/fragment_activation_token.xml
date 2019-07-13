@@ -12,7 +12,7 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/activation_token"
+            android:id="@+id/token_field"
             android:layout_width="290dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
@@ -20,11 +20,12 @@
             android:layout_marginBottom="15dp"
             android:drawableStart="@drawable/ic_token"
             android:drawablePadding="5dp"
-            android:hint="Пожалуйста, вставте сюда токен активации"
+            android:hint="Пожалуйста, вставте сюда токен"
             android:inputType="textPersonName"
             android:textSize="14sp" />
 
         <ImageButton
+            android:id="@+id/confirm"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="15dp"

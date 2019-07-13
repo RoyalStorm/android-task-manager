@@ -317,11 +317,11 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     }
 
     private void saveRequest(Event event, EventPattern eventPattern, String userToken) {
-        retrofitClient.getEventRepository().save(event, userToken).enqueue(new Callback<EventResponse>() {
+        retrofitClient.getEventsRepository().save(event, userToken).enqueue(new Callback<EventResponse>() {
             @Override
             public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    retrofitClient.getEventPatternRepository().save(response.body().getData()[0].getId(), eventPattern, userToken).enqueue(new Callback<EventPatternResponse>() {
+                    retrofitClient.getPatternsRepository().save(response.body().getData()[0].getId(), eventPattern, userToken).enqueue(new Callback<EventPatternResponse>() {
                         @Override
                         public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
                             setResult(RESULT_OK, new Intent());

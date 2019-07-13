@@ -171,7 +171,7 @@ public class DayFragment extends Fragment implements SelectDateDialog.SelectDayD
     }
 
     private void getEvents(GregorianCalendar from, GregorianCalendar to, String userToken) {
-        retrofitClient.getEventRepository().getEventInstancesByInterval(from.getTimeInMillis(), to.getTimeInMillis(), userToken).enqueue(new Callback<EventInstanceResponse>() {
+        retrofitClient.getEventsRepository().getEventInstancesByInterval(from.getTimeInMillis(), to.getTimeInMillis(), userToken).enqueue(new Callback<EventInstanceResponse>() {
             @Override
             public void onResponse(Call<EventInstanceResponse> call, Response<EventInstanceResponse> response) {
                 if (response.isSuccessful()) {

@@ -16,7 +16,7 @@ public class EventService {
     private RetrofitClient retrofitClient = RetrofitClient.getInstance();
 
     public void getEventInstancesByInterval(Long from, Long to, String userToken) {
-        retrofitClient.getEventRepository().getEventInstancesByInterval(from, to, userToken).enqueue(new Callback<EventInstanceResponse>() {
+        retrofitClient.getEventsRepository().getEventInstancesByInterval(from, to, userToken).enqueue(new Callback<EventInstanceResponse>() {
             @Override
             public void onResponse(Call<EventInstanceResponse> call, Response<EventInstanceResponse> response) {
                 if (response.isSuccessful())
