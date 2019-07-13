@@ -23,4 +23,14 @@
             </group>
         </menu>
     </item>
+
+    <item android:title="Настройки прав">
+        <menu>
+            <item
+                android:id="@+id/nav_sharing"
+                android:icon="@drawable/ic_sharing"
+                android:title="Управление доступом" />
+        </menu>
+    </item>
+
 </menu>

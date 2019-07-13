@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.fragment.DayFragment;
 import com.github.royalstorm.android_task_manager.fragment.MonthFragment;
+import com.github.royalstorm.android_task_manager.fragment.RulesSharingFragment;
 import com.github.royalstorm.android_task_manager.fragment.WeekFragment;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -180,6 +181,10 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_month:
                 getSupportFragmentManager().beginTransaction().replace(R.id.calendarContainer,
                         new MonthFragment()).commit();
+                break;
+            case R.id.nav_sharing:
+                getSupportFragmentManager().beginTransaction().replace(R.id.calendarContainer,
+                        new RulesSharingFragment()).commit();
                 break;
         }
 

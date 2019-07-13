@@ -29,7 +29,7 @@ public class MonthFragment extends Fragment {
     private List<EventDay> events = new ArrayList<>();
 
     private FirebaseAuth firebaseAuth;
-    private String userToken = null;
+    private String userToken;
 
     @Nullable
     @Override
@@ -53,6 +53,7 @@ public class MonthFragment extends Fragment {
         });
 
         firebaseAuth = FirebaseAuth.getInstance();
+        userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
 
         EventBus.getDefault().register(this);
 
