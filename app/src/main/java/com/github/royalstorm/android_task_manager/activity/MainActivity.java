@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.github.royalstorm.android_task_manager.R;
+import com.github.royalstorm.android_task_manager.fragment.ActivationTokenFragment;
 import com.github.royalstorm.android_task_manager.fragment.DayFragment;
 import com.github.royalstorm.android_task_manager.fragment.MonthFragment;
 import com.github.royalstorm.android_task_manager.fragment.WeekFragment;
@@ -184,6 +185,10 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_sharing:
                 /*getSupportFragmentManager().beginTransaction().replace(R.id.calendarContainer,
                         new RulesSharingFragment()).commit();*/
+                break;
+            case R.id.nav_activate_token:
+                getSupportFragmentManager().beginTransaction().replace(R.id.calendarContainer,
+                        new ActivationTokenFragment()).commit();
                 break;
         }
 

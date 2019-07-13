@@ -24,12 +24,17 @@
         </menu>
     </item>
 
-    <item android:title="Настройки прав">
+    <item android:title="Настройки доступа">
         <menu>
             <item
                 android:id="@+id/nav_sharing"
                 android:icon="@drawable/ic_sharing"
-                android:title="Управление доступом" />
+                android:title="Управление правами" />
+
+            <item
+                android:id="@+id/nav_activate_token"
+                android:icon="@drawable/ic_activate_token"
+                android:title="Активация токена" />
         </menu>
     </item>
 
