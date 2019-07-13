@@ -3,6 +3,7 @@ package com.github.royalstorm.android_task_manager.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -228,6 +229,9 @@ public class WeekFragment extends Fragment {
 
                     getFragmentManager().beginTransaction().replace(R.id.calendarContainer,
                             dayFragment).commit();
+
+                    NavigationView navigationView = getActivity().findViewById(R.id.nav_view);
+                    navigationView.setCheckedItem(R.id.nav_day);
                 });
             }
 

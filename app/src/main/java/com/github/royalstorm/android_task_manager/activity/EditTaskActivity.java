@@ -226,7 +226,7 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.edit_task_menu, menu);
+        menuInflater.inflate(R.menu.edit_event_menu, menu);
         return true;
     }
 

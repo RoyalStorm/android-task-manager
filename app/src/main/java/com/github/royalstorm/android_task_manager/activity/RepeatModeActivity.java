@@ -105,7 +105,7 @@ public class RepeatModeActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.add_task_menu, menu);
+        menuInflater.inflate(R.menu.add_event_menu, menu);
 
         return true;
     }
