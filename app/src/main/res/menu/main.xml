@@ -6,10 +6,4 @@
         android:orderInCategory="100"
         android:title="@string/export_desc"
         app:showAsAction="never" />
-
-    <item
-        android:id="@+id/import_to_server"
-        android:orderInCategory="100"
-        android:title="@string/import_desc"
-        app:showAsAction="never" />
 </menu>

@@ -32,7 +32,7 @@ public class MonthFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private String userToken = null;
 
-    ArrayList<Integer> iconsIDs = new ArrayList<Integer>() {{
+    private ArrayList<Integer> iconsIDs = new ArrayList<Integer>() {{
         add(R.drawable.looks_9_plus);
         add(R.drawable.looks_1);
         add(R.drawable.looks_2);
@@ -47,7 +47,6 @@ public class MonthFragment extends Fragment {
 
     @Nullable
     @Override
-
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_month, container, false);
 
@@ -87,8 +86,8 @@ public class MonthFragment extends Fragment {
         GregorianCalendar endOfYear = new GregorianCalendar();
         endOfYear.set(Calendar.MONTH, Calendar.DECEMBER);
         endOfYear.set(Calendar.DAY_OF_MONTH, 31);
-        beginOfYear.set(Calendar.HOUR_OF_DAY, 23);
-        beginOfYear.set(Calendar.MINUTE, 59);
+        endOfYear.set(Calendar.HOUR_OF_DAY, 23);
+        endOfYear.set(Calendar.MINUTE, 59);
 
         if (userToken == null)
             firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
