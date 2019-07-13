@@ -1,22 +1,22 @@
 package com.github.royalstorm.android_task_manager.repository;
 
-import com.github.royalstorm.android_task_manager.dao.Task;
+import com.github.royalstorm.android_task_manager.dao.MockUpEvent;
 
 import java.util.List;
 
 public interface MockUpEventRepository {
 
-    List<Task> findAll();
+    List<MockUpEvent> findAll();
 
-    Task findById(int id);
+    MockUpEvent findById(int id);
 
-    List<Task> findByDate(int year, int month, int day);
+    List<MockUpEvent> findByDate(int year, int month, int day);
 
-    List<Task> findByDateAndTime(int year, int month, int day, int hour, int minute);
+    List<MockUpEvent> findByDateAndTime(int year, int month, int day, int hour, int minute);
 
-    void create(Task event);
+    void create(MockUpEvent event);
 
-    void update(int id, Task event);
+    void update(int id, MockUpEvent event);
 
     void delete(int id);
 }

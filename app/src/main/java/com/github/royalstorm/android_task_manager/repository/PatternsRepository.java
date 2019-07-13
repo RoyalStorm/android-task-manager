@@ -13,7 +13,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-public interface EventPatternRepository {
+public interface PatternsRepository {
 
     @GET("/api/v1/patterns/{id}")
     Call<EventPatternResponse> getPatternsById(@Path("id") Long id, @Header("X-Firebase-Auth") String userToken);

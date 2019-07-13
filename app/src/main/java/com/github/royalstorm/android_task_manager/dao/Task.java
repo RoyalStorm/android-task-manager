@@ -1,92 +1,63 @@
 package com.github.royalstorm.android_task_manager.dao;
 
-import java.io.Serializable;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-public class Task implements Serializable {
-    private int id;
+public class Task {
+    /*Readonly fields*/
+    @SerializedName("created_at")
+    private Long createdAt;
+    @SerializedName("updated_at")
+    private Long updatedAt;
+    @Expose
+    private Long eventId;
 
-    private String owner;
-    private String name;
+    @Expose
+    @SerializedName("deadline_at")
+    private Long deadlineAt;
+    @Expose
     private String details;
+    @Expose
+    private Long id;
+    @Expose
+    private String name;
+    @Expose
+    @SerializedName("parent_id")
+    private Long parentId;
+    @Expose
+    private String status;
 
-    private int beginMinute;
-    private int beginHour;
-    private int beginDay;
-    private int beginMonth;
-    private int beginYear;
-
-    private int endMinute;
-    private int endHour;
-    private int endDay;
-    private int endMonth;
-    private int endYear;
-
-    private int repeatNumber;
-    private String repeatMode;
-    private int[] repeatDays;
-
+    /*Default constructor*/
     public Task() {
     }
 
-    public Task(int id, String owner, String name, String details, int beginMinute, int beginHour, int beginDay, int beginMonth, int beginYear, int endMinute, int endHour, int endDay, int endMonth, int endYear) {
-        this.id = id;
-        this.owner = owner;
-        this.name = name;
+    public Task(Long deadlineAt, String details, Long id, String name, Long parentId, String status) {
+        this.deadlineAt = deadlineAt;
         this.details = details;
-        this.beginMinute = beginMinute;
-        this.beginHour = beginHour;
-        this.beginDay = beginDay;
-        this.beginMonth = beginMonth;
-        this.beginYear = beginYear;
-        this.endMinute = endMinute;
-        this.endHour = endHour;
-        this.endDay = endDay;
-        this.endMonth = endMonth;
-        this.endYear = endYear;
-    }
-
-    public Task(int id, String owner, String name, String details, int beginMinute, int beginHour, int beginDay, int beginMonth, int beginYear, int endMinute, int endHour, int endDay, int endMonth, int endYear, int repeatNumber, String repeatMode, int[] repeatDays) {
         this.id = id;
-        this.owner = owner;
         this.name = name;
-        this.details = details;
-        this.beginMinute = beginMinute;
-        this.beginHour = beginHour;
-        this.beginDay = beginDay;
-        this.beginMonth = beginMonth;
-        this.beginYear = beginYear;
-        this.endMinute = endMinute;
-        this.endHour = endHour;
-        this.endDay = endDay;
-        this.endMonth = endMonth;
-        this.endYear = endYear;
-        this.repeatNumber = repeatNumber;
-        this.repeatMode = repeatMode;
-        this.repeatDays = repeatDays;
+        this.parentId = parentId;
+        this.status = status;
     }
 
-    public int getId() {
-        return id;
+    public Long getCreatedAt() {
+        return createdAt;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public Long getUpdatedAt() {
+        return updatedAt;
     }
 
-    public String getOwner() {
-        return owner;
+    public Long getEventId() {
+        return eventId;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public Long getDeadlineAt() {
+        return deadlineAt;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setDeadlineAt(Long deadlineAt) {
+        this.deadlineAt = deadlineAt;
     }
 
     public String getDetails() {
@@ -97,107 +68,35 @@ public class Task implements Serializable {
         this.details = details;
     }
 
-    public int getBeginMinute() {
-        return beginMinute;
+    public Long getId() {
+        return id;
     }
 
-    public void setBeginMinute(int beginMinute) {
-        this.beginMinute = beginMinute;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public int getBeginHour() {
-        return beginHour;
+    public String getName() {
+        return name;
     }
 
-    public void setBeginHour(int beginHour) {
-        this.beginHour = beginHour;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public int getBeginDay() {
-        return beginDay;
+    public Long getParentId() {
+        return parentId;
     }
 
-    public void setBeginDay(int beginDay) {
-        this.beginDay = beginDay;
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
-    public int getBeginMonth() {
-        return beginMonth;
+    public String getStatus() {
+        return status;
     }
 
-    public void setBeginMonth(int beginMonth) {
-        this.beginMonth = beginMonth;
-    }
-
-    public int getBeginYear() {
-        return beginYear;
-    }
-
-    public void setBeginYear(int beginYear) {
-        this.beginYear = beginYear;
-    }
-
-    public int getEndMinute() {
-        return endMinute;
-    }
-
-    public void setEndMinute(int endMinute) {
-        this.endMinute = endMinute;
-    }
-
-    public int getEndHour() {
-        return endHour;
-    }
-
-    public void setEndHour(int endHour) {
-        this.endHour = endHour;
-    }
-
-    public int getEndDay() {
-        return endDay;
-    }
-
-    public void setEndDay(int endDay) {
-        this.endDay = endDay;
-    }
-
-    public int getEndMonth() {
-        return endMonth;
-    }
-
-    public void setEndMonth(int endMonth) {
-        this.endMonth = endMonth;
-    }
-
-    public int getEndYear() {
-        return endYear;
-    }
-
-    public void setEndYear(int endYear) {
-        this.endYear = endYear;
-    }
-
-    public int getRepeatNumber() {
-        return repeatNumber;
-    }
-
-    public void setRepeatNumber(int repeatNumber) {
-        this.repeatNumber = repeatNumber;
-    }
-
-    public String getRepeatMode() {
-        return repeatMode;
-    }
-
-    public void setRepeatMode(String repeatMode) {
-        this.repeatMode = repeatMode;
-    }
-
-    public int[] getRepeatDays() {
-        return repeatDays;
-    }
-
-    public void setRepeatDays(int[] repeatDays) {
-        this.repeatDays = repeatDays;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

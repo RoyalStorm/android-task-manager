@@ -1,6 +1,6 @@
 package com.github.royalstorm.android_task_manager.service;
 
-import com.github.royalstorm.android_task_manager.dao.Task;
+import com.github.royalstorm.android_task_manager.dao.MockUpEvent;
 import com.github.royalstorm.android_task_manager.repository.MockUpEventRepository;
 
 import java.util.ArrayList;
@@ -9,83 +9,83 @@ import java.util.List;
 
 public class MockUpEventService implements MockUpEventRepository {
 
-    private static List<Task> tasks = new ArrayList<>();
-    private List<Task> foundTasks;
+    private static List<MockUpEvent> mockUpEvents = new ArrayList<>();
+    private List<MockUpEvent> foundMockUpEvents;
 
     private static int counter = 0;
 
-    private Task getTask(int id) {
-        for (Task task : tasks)
-            if (task.getId() == id)
-                return task;
+    private MockUpEvent getTask(int id) {
+        for (MockUpEvent mockUpEvent : mockUpEvents)
+            if (mockUpEvent.getId() == id)
+                return mockUpEvent;
 
         return null;
     }
 
     @Override
-    public List<Task> findAll() {
-        return tasks;
+    public List<MockUpEvent> findAll() {
+        return mockUpEvents;
     }
 
     @Override
-    public Task findById(int id) {
+    public MockUpEvent findById(int id) {
         return getTask(id);
     }
 
     @Override
-    public List<Task> findByDate(int year, int month, int day) {
-        foundTasks = new ArrayList<>();
+    public List<MockUpEvent> findByDate(int year, int month, int day) {
+        foundMockUpEvents = new ArrayList<>();
 
         GregorianCalendar current = new GregorianCalendar(year, month, day);
 
-        for (Task task : tasks) {
-            GregorianCalendar begin = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), task.getBeginDay());
-            GregorianCalendar end = new GregorianCalendar(task.getEndYear(), task.getEndMonth(), task.getEndDay());
+        for (MockUpEvent mockUpEvent : mockUpEvents) {
+            GregorianCalendar begin = new GregorianCalendar(mockUpEvent.getBeginYear(), mockUpEvent.getBeginMonth(), mockUpEvent.getBeginDay());
+            GregorianCalendar end = new GregorianCalendar(mockUpEvent.getEndYear(), mockUpEvent.getEndMonth(), mockUpEvent.getEndDay());
 
             if (isWithinRange(begin, current, end))
-                foundTasks.add(task);
+                foundMockUpEvents.add(mockUpEvent);
         }
 
-        return foundTasks;
+        return foundMockUpEvents;
     }
 
     @Override
-    public List<Task> findByDateAndTime(int year, int month, int day, int hour, int minutes) {
-        foundTasks = new ArrayList<>();
+    public List<MockUpEvent> findByDateAndTime(int year, int month, int day, int hour, int minutes) {
+        foundMockUpEvents = new ArrayList<>();
 
         GregorianCalendar current = new GregorianCalendar(year, month, day, hour, minutes);
 
-        for (Task task : tasks) {
-            GregorianCalendar begin = new GregorianCalendar(task.getBeginYear(), task.getBeginMonth(), task.getBeginDay(), task.getBeginHour(), task.getBeginMinute());
-            GregorianCalendar end = new GregorianCalendar(task.getEndYear(), task.getEndMonth(), task.getEndDay(), task.getEndHour(), task.getEndMinute());
+        for (MockUpEvent mockUpEvent : mockUpEvents) {
+            GregorianCalendar begin = new GregorianCalendar(mockUpEvent.getBeginYear(), mockUpEvent.getBeginMonth(), mockUpEvent.getBeginDay(), mockUpEvent.getBeginHour(), mockUpEvent.getBeginMinute());
+            GregorianCalendar end = new GregorianCalendar(mockUpEvent.getEndYear(), mockUpEvent.getEndMonth(), mockUpEvent.getEndDay(), mockUpEvent.getEndHour(), mockUpEvent.getEndMinute());
 
             if (isWithinRange(begin, current, end))
-                foundTasks.add(task);
+                foundMockUpEvents.add(mockUpEvent);
         }
 
-        return foundTasks;
+        return foundMockUpEvents;
     }
 
     @Override
-    public void create(Task task) {
-        tasks.add(task);
+    public void create(MockUpEvent mockUpEvent) {
+        mockUpEvents.add(mockUpEvent);
 
         ++counter;
     }
 
     @Override
-    public void update(int id, Task task) {
-        Task taskFromDB = getTask(id);
+    public void update(int id, MockUpEvent mockUpEvent) {
+        MockUpEvent mockUpEventFromDB = getTask(id);
 
-        taskFromDB = task;
-        taskFromDB.setId(id);
+        mockUpEventFromDB = mockUpEvent;
+        mockUpEventFromDB.setId(id);
 
-        tasks.set(id, taskFromDB);
+        mockUpEvents.set(id, mockUpEventFromDB);
     }
 
     @Override
     public void delete(int id) {
-        tasks.remove(getTask(id));
+        mockUpEvents.remove(getTask(id));
 
         --counter;
     }

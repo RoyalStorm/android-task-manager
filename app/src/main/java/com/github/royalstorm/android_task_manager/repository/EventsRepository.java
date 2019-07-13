@@ -14,7 +14,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-public interface EventRepository {
+public interface EventsRepository {
 
     @POST("/api/v1/events")
     Call<EventResponse> save(@Body Event event, @Header("X-Firebase-Auth") String userToken);
