@@ -1,6 +1,7 @@
 package com.github.royalstorm.android_task_manager.fragment.dialog;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,6 +26,8 @@ public class AccessConfigurationDialog extends AppCompatDialogFragment
     private PermissionService permissionService;
 
     private Intent shareIntent;
+
+    private ApplyAccessConfiguration applyAccessConfiguration;
 
     @NonNull
     @Override
@@ -66,11 +69,27 @@ public class AccessConfigurationDialog extends AppCompatDialogFragment
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            applyAccessConfiguration = (AccessConfigurationDialog.ApplyAccessConfiguration) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() +
+                    "Must implement ApplyAccessConfiguration");
+        }
+    }
+
+    @Override
     public void requestPermissionSuccess(boolean success, String sharingToken) {
         shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_TEXT, sharingToken);
         shareIntent.setType("text/plain");
-        startActivity(Intent.createChooser(shareIntent, "Выберите пользователя"));
+        applyAccessConfiguration.applySharingLink(shareIntent);
+    }
+
+    public interface ApplyAccessConfiguration {
+        void applySharingLink(Intent sharingIntent);
     }
 }

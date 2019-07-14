@@ -47,8 +47,10 @@ import static com.github.royalstorm.android_task_manager.shared.Frequency.NEVER;
 import static com.github.royalstorm.android_task_manager.shared.Frequency.WEEKLY;
 import static com.github.royalstorm.android_task_manager.shared.Frequency.YEARLY;
 
-public class EditTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener,
-        TimePickerDialog.OnTimeSetListener, SelectRepeatModeDialog.SelectRepeatModeDialogListener {
+public class EditTaskActivity extends AppCompatActivity
+        implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener,
+        SelectRepeatModeDialog.SelectRepeatModeDialogListener,
+        AccessConfigurationDialog.ApplyAccessConfiguration {
 
     private RetrofitClient retrofitClient = RetrofitClient.getInstance();
 
@@ -416,5 +418,10 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
 
     private void showSnackbar(String message) {
         Snackbar.make(getWindow().getDecorView().getRootView(), message, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void applySharingLink(Intent sharingIntent) {
+        startActivity(Intent.createChooser(sharingIntent, "Выберите пользователя"));
     }
 }

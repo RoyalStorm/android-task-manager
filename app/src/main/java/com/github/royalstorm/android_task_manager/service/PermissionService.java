@@ -14,6 +14,9 @@ public class PermissionService {
 
     private RequestPermissionCallback requestPermissionCallback;
 
+    private static final int TOKEN_BEGIN = 23;
+    private static final int TOKEN_END = 30;
+
     public PermissionService(RequestPermissionCallback requestPermissionCallback) {
         retrofitClient = RetrofitClient.getInstance();
         this.requestPermissionCallback = requestPermissionCallback;
@@ -24,7 +27,10 @@ public class PermissionService {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful())
-                    requestPermissionCallback.requestPermissionSuccess(response.isSuccessful(), response.body().toString());
+                    requestPermissionCallback.requestPermissionSuccess(
+                            response.isSuccessful(),
+                            response.body().toString().substring(TOKEN_BEGIN, TOKEN_END)
+                    );
             }
 
             @Override
