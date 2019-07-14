@@ -234,7 +234,7 @@ public class WeekFragment extends Fragment {
                         if (eventCount == 1)
                             event.setBackgroundColor(getResources().getColor(R.color.purple));
                         if (eventCount == 2)
-                            event.setBackgroundColor(getResources().getColor(R.color.medium_spring_green));
+                            event.setBackgroundColor(getResources().getColor(R.color.colorAccent));
                         if (eventCount == 3)
                             event.setBackgroundColor(getResources().getColor(R.color.pink));
                         if (eventCount == 4) {

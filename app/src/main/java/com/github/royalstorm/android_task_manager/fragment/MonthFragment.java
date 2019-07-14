@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,9 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MonthFragment extends Fragment {
     private com.applandeo.materialcalendarview.CalendarView calendar;
@@ -140,6 +143,8 @@ public class MonthFragment extends Fragment {
 
     @Subscribe
     public void onEventInstanceResponse(List<EventInstance> eventInstances) {
+        HashMap<GregorianCalendar, Integer> eventsInDay = new HashMap<>();
+
         for (EventInstance eventInstance : eventInstances) {
             GregorianCalendar start = new GregorianCalendar();
             start.setTimeInMillis(eventInstance.getStartedAt());
@@ -151,12 +156,24 @@ public class MonthFragment extends Fragment {
             end.set(Calendar.HOUR_OF_DAY, 0);
             end.set(Calendar.MINUTE, 0);
 
-            //Stream.of(eventInstances).filter()
-
             while (isWithinRange(start, now, end)) {
-                events.add(new EventDay(new GregorianCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH)), R.drawable.ic_star));
+                if (eventsInDay.containsKey(now)) {
+                    int eventsCount = eventsInDay.get(now);
+                    eventsInDay.put(now, ++eventsCount);
+                } else
+                    eventsInDay.put(new GregorianCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH)), 1);
+
                 now.add(Calendar.DAY_OF_MONTH, 1);
             }
+        }
+
+        for (Map.Entry entry : eventsInDay.entrySet()) {
+            if ((int) entry.getValue() > 0)
+                events.add(new EventDay(
+                        (GregorianCalendar) entry.getKey(),
+                        iconsIDs.get((int) entry.getValue() > 9 ? 0 : (int) entry.getValue()))
+                );
+
         }
 
         calendar.setEvents(events);
