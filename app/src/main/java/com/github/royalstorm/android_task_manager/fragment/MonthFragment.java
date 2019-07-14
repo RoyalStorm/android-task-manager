@@ -5,11 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.annimon.stream.Stream;
 import com.applandeo.materialcalendarview.EventDay;
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
@@ -24,7 +24,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MonthFragment extends Fragment {
     private com.applandeo.materialcalendarview.CalendarView calendar;
@@ -78,19 +77,23 @@ public class MonthFragment extends Fragment {
 
         EventBus.getDefault().register(this);
 
-        GregorianCalendar beginOfYear = new GregorianCalendar();
-        beginOfYear.set(Calendar.MONTH, Calendar.JANUARY);
-        beginOfYear.set(Calendar.DAY_OF_MONTH, 1);
-        beginOfYear.set(Calendar.HOUR_OF_DAY, 0);
-        beginOfYear.set(Calendar.MINUTE, 0);
+        GregorianCalendar beginOfYear = new GregorianCalendar(
+                new GregorianCalendar().get(Calendar.YEAR),
+                Calendar.JANUARY,
+                1,
+                0,
+                0
+        );
 
         GregorianCalendar now = new GregorianCalendar();
 
-        GregorianCalendar endOfYear = new GregorianCalendar();
-        endOfYear.set(Calendar.MONTH, Calendar.DECEMBER);
-        endOfYear.set(Calendar.DAY_OF_MONTH, 31);
-        endOfYear.set(Calendar.HOUR_OF_DAY, 23);
-        endOfYear.set(Calendar.MINUTE, 59);
+        GregorianCalendar endOfYear = new GregorianCalendar(
+                new GregorianCalendar().get(Calendar.YEAR),
+                Calendar.DECEMBER,
+                31,
+                23,
+                59
+        );
 
         if (userToken == null)
             firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
@@ -167,14 +170,11 @@ public class MonthFragment extends Fragment {
             }
         }
 
-        for (Map.Entry entry : eventsInDay.entrySet()) {
-            if ((int) entry.getValue() > 0)
+        Stream.of(eventsInDay).forEach(entry ->
                 events.add(new EventDay(
-                        (GregorianCalendar) entry.getKey(),
-                        iconsIDs.get((int) entry.getValue() > 9 ? 0 : (int) entry.getValue()))
-                );
-
-        }
+                        entry.getKey(),
+                        iconsIDs.get(entry.getValue() > 9 ? 0 : entry.getValue()))
+                ));
 
         calendar.setEvents(events);
     }
