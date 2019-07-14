@@ -8,7 +8,6 @@
     <string name="nav_header_subtitle">8 (914)736 9914</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="export_desc">Экспорт событий в файл .ics</string>
-    <string name="import_desc">Импорт событий в файл .ics</string>
 
     <string name="material_calendar_monday">Пн</string>
     <string name="material_calendar_tuesday">Вт</string>
@@ -39,6 +38,6 @@
     <string name="event_name">Заголовок</string>
 
     <string name="activation_hint">Для получения доступа к событию/задаче Вашего друга, необходимо получить
-         у него токен активации. Попросите прислать его Вам, скопируйте и вставьте в специальное
+         у него токен активации. Попросите прислать его Вам, скопируйте, и вставьте в специальное
          поле. После успешной активации событие другого пользователя добавится в Ваш календарь.</string>
 </resources>

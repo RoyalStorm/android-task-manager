@@ -1,4 +1,4 @@
-package com.github.royalstorm.android_task_manager.fragment.ui.dialog;
+package com.github.royalstorm.android_task_manager.fragment.dialog;
 
 import android.app.Dialog;
 import android.content.Context;

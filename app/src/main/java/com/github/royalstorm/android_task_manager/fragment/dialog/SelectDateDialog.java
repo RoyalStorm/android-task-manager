@@ -1,4 +1,4 @@
-package com.github.royalstorm.android_task_manager.fragment.ui.dialog;
+package com.github.royalstorm.android_task_manager.fragment.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -29,25 +29,19 @@ public class SelectDateDialog extends AppCompatDialogFragment {
 
         builder.setView(view)
                 .setTitle("Выбрать дату")
-                .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
+                .setNegativeButton("Отмена", (dialogInterface, i) -> {
                 })
-                .setPositiveButton("Ок", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        int day = datePicker.getDayOfMonth();
-                        int month = datePicker.getMonth();
-                        int year = datePicker.getYear();
+                .setPositiveButton("Ок", (dialogInterface, i) -> {
+                    int day = datePicker.getDayOfMonth();
+                    int month = datePicker.getMonth();
+                    int year = datePicker.getYear();
 
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("day", day);
-                        bundle.putInt("month", month);
-                        bundle.putInt("year", year);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("day", day);
+                    bundle.putInt("month", month);
+                    bundle.putInt("year", year);
 
-                        selectDayDialogListener.setDay(year, month, day);
-                    }
+                    selectDayDialogListener.setDay(year, month, day);
                 });
 
         datePicker = view.findViewById(R.id.date_picker);

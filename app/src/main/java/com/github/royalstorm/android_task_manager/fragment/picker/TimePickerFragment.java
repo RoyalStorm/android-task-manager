@@ -1,4 +1,4 @@
-package com.github.royalstorm.android_task_manager.fragment.ui.picker;
+package com.github.royalstorm.android_task_manager.fragment.picker;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;

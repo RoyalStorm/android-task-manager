@@ -22,9 +22,10 @@ import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dto.EventPatternResponse;
 import com.github.royalstorm.android_task_manager.dto.EventResponse;
-import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectRepeatModeDialog;
-import com.github.royalstorm.android_task_manager.fragment.ui.picker.DatePickerFragment;
-import com.github.royalstorm.android_task_manager.fragment.ui.picker.TimePickerFragment;
+import com.github.royalstorm.android_task_manager.fragment.dialog.AccessConfigurationDialog;
+import com.github.royalstorm.android_task_manager.fragment.dialog.SelectRepeatModeDialog;
+import com.github.royalstorm.android_task_manager.fragment.picker.DatePickerFragment;
+import com.github.royalstorm.android_task_manager.fragment.picker.TimePickerFragment;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -78,6 +79,8 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
     TextView taskEndTime;
     @BindView(R.id.task_repeat_mode)
     TextView eventRepeatMode;
+    @BindView(R.id.generate_sharing_link)
+    TextView generateSharingLink;
 
     private DialogFragment picker;
 
@@ -212,6 +215,7 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
         taskEndDate.setOnClickListener(dateListener);
         taskBeginTime.setOnClickListener(timeListener);
         taskEndTime.setOnClickListener(timeListener);
+
         eventRepeatMode.setOnClickListener(v -> {
             SelectRepeatModeDialog selectRepeatModeDialog = new SelectRepeatModeDialog();
 
@@ -220,6 +224,16 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
 
             selectRepeatModeDialog.setArguments(eventPatternBundle);
             selectRepeatModeDialog.show(getSupportFragmentManager(), "Select repeat mode dialog");
+        });
+
+        generateSharingLink.setOnClickListener(v -> {
+            AccessConfigurationDialog accessConfigurationDialog = new AccessConfigurationDialog();
+
+            Bundle accessConfigurationBundle = new Bundle();
+            accessConfigurationBundle.putSerializable(EventInstance.class.getSimpleName(), eventInstance);
+
+            accessConfigurationDialog.setArguments(accessConfigurationBundle);
+            accessConfigurationDialog.show(getSupportFragmentManager(), "Access config dialog");
         });
     }
 
@@ -380,7 +394,7 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
                                             eventRepeatMode.setText("Каждый год");
                                             break;
                                         default:
-                                            eventRepeatMode.setText("Другое");
+                                            eventRepeatMode.setText("Другое...");
                                     }
                             }
                         }
@@ -398,5 +412,9 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
 
             }
         });
+    }
+
+    private void showSnackbar(String message) {
+        Snackbar.make(getWindow().getDecorView().getRootView(), message, Snackbar.LENGTH_LONG).show();
     }
 }

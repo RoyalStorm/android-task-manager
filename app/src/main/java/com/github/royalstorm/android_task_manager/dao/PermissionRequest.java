@@ -5,29 +5,29 @@ import com.google.gson.annotations.SerializedName;
 
 public class PermissionRequest {
     @Expose
-    private Action action;
+    private String action;
     @Expose
     @SerializedName("entity_id")
     private Long entityId;
     @Expose
     @SerializedName("entity_type")
-    private EntityType entityType;
+    private String entityType;
 
     /*Default constructor*/
     public PermissionRequest() {
     }
 
-    public PermissionRequest(Action action, Long entityId, EntityType entityType) {
+    public PermissionRequest(String action, Long entityId, String entityType) {
         this.action = action;
         this.entityId = entityId;
         this.entityType = entityType;
     }
 
-    public Action getAction() {
+    public String getAction() {
         return action;
     }
 
-    public void setAction(Action action) {
+    public void setAction(String action) {
         this.action = action;
     }
 
@@ -39,11 +39,11 @@ public class PermissionRequest {
         this.entityId = entityId;
     }
 
-    public EntityType getEntityType() {
+    public String getEntityType() {
         return entityType;
     }
 
-    public void setEntityType(EntityType entityType) {
+    public void setEntityType(String entityType) {
         this.entityType = entityType;
     }
 }

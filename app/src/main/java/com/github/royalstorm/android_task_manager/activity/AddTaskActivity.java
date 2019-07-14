@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -23,9 +24,9 @@ import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.dto.EventPatternResponse;
 import com.github.royalstorm.android_task_manager.dto.EventResponse;
-import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectRepeatModeDialog;
-import com.github.royalstorm.android_task_manager.fragment.ui.picker.DatePickerFragment;
-import com.github.royalstorm.android_task_manager.fragment.ui.picker.TimePickerFragment;
+import com.github.royalstorm.android_task_manager.fragment.dialog.SelectRepeatModeDialog;
+import com.github.royalstorm.android_task_manager.fragment.picker.DatePickerFragment;
+import com.github.royalstorm.android_task_manager.fragment.picker.TimePickerFragment;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.ical.values.RRule;
@@ -60,6 +61,10 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     TextView taskEndTime;
     @BindView(R.id.task_repeat_mode)
     TextView eventRepeatMode;
+    @BindView(R.id.ic_token)
+    ImageView icToken;
+    @BindView(R.id.generate_sharing_link)
+    TextView generateSharingLink;
 
     private RetrofitClient retrofitClient = RetrofitClient.getInstance();
 
@@ -252,6 +257,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         taskEndDate.setOnClickListener(dateListener);
         taskBeginTime.setOnClickListener(timeListener);
         taskEndTime.setOnClickListener(timeListener);
+
         eventRepeatMode.setOnClickListener(v -> {
             SelectRepeatModeDialog selectRepeatModeDialog = new SelectRepeatModeDialog();
 
@@ -261,17 +267,18 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
             selectRepeatModeDialog.setArguments(bundle);
             selectRepeatModeDialog.show(getSupportFragmentManager(), "Select repeat mode dialog");
         });
+
+        icToken.setVisibility(View.GONE);
+        generateSharingLink.setVisibility(View.GONE);
     }
 
     private void createEvent() {
         if (taskName.getText().toString().trim().isEmpty()) {
-            Snackbar.make(getWindow().getDecorView().
-                    getRootView(), "Заголовок не может быть пустым", Snackbar.LENGTH_LONG).show();
+            showSnackbar("Заголовок не может быть пустым");
             return;
         } else {
             if (start.after(end)) {
-                Snackbar.make(getWindow().getDecorView().
-                        getRootView(), "Событие не может завершиться раньше, чем начаться", Snackbar.LENGTH_LONG).show();
+                showSnackbar("Событие не может завершиться раньше, чем начаться");
                 return;
             }
 
@@ -340,5 +347,9 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
             }
         });
+    }
+
+    private void showSnackbar(String message) {
+        Snackbar.make(getWindow().getDecorView().getRootView(), message, Snackbar.LENGTH_LONG).show();
     }
 }

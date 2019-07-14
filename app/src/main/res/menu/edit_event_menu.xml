@@ -5,11 +5,13 @@
         android:id="@+id/delete_event"
         android:icon="@drawable/ic_delete"
         android:title="Удалить"
+        android:background="?attr/selectableItemBackgroundBorderless"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/edit_event"
         android:icon="@drawable/ic_edit"
         android:title="Изменить"
+        android:background="?attr/selectableItemBackgroundBorderless"
         app:showAsAction="ifRoom" />
 </menu>

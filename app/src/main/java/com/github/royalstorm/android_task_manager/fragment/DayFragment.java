@@ -19,7 +19,7 @@ import com.github.royalstorm.android_task_manager.activity.EditTaskActivity;
 import com.github.royalstorm.android_task_manager.adapter.EventAdapter;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.dto.EventInstanceResponse;
-import com.github.royalstorm.android_task_manager.fragment.ui.dialog.SelectDateDialog;
+import com.github.royalstorm.android_task_manager.fragment.dialog.SelectDateDialog;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 import com.google.firebase.auth.FirebaseAuth;
 

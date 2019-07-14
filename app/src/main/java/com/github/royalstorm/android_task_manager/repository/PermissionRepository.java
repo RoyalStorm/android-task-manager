@@ -3,6 +3,7 @@ package com.github.royalstorm.android_task_manager.repository;
 import com.github.royalstorm.android_task_manager.dao.PermissionRequest;
 import com.github.royalstorm.android_task_manager.dto.PermissionResponse;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -38,8 +39,8 @@ public interface PermissionRepository {
     );
 
     @POST("/api/v1/share")
-    Call<String> generateLinkForSharing(
-            @Body PermissionRequest permissionRequest,
+    Call<ResponseBody> generateSharingLink(
+            @Body PermissionRequest[] permissionRequests,
             @Header("X-Firebase-Auth") String userToken
     );
 
