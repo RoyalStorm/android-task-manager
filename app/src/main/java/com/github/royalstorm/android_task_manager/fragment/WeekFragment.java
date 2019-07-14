@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -202,19 +203,51 @@ public class WeekFragment extends Fragment {
         for (int i = 0; i < 24; i++) {
             row = new TableRow(getContext());
 
-            TextView[] days = new TextView[7];
+            LinearLayout[] days = new LinearLayout[7];
 
             for (int j = 0; j < 7; j++) {
-                days[j] = new TextView(getContext());
-                days[j].setHeight(dpToPix());
+                days[j] = new LinearLayout(getContext());
+                days[j].setOrientation(LinearLayout.HORIZONTAL);
+                days[j].setMinimumHeight(dpToPix(60));
                 days[j].setId(j * 100 + i);
 
                 days[j].setBackground(days[j].getContext().getDrawable(R.drawable.text_view_border));
 
                 row.addView(days[j]);
 
-                if (findByMoment(year, month, day + j, i).size() > 0)
-                    days[j].setBackground(days[j].getContext().getDrawable(R.drawable.side_nav_bar));
+                List<EventInstance> foundedEventInstances = findByMoment(year, month, day + j, i);
+                if (foundedEventInstances.size() > 0) {
+                    int eventCount = 1;
+                    for (EventInstance eventInstance : foundedEventInstances) {
+                        if (eventCount > 4)
+                            break;
+
+                        TextView event = new TextView(getContext());
+                        event.setLayoutParams(new LinearLayout.LayoutParams(
+                                dpToPix(2),
+                                dpToPix(60),
+                                0.2f)
+                        );
+                        event.setText("Новое");
+                        event.setTextColor(getResources().getColor(R.color.white));
+
+                        if (eventCount == 1)
+                            event.setBackgroundColor(getResources().getColor(R.color.purple));
+                        if (eventCount == 2)
+                            event.setBackgroundColor(getResources().getColor(R.color.medium_spring_green));
+                        if (eventCount == 3)
+                            event.setBackgroundColor(getResources().getColor(R.color.pink));
+                        if (eventCount == 4) {
+                            event.setTextColor(getResources().getColor(R.color.elegant_color));
+                            event.setTextSize(16);
+                            event.setText("...");
+                        }
+
+                        days[j].addView(event);
+
+                        eventCount++;
+                    }
+                }
 
                 days[j].setOnClickListener(v -> {
                     day += ((v.getId()) / 100);
@@ -239,8 +272,8 @@ public class WeekFragment extends Fragment {
         }
     }
 
-    private int dpToPix() {
-        return 60 * (int) getContext().getResources().getDisplayMetrics().density;
+    private int dpToPix(int dp) {
+        return dp * (int) getContext().getResources().getDisplayMetrics().density;
     }
 
     private List<EventInstance> findByMoment(int year, int month, int day, int hour) {

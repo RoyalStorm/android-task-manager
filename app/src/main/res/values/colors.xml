@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#00bcd4 </color>
-    <color name="colorPrimaryDark">#009688 </color>
-    <color name="colorAccent">#ffb300 </color>
+    <color name="colorPrimary">#00bcd4</color>
+    <color name="colorPrimaryDark">#009688</color>
+    <color name="colorAccent">#ffb300</color>
 
     <color name="burgundy">#e91e63</color>
     <color name="elegant_color">#2e2e2e</color>
     <color name="white">#ffffff</color>
     <color name="dove_gray">#6b6c6e</color>
+
+    <color name="purple">#9c27b0</color>
+    <color name="medium_spring_green">#01f4be</color>
+    <color name="pink">#e91e63</color>
 </resources>

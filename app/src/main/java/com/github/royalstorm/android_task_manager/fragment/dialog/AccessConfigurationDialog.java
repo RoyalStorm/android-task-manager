@@ -29,6 +29,8 @@ public class AccessConfigurationDialog extends AppCompatDialogFragment
 
     private ApplyAccessConfiguration applyAccessConfiguration;
 
+    PermissionRequest defaultPermission = new PermissionRequest();
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -41,27 +43,26 @@ public class AccessConfigurationDialog extends AppCompatDialogFragment
         userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
         permissionService = new PermissionService(this);
 
+        Bundle accessConfigurationBundle = this.getArguments();
+        EventInstance eventInstance = (EventInstance) accessConfigurationBundle.getSerializable(EventInstance.class.getSimpleName());
+
+        defaultPermission.setAction(Action.READ.name());
+        defaultPermission.setEntityType(EntityType.EVENT.name());
+        defaultPermission.setEntityId(eventInstance.getEventId());
+
         builder.setView(view)
                 .setTitle("Выберите уровни привилегий")
                 .setNegativeButton("Отмена", (dialogInterface, i) -> {
                 })
                 .setPositiveButton("Создать токен", (dialogInterface, i) -> {
-                    Bundle accessConfigurationBundle = this.getArguments();
-                    EventInstance eventInstance = (EventInstance) accessConfigurationBundle.getSerializable(EventInstance.class.getSimpleName());
-
-                    PermissionRequest permissionRequest = new PermissionRequest();
-                    permissionRequest.setAction(Action.READ.name());
-                    permissionRequest.setEntityType(EntityType.EVENT.name());
-                    permissionRequest.setEntityId(eventInstance.getEventId());
-
                     if (userToken == null) {
                         firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
                             userToken = task.getResult().getToken();
-                            permissionService.generateSharingLink(new PermissionRequest[]{permissionRequest}, userToken);
+                            permissionService.generateSharingLink(new PermissionRequest[]{defaultPermission}, userToken);
                         });
                     } else {
                         userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
-                        permissionService.generateSharingLink(new PermissionRequest[]{permissionRequest}, userToken);
+                        permissionService.generateSharingLink(new PermissionRequest[]{defaultPermission}, userToken);
                     }
                 });
 
