@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
@@ -63,10 +64,10 @@ public class RepeatModeActivity extends AppCompatActivity {
     @BindView(R.id.never)
     RadioButton never;
 
-    /*@BindView(R.id.selected_date)
+    @BindView(R.id.selected_date)
     RadioButton selectedDate;
     @BindView(R.id.date)
-    TextView date;*/
+    TextView date;
 
     @BindView(R.id.times)
     RadioButton times;

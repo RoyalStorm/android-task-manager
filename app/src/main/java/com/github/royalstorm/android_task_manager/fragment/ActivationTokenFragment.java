@@ -45,21 +45,26 @@ public class ActivationTokenFragment extends Fragment {
         confirm.setOnClickListener(v -> {
             String activationToken = tokenField.getText().toString().trim();
 
+            if (activationToken.isEmpty()) {
+                showSnackbar("Поле для активации не может быть пустым");
+                return;
+            }
+
             if (userToken == null) {
                 firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
                     userToken = task.getResult().getToken();
-                    activateToken(view, activationToken, userToken);
+                    activateToken(activationToken, userToken);
                 });
             } else {
                 userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
-                activateToken(view, activationToken, userToken);
+                activateToken(activationToken, userToken);
             }
         });
 
         return view;
     }
 
-    private void activateToken(View view, String activationToken, String userToken) {
+    private void activateToken(String activationToken, String userToken) {
         retrofitClient.getPermissionRepository().activateShareLink(activationToken, userToken).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {

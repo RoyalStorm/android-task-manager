@@ -142,7 +142,7 @@
                 android:layout_weight="1"
                 android:text="Никогда" />
 
-            <!--<RadioButton
+            <RadioButton
                 android:id="@+id/selected_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -155,7 +155,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="35dp"
-                android:layout_marginTop="-25dp" />-->
+                android:layout_marginTop="-25dp" />
 
             <RadioButton
                 android:id="@+id/times"
