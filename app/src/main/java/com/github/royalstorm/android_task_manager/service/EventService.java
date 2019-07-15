@@ -1,6 +1,7 @@
 package com.github.royalstorm.android_task_manager.service;
 
 import com.github.royalstorm.android_task_manager.dto.EventInstanceResponse;
+import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
 import org.greenrobot.eventbus.EventBus;
@@ -15,6 +16,13 @@ public class EventService {
 
     private RetrofitClient retrofitClient = RetrofitClient.getInstance();
 
+    private RequestEventCallback requestEventCallback;
+
+    public EventService(EventService.RequestEventCallback requestEventCallback) {
+        retrofitClient = RetrofitClient.getInstance();
+        this.requestEventCallback = requestEventCallback;
+    }
+
     public void getEventInstancesByInterval(Long from, Long to, String userToken) {
         retrofitClient.getEventsRepository().getEventInstancesByInterval(from, to, userToken).enqueue(new Callback<EventInstanceResponse>() {
             @Override
@@ -28,5 +36,23 @@ public class EventService {
 
             }
         });
+    }
+
+    public void getEventsById(Long[] ids, String userToken) {
+        retrofitClient.getEventsRepository().getEventsById(ids, userToken).enqueue(new Callback<EventResponse>() {
+            @Override
+            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+                requestEventCallback.requestEventSuccess(response.isSuccessful(), response.body());
+            }
+
+            @Override
+            public void onFailure(Call<EventResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public interface RequestEventCallback {
+        void requestEventSuccess(boolean success, EventResponse eventResponse);
     }
 }

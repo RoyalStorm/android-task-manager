@@ -14,12 +14,13 @@
             android:layout_height="45dp"
             android:orientation="horizontal">
 
-            <TextView
+            <ImageButton
                 android:id="@+id/prev_day"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="4.2"
-                android:background="@drawable/ic_navigate_before"
+                app:srcCompat="@drawable/ic_navigate_before"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:gravity="center" />
 
             <TextView
@@ -31,12 +32,13 @@
                 android:textSize="20sp"
                 android:textColor="@color/elegant_color" />
 
-            <TextView
+            <ImageButton
                 android:id="@+id/next_day"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="4.2"
-                android:background="@drawable/ic_navigate_next"
+                app:srcCompat="@drawable/ic_navigate_next"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:gravity="center" />
         </LinearLayout>
 

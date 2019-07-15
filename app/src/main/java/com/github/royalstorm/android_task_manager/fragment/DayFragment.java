@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.github.royalstorm.android_task_manager.R;
@@ -46,9 +47,9 @@ public class DayFragment extends Fragment implements SelectDateDialog.SelectDayD
 
     private GregorianCalendar gregorianCalendar;
 
-    private TextView prevDay;
+    private ImageButton prevDay;
     private TextView currentDay;
-    private TextView nextDay;
+    private ImageButton nextDay;
 
     private int day;
     private int month;

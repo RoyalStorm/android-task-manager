@@ -21,13 +21,14 @@
                 android:layout_height="40dp"
                 android:orientation="horizontal">
 
-                <TextView
+                <ImageButton
                     android:id="@+id/prev_week"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="4.2"
-                    android:background="@drawable/ic_navigate_before"
-                    android:gravity="center" />
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    app:srcCompat="@drawable/ic_navigate_before" />
 
                 <TextView
                     android:id="@+id/current_week"
@@ -39,13 +40,14 @@
                     android:textColor="@color/elegant_color"
                     android:textSize="20sp" />
 
-                <TextView
+                <ImageButton
                     android:id="@+id/next_week"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="4.2"
-                    android:background="@drawable/ic_navigate_next"
-                    android:gravity="center" />
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    app:srcCompat="@drawable/ic_navigate_next" />
             </LinearLayout>
 
             <TableRow
@@ -143,6 +145,7 @@
                     android:layout_height="30dp"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
 
@@ -152,6 +155,7 @@
                     android:layout_height="30dp"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
 
@@ -161,6 +165,7 @@
                     android:layout_height="30dp"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
 
@@ -170,6 +175,7 @@
                     android:layout_height="30dp"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
 
@@ -179,6 +185,7 @@
                     android:layout_height="30dp"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
 
@@ -188,6 +195,7 @@
                     android:layout_height="30dp"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
 
@@ -197,6 +205,7 @@
                     android:layout_height="30dp"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
             </TableRow>
@@ -220,7 +229,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="0:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -229,7 +238,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="1:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -238,7 +247,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="2:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -248,7 +257,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="3:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -258,7 +267,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="4:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -268,7 +277,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="5:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -278,7 +287,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="6:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -288,7 +297,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="7:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -298,7 +307,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="8:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -308,7 +317,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="9:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -318,7 +327,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="10:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -328,7 +337,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="11:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -338,7 +347,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="12:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -348,7 +357,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="13:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -358,7 +367,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="14:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -368,7 +377,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="15:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -378,7 +387,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="16:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -388,7 +397,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="17:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -398,7 +407,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="18:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -408,7 +417,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="19:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -418,7 +427,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="20:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -428,7 +437,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="21:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -438,7 +447,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="22:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />
@@ -448,7 +457,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/week_fragment_cell_height"
                         android:background="@drawable/text_view_border"
-                        android:gravity="center"
+                        android:gravity="center|top"
                         android:text="23:00"
                         android:textAlignment="center"
                         android:textColor="@android:color/black" />

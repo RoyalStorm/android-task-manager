@@ -13,6 +13,7 @@ import com.annimon.stream.Stream;
 import com.applandeo.materialcalendarview.EventDay;
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
+import com.github.royalstorm.android_task_manager.dto.EventResponse;
 import com.github.royalstorm.android_task_manager.service.EventService;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -25,10 +26,10 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
-public class MonthFragment extends Fragment {
+public class MonthFragment extends Fragment implements EventService.RequestEventCallback {
     private com.applandeo.materialcalendarview.CalendarView calendar;
 
-    private EventService eventService = new EventService();
+    private EventService eventService = new EventService(this);
     private List<EventDay> events = new ArrayList<>();
 
     private FirebaseAuth firebaseAuth;
@@ -177,6 +178,11 @@ public class MonthFragment extends Fragment {
                 ));
 
         calendar.setEvents(events);
+    }
+
+    @Override
+    public void requestEventSuccess(boolean success, EventResponse eventResponse) {
+
     }
 
     @Override
