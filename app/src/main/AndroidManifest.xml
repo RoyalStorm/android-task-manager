@@ -39,6 +39,8 @@
             android:parentActivityName=".activity.TasksActivity"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.RepeatModeActivity" />
+        <activity
+            android:name=".activity.RepeatModeActivity"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>

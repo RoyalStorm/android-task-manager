@@ -1,10 +1,10 @@
 package com.github.royalstorm.android_task_manager.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -309,10 +309,11 @@ public class RepeatModeActivity extends AppCompatActivity {
         else
             eventPattern.setEndedAt(endedAt);
 
-        Intent intent = new Intent();
+        Log.d("_____________", eventPattern.toString());
+        /*Intent intent = new Intent();
         intent.putExtra(EventPattern.class.getSimpleName(), eventPattern);
         setResult(RESULT_OK, intent);
-        finish();
+        finish();*/
     }
 
     private int getInterval() {

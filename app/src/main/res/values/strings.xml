@@ -42,4 +42,15 @@
         у него токен активации. Попросите прислать его Вам, скопируйте, и вставьте в специальное
         поле. После успешной активации событие другого пользователя добавится в Ваш календарь.
     </string>
+
+    <string name="MO">Пн</string>
+    <string name="TU">Вт</string>
+    <string name="WE">Ср</string>
+    <string name="TH">Чт</string>
+    <string name="FR">Пт</string>
+    <string name="SA">Сб</string>
+    <string name="SU">Вс</string>
+
+    <string name="never">Никогда</string>
+    <string name="repeat_count">Повторить раз</string>
 </resources>

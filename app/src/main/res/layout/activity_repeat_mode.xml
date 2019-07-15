@@ -28,8 +28,9 @@
                 android:id="@+id/interval"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="0.1"
-                android:inputType="numberSigned"
+                android:digits="0123456789"
+                android:inputType="numberDecimal"
+                android:maxLength="2"
                 android:textColor="@color/elegant_color" />
 
             <Spinner
@@ -71,49 +72,49 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="ПН" />
+                android:text="@string/MO" />
 
             <CheckBox
                 android:id="@+id/TU"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="ВТ" />
+                android:text="@string/TU" />
 
             <CheckBox
                 android:id="@+id/WE"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="СР" />
+                android:text="@string/WE" />
 
             <CheckBox
                 android:id="@+id/TH"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="ЧТ" />
+                android:text="@string/TH" />
 
             <CheckBox
                 android:id="@+id/FR"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="ПТ" />
+                android:text="@string/FR" />
 
             <CheckBox
                 android:id="@+id/SA"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="СБ" />
+                android:text="@string/SA" />
 
             <CheckBox
                 android:id="@+id/SU"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="ВС" />
+                android:text="@string/SU" />
         </LinearLayout>
 
         <View
@@ -140,7 +141,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Никогда" />
+                android:text="@string/never" />
 
             <RadioButton
                 android:id="@+id/selected_date"
@@ -162,13 +163,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Повторить раз" />
+                android:text="@string/repeat_count" />
 
             <EditText
                 android:id="@+id/count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="145dp"
+                android:digits="0123456789"
+                android:maxLength="2"
                 android:layout_marginTop="-40dp"
                 android:inputType="numberSigned" />
         </RadioGroup>
