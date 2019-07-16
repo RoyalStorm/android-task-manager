@@ -29,6 +29,7 @@ import com.google.ical.values.WeekdayNum;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
@@ -72,7 +73,10 @@ public class RepeatModeActivity extends AppCompatActivity implements DatePickerD
     EditText etCount;
 
     private SimpleDateFormat untilSimpleDateFormat;
+
     private EventPattern eventPattern;
+
+    private GregorianCalendar untilGregorianCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +90,9 @@ public class RepeatModeActivity extends AppCompatActivity implements DatePickerD
         untilSimpleDateFormat = new SimpleDateFormat("d MMMM yyyy (E)", Locale.getDefault());
 
         eventPattern = (EventPattern) getIntent().getExtras().getSerializable(EventPattern.class.getSimpleName());
+
+        untilGregorianCalendar = new GregorianCalendar();
+        untilGregorianCalendar.setTimeInMillis(eventPattern.getStartedAt() + eventPattern.getDuration());
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
@@ -120,16 +127,15 @@ public class RepeatModeActivity extends AppCompatActivity implements DatePickerD
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         rbUntil.toggle();
-        tvUntil.setText(untilSimpleDateFormat.format(new GregorianCalendar(
-                year, month, dayOfMonth).getTimeInMillis())
-        );
+        untilGregorianCalendar.set(year, month, dayOfMonth);
+        tvUntil.setText(untilSimpleDateFormat.format(untilGregorianCalendar.getTimeInMillis()));
     }
 
     private void setListeners() {
         tvUntil.setOnClickListener(v -> {
             DialogFragment picker = new DatePickerFragment();
             Bundle bundle = new Bundle();
-            bundle.putSerializable(GregorianCalendar.class.getSimpleName(), new GregorianCalendar());
+            bundle.putSerializable(GregorianCalendar.class.getSimpleName(), untilGregorianCalendar);
             picker.setArguments(bundle);
             picker.show(getSupportFragmentManager(), "Until date");
         });
@@ -192,7 +198,9 @@ public class RepeatModeActivity extends AppCompatActivity implements DatePickerD
             etCount.setText(Integer.toString(rRule.getCount()));
         }
 
-
+        untilGregorianCalendar.add(Calendar.MONTH, 1);
+        tvUntil.setText(untilSimpleDateFormat.format(untilGregorianCalendar.getTimeInMillis()));
+        etCount.setText("1");
     }
 
     private RRule initRRule() {
@@ -203,7 +211,6 @@ public class RepeatModeActivity extends AppCompatActivity implements DatePickerD
             rRule.setFreq(Frequency.WEEKLY);
 
             rRule.setUntil(null);
-            rRule.setCount(1);
         } else
             try {
                 rRule = new RRule("RRULE:" + eventPattern.getRrule());
@@ -234,8 +241,11 @@ public class RepeatModeActivity extends AppCompatActivity implements DatePickerD
         for (String day : byDay)
             byDayPart.append(day).append(",");
 
+        eventPattern.setEndedAt(getInfinitePeriod(eventPattern));
+        eventPattern.setEndedAt(getUntil(eventPattern));
+
         Snackbar.make(getWindow().getDecorView().
-                getRootView(), rRule.toIcal() + byDayPart.substring(0, byDayPart.length() - 1) + "  " + eventPattern.getEndedAt(), Snackbar.LENGTH_LONG).show();
+                getRootView(), rRule.toIcal().substring(6) + byDayPart.substring(0, byDayPart.length() - 1) + "  " + eventPattern.getEndedAt(), Snackbar.LENGTH_LONG).show();
 
         /*Intent intent = new Intent();
         intent.putExtra(EventPattern.class.getSimpleName(), eventPattern);
@@ -285,26 +295,29 @@ public class RepeatModeActivity extends AppCompatActivity implements DatePickerD
     }
 
     //If selected "never"
-    private Long getEndedAt(EventPattern eventPattern) {
+    private Long getInfinitePeriod(EventPattern eventPattern) {
         if (rgEndingMode.getCheckedRadioButtonId() == R.id.rb_never)
             return Long.MAX_VALUE - 1;
 
         return eventPattern.getEndedAt();
     }
 
-    /*private Long getUntil() {
+    private Long getUntil(EventPattern eventPattern) {
         if (rgEndingMode.getCheckedRadioButtonId() == R.id.rb_until)
-            return
+            return untilGregorianCalendar.getTimeInMillis();
 
+        return eventPattern.getEndedAt();
     }
 
-    private int getCount() {
-        if (rgEndingMode.getCheckedRadioButtonId() == R.id.rb_count)
+    /*private Long getCount() {
+        if (rgEndingMode.getCheckedRadioButtonId() == R.id.rb_count) {
             return etCount.getText().toString().isEmpty() ?
                     1 : Integer.parseInt(etCount.getText().toString());
 
-        return 0;
+            //RecurrenceRule ruleHelper = new RecurrenceRule(stRule);
+            //RecurrenceRuleIterator it = ruleHelper.iterator(new DateTime(eventPattern.getStartedAt()));
+        }
 
-        //TODO: rewrite endedAt
+        return 0;
     }*/
 }
