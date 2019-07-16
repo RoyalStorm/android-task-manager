@@ -11,8 +11,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -66,6 +68,8 @@ public class EditTaskActivity extends AppCompatActivity
     private GregorianCalendar start;
     private GregorianCalendar end;
 
+    private String[] timeZones;
+
     @BindView(R.id.task_name)
     EditText taskName;
     @BindView(R.id.task_details)
@@ -79,6 +83,8 @@ public class EditTaskActivity extends AppCompatActivity
     TextView taskBeginTime;
     @BindView(R.id.task_end_time)
     TextView taskEndTime;
+    @BindView(R.id.time_zone_spinner)
+    Spinner timeZoneSpinner;
     @BindView(R.id.task_repeat_mode)
     TextView eventRepeatMode;
     @BindView(R.id.generate_sharing_link)
@@ -104,7 +110,6 @@ public class EditTaskActivity extends AppCompatActivity
                     break;
             }
 
-            bundle.putBoolean("IS_BEGIN_DATE", IS_BEGIN_DATE);
             picker = new DatePickerFragment();
             picker.setArguments(bundle);
             picker.show(getSupportFragmentManager(), "Date picker");
@@ -126,7 +131,6 @@ public class EditTaskActivity extends AppCompatActivity
                     break;
             }
 
-            bundle.putBoolean("IS_BEGIN_TIME", IS_BEGIN_TIME);
             picker = new TimePickerFragment();
             picker.setArguments(bundle);
             picker.show(getSupportFragmentManager(), "Time picker");
@@ -146,6 +150,7 @@ public class EditTaskActivity extends AppCompatActivity
         eventInstance = (EventInstance) bundle.getSerializable(EventInstance.class.getSimpleName());
         event = new Event();
         eventPattern = new EventPattern();
+        timeZones = TimeZone.getAvailableIDs();
 
         firebaseAuth = FirebaseAuth.getInstance();
         userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
@@ -155,6 +160,14 @@ public class EditTaskActivity extends AppCompatActivity
     }
 
     private void initFields(EventInstance eventInstance) {
+        timeZoneSpinner.setAdapter(
+                new ArrayAdapter<>(
+                        this,
+                        android.R.layout.simple_spinner_item,
+                        timeZones
+                )
+        );
+
         if (userToken == null) {
             firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
                 userToken = task.getResult().getToken();
@@ -194,7 +207,7 @@ public class EditTaskActivity extends AppCompatActivity
             //If selected never repeat
             if (eventPattern.getRrule() == null)
                 eventPattern.setEndedAt(end.getTimeInMillis());
-            eventPattern.setTimezone(TimeZone.getDefault().getID());
+            eventPattern.setTimezone(timeZoneSpinner.getSelectedItem().toString());
             eventPattern.setDuration(end.getTimeInMillis() - start.getTimeInMillis());
         }
 
@@ -378,6 +391,12 @@ public class EditTaskActivity extends AppCompatActivity
                         public void onResponse(Call<EventPatternResponse> call, Response<EventPatternResponse> response) {
                             if (response.isSuccessful() && response.body() != null) {
                                 eventPattern = response.body().getData()[0];
+
+                                for (int i = 0; i < timeZones.length; i++)
+                                    if (timeZones[i].equals(eventPattern.getTimezone())) {
+                                        timeZoneSpinner.setSelection(i);
+                                        break;
+                                    }
 
                                 if (eventPattern.getRrule() == NEVER)
                                     eventRepeatMode.setText("Не повторяется");

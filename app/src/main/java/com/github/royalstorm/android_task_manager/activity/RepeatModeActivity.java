@@ -1,15 +1,20 @@
 package com.github.royalstorm.android_task_manager.activity;
 
+import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -19,6 +24,7 @@ import android.widget.TextView;
 import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.EventPattern;
 import com.github.royalstorm.android_task_manager.filter.InputFilterMinMax;
+import com.github.royalstorm.android_task_manager.fragment.picker.DatePickerFragment;
 import com.google.ical.values.Frequency;
 import com.google.ical.values.RRule;
 import com.google.ical.values.Weekday;
@@ -36,7 +42,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RepeatModeActivity extends AppCompatActivity {
+public class RepeatModeActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     @BindView(R.id.interval)
     EditText interval;
@@ -60,25 +66,23 @@ public class RepeatModeActivity extends AppCompatActivity {
 
     @BindView(R.id.ending_case)
     RadioGroup endingCase;
-
-    @BindView(R.id.never)
+    @BindView(R.id.rbNever)
     RadioButton never;
-
-    @BindView(R.id.selected_date)
-    RadioButton selectedDate;
-    @BindView(R.id.date)
-    TextView date;
-
-    @BindView(R.id.times)
+    @BindView(R.id.rbUntil)
+    RadioButton rbUntil;
+    @BindView(R.id.until)
+    TextView until;
+    @BindView(R.id.rbCount)
     RadioButton times;
     @BindView(R.id.count)
     EditText count;
 
     private EventPattern eventPattern;
 
-    private List<String> byDay;
+    private List<String> byDayList;
 
     private Long endedAt;
+    private SimpleDateFormat sdf = new SimpleDateFormat("d MMMM yyyy (E)", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +101,7 @@ public class RepeatModeActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         frequency.setAdapter(adapter);
 
-        byDay = new ArrayList<>();
+        byDayList = new ArrayList<>();
 
         initActivity();
         setListeners();
@@ -121,62 +125,23 @@ public class RepeatModeActivity extends AppCompatActivity {
     }
 
     private void setListeners() {
+        until.setOnClickListener(v -> {
+            DialogFragment picker = new DatePickerFragment();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(GregorianCalendar.class.getSimpleName(), new GregorianCalendar());
+            picker.setArguments(bundle);
+            picker.show(getSupportFragmentManager(), "Until date");
+        });
+
         interval.setFilters(new InputFilter[]{new InputFilter.LengthFilter(2), new InputFilterMinMax(1, 99)});
         count.setFilters(new InputFilter[]{new InputFilter.LengthFilter(2), new InputFilterMinMax(1, 99)});
-
-        SU.setOnClickListener(v -> {
-            if (SU.isChecked())
-                byDay.add("SU");
-            else
-                byDay.remove("SU");
-        });
-        MO.setOnClickListener(v -> {
-            if (MO.isChecked())
-                byDay.add("MO");
-            else
-                byDay.remove("MO");
-        });
-        TU.setOnClickListener(v -> {
-            if (TU.isChecked())
-                byDay.add("TU");
-            else
-                byDay.remove("TU");
-        });
-        WE.setOnClickListener(v -> {
-            if (WE.isChecked())
-                byDay.add("WE");
-            else
-                byDay.remove("WE");
-        });
-        TH.setOnClickListener(v -> {
-            if (TH.isChecked())
-                byDay.add("TH");
-            else
-                byDay.remove("TH");
-        });
-        FR.setOnClickListener(v -> {
-            if (FR.isChecked())
-                byDay.add("FR");
-            else
-                byDay.remove("FR");
-        });
-        SA.setOnClickListener(v -> {
-            if (SA.isChecked())
-                byDay.add("SA");
-            else
-                byDay.remove("SA");
-        });
     }
 
     private void initActivity() {
-        SimpleDateFormat sdf = new SimpleDateFormat("d MMMM yyyy (E)", Locale.getDefault());
-
         RRule rRule = initRRule();
 
-        //Setup repeat per time (first EditText)
         interval.setText(Integer.toString(rRule.getInterval()));
 
-        //Setup values for spinner and checkboxes
         switch (rRule.getFreq()) {
             case DAILY:
                 frequency.setSelection(0);
@@ -217,16 +182,15 @@ public class RepeatModeActivity extends AppCompatActivity {
                 break;
         }
 
-        //Setup radio buttons
-        if (rRule.getCount() == 0 && rRule.getUntil() == null) {
+        if (rRule.getCount() == 0) {
             ((RadioButton) endingCase.getChildAt(0)).setChecked(true);
             never.setSelected(true);
-        } /*else if (rRule.getUntil() != null) {
+        } else if (rRule.getUntil() != null) {
             ((RadioButton) endingCase.getChildAt(1)).setChecked(true);
-            selectedDate.setSelected(true);
-            date.setText(sdf.format(eventPattern.getEndedAt()));
-        }*/ else {
-            ((RadioButton) endingCase.getChildAt(1)).setChecked(true);
+            rbUntil.setSelected(true);
+            until.setText(sdf.format(eventPattern.getEndedAt()));
+        } else {
+            ((RadioButton) endingCase.getChildAt(3)).setChecked(true);
             times.setSelected(true);
             count.setText(Integer.toString(rRule.getCount()));
         }
@@ -236,10 +200,10 @@ public class RepeatModeActivity extends AppCompatActivity {
             ((RadioButton) endingCase.getChildAt(0)).setChecked(true);
             never.setSelected(true);
 
-            /*GregorianCalendar gregorianCalendar = new GregorianCalendar();
+            GregorianCalendar gregorianCalendar = new GregorianCalendar();
             gregorianCalendar.setTimeInMillis(eventPattern.getEndedAt());
             gregorianCalendar.add(Calendar.MONTH, 1);
-            selectedDate.setText(sdf.format(gregorianCalendar.getTimeInMillis()));*/
+            until.setText(sdf.format(gregorianCalendar.getTimeInMillis()));
         }
     }
 
@@ -251,7 +215,7 @@ public class RepeatModeActivity extends AppCompatActivity {
         RRule rRule = new RRule();
 
         //If event is being created
-        if (eventPattern.getId() == null || eventPattern.getRrule() == null) {
+        if (eventNotCreatedOrNotRepeated(eventPattern)) {
             rRule.setInterval(1);
             rRule.setFreq(Frequency.WEEKLY);
 
@@ -269,7 +233,7 @@ public class RepeatModeActivity extends AppCompatActivity {
                 put(7, Weekday.SA);
             }};
 
-            byDay.add(weekdays.get(weekDay).name());
+            byDayList.add(weekdays.get(weekDay).name());
 
             rRule.setByDay(new ArrayList<WeekdayNum>() {{
                 add(new WeekdayNum(weekDay, weekdays.get(weekDay)));
@@ -288,38 +252,43 @@ public class RepeatModeActivity extends AppCompatActivity {
 
     private void creteRRule() {
         RRule rRule = new RRule();
-        rRule.setFreq(getFrequency());
-        rRule.setCount(getCount());
         rRule.setInterval(getInterval());
+        rRule.setFreq(getFrequency());
+        setSelectedDays();
+        rRule.setCount(getCount());
 
         StringBuilder byDay = new StringBuilder(";BYDAY=");
-        for (String s : this.byDay)
-            byDay.append(s).append(",");
+        for (String day : byDayList)
+            byDay.append(day).append(",");
 
         eventPattern.setRrule(rRule.toIcal().substring(6) + byDay.substring(0, byDay.length() - 1));
 
-        if (this.byDay.isEmpty()) {
+        if (byDayList.isEmpty()) {
             Snackbar.make(getWindow().getDecorView().
                     getRootView(), "Не выбраны дни повторения", Snackbar.LENGTH_LONG).show();
             return;
         }
 
-        if (((RadioButton) endingCase.getChildAt(0)).isChecked())
+        if (endingCase.getCheckedRadioButtonId() == R.id.rbNever)
             eventPattern.setEndedAt(Long.MAX_VALUE - 1);
         else
             eventPattern.setEndedAt(endedAt);
 
         Log.d("_____________", eventPattern.toString());
-        /*Intent intent = new Intent();
+
+        Intent intent = new Intent();
         intent.putExtra(EventPattern.class.getSimpleName(), eventPattern);
         setResult(RESULT_OK, intent);
-        finish();*/
+        finish();
+    }
+
+    private boolean eventNotCreatedOrNotRepeated(EventPattern eventPattern) {
+        return eventPattern.getId() == null || eventPattern.getRrule() == null;
     }
 
     private int getInterval() {
         return interval.getText().toString().isEmpty() ?
-                1 : interval.getText().toString().length() > 2 ?
-                99 : Integer.parseInt(interval.getText().toString());
+                1 : Integer.parseInt(interval.getText().toString());
     }
 
     private Frequency getFrequency() {
@@ -337,12 +306,41 @@ public class RepeatModeActivity extends AppCompatActivity {
         }
     }
 
+    private void setSelectedDays() {
+        byDayList.clear();
+
+        if (MO.isChecked())
+            byDayList.add("MO");
+        if (TU.isChecked())
+            byDayList.add("TU");
+        if (WE.isChecked())
+            byDayList.add("WE");
+        if (TH.isChecked())
+            byDayList.add("TH");
+        if (FR.isChecked())
+            byDayList.add("FR");
+        if (SA.isChecked())
+            byDayList.add("SA");
+        if (SU.isChecked())
+            byDayList.add("SU");
+    }
+
+    /*private GregorianCalendar getUntil() {
+        if (endingCase.getCheckedRadioButtonId() == R.id.rbUntil)
+            return
+    }*/
+
     private int getCount() {
-        if (((RadioButton) endingCase.getChildAt(1)).isChecked())
+        if (endingCase.getCheckedRadioButtonId() == R.id.rbCount)
             return count.getText().toString().isEmpty() ?
-                    1 : count.getText().toString().length() > 2 ?
-                    99 : Integer.parseInt(count.getText().toString());
+                    1 : Integer.parseInt(count.getText().toString());
 
         return 0;
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        until.setText(sdf.format(new GregorianCalendar(year, month, dayOfMonth).getTimeInMillis()));
+        rbUntil.toggle();
     }
 }

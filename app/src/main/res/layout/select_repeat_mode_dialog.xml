@@ -9,7 +9,7 @@
         android:layout_height="300dp">
 
         <RadioButton
-            android:id="@+id/never"
+            android:id="@+id/rbNever"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

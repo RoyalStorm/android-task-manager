@@ -1,5 +1,6 @@
 package com.github.royalstorm.android_task_manager.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -52,6 +53,9 @@ public class WeekFragment extends Fragment implements EventService.RequestEventC
     private String userToken;
 
     private View view;
+    private Context context;
+
+    private LinearLayout scheduleWrapper;
 
     @Nullable
     @Override
@@ -59,11 +63,14 @@ public class WeekFragment extends Fragment implements EventService.RequestEventC
         view = inflater.inflate(R.layout.fragment_week,
                 container, false);
 
+        scheduleWrapper = view.findViewById(R.id.schedule_wrapper);
+
         EventBus.getDefault().register(this);
         eventService = new EventService(this);
 
         firebaseAuth = FirebaseAuth.getInstance();
         userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
+        context = view.getContext();
 
         setPrevWeekListener(view);
         setNextWeekListener(view);
@@ -90,7 +97,7 @@ public class WeekFragment extends Fragment implements EventService.RequestEventC
     public void requestEventSuccess(boolean success, EventResponse eventResponse) {
         createScheduleGrid(view, Arrays.asList(eventResponse.getData()));
 
-        lockNavigationButton(true);
+        lockNavigationButtons(true);
     }
 
     private void setDays(View view) {
@@ -156,7 +163,7 @@ public class WeekFragment extends Fragment implements EventService.RequestEventC
         gregorianCalendar.set(Calendar.SECOND, 59);
         Long to = gregorianCalendar.getTimeInMillis();
 
-        lockNavigationButton(false);
+        lockNavigationButtons(false);
 
         if (userToken == null) {
             firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
@@ -216,21 +223,21 @@ public class WeekFragment extends Fragment implements EventService.RequestEventC
     }
 
     private void createScheduleGrid(View view, List<Event> events) {
-        TableLayout tableLayout = view.findViewById(R.id.scheduleTable);
+        TableLayout tableLayout = view.findViewById(R.id.schedule_table);
         TableRow row;
 
         for (int i = 0; i < 24; i++) {
-            row = new TableRow(getContext());
+            row = new TableRow(context);
 
             LinearLayout[] days = new LinearLayout[7];
 
             for (int j = 0; j < 7; j++) {
-                days[j] = new LinearLayout(getContext());
+                days[j] = new LinearLayout(context);
                 days[j].setOrientation(LinearLayout.HORIZONTAL);
                 days[j].setMinimumHeight(dpToPix(60));
                 days[j].setId(j * 100 + i);
 
-                days[j].setBackground(getContext().getDrawable(R.drawable.text_view_border));
+                days[j].setBackground(context.getDrawable(R.drawable.text_view_border));
 
                 row.addView(days[j]);
 
@@ -241,31 +248,33 @@ public class WeekFragment extends Fragment implements EventService.RequestEventC
                         if (eventCount > 4)
                             break;
 
-                        TextView eventName = new TextView(getContext());
-                        eventName.setLayoutParams(new LinearLayout.LayoutParams(
+                        TextView eventName = new TextView(context);
+
+                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                                 dpToPix(2),
                                 dpToPix(60),
-                                0.2f)
-                        );
+                                0.2f);
+                        layoutParams.setMargins(-1, -1, -1, -1);
+                        eventName.setLayoutParams(layoutParams);
 
                         if (event != null) {
                             eventName.setText(event.getName());
-                            eventName.setTextColor(getContext().getResources().getColor(R.color.white));
+                            eventName.setTextColor(context.getResources().getColor(R.color.white));
 
                             if (eventCount == 1)
-                                eventName.setBackgroundColor(getContext().getResources().getColor(R.color.purple));
+                                eventName.setBackgroundColor(context.getResources().getColor(R.color.purple));
                             if (eventCount == 2)
-                                eventName.setBackgroundColor(getContext().getResources().getColor(R.color.colorAccent));
+                                eventName.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
                             if (eventCount == 3)
-                                eventName.setBackgroundColor(getContext().getResources().getColor(R.color.pink));
+                                eventName.setBackgroundColor(context.getResources().getColor(R.color.pink));
                             if (eventCount == 4) {
-                                eventName.setTextColor(getContext().getResources().getColor(R.color.elegant_color));
-                                eventName.setTextSize(16);
-                                eventName.setText("...");
+                                eventName.setTextColor(context.getResources().getColor(R.color.elegant_color));
+                                eventName.setText("......");
                             }
                         }
 
                         days[j].addView(eventName);
+                        days[j].setBackground(context.getDrawable(R.drawable.text_view_border));
 
                         eventCount++;
                     }
@@ -295,7 +304,7 @@ public class WeekFragment extends Fragment implements EventService.RequestEventC
     }
 
     private int dpToPix(int dp) {
-        return dp * (int) getContext().getResources().getDisplayMetrics().density;
+        return dp * (int) context.getResources().getDisplayMetrics().density;
     }
 
     private List<Event> findByMoment(List<Event> events, int year, int month, int day, int hour) {
@@ -310,17 +319,22 @@ public class WeekFragment extends Fragment implements EventService.RequestEventC
                         Stream.of(events)
                                 .filter(e -> e.getId().equals(eventInstance.getEventId()))
                                 .findFirst()
-                                .get()
+                                .orElse(null)
                 );
         }
 
         return foundEvents;
     }
 
-    private void lockNavigationButton(boolean lock) {
+    private void lockNavigationButtons(boolean lock) {
         prevWeek.setClickable(lock);
         prevWeek.setEnabled(lock);
         nextWeek.setClickable(lock);
         nextWeek.setEnabled(lock);
+
+        if (lock)
+            scheduleWrapper.setVisibility(View.VISIBLE);
+        else
+            scheduleWrapper.setVisibility(View.GONE);
     }
 }

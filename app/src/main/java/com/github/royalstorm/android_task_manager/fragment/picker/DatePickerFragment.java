@@ -16,15 +16,10 @@ public class DatePickerFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle bundle = getArguments();
         GregorianCalendar calendar = (GregorianCalendar) bundle.getSerializable(GregorianCalendar.class.getSimpleName());
-        boolean IS_BEGIN_DATE = bundle.getBoolean("IS_BEGIN_DATE");
 
-        if (IS_BEGIN_DATE)
-            return new DatePickerDialog(getActivity(),
-                    (DatePickerDialog.OnDateSetListener) getActivity(),
-                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        else
-            return new DatePickerDialog(getActivity(),
-                    (DatePickerDialog.OnDateSetListener) getActivity(),
-                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        return new DatePickerDialog(
+                getActivity(),
+                (DatePickerDialog.OnDateSetListener) getActivity(),
+                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
     }
 }

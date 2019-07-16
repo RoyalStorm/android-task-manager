@@ -17,17 +17,11 @@ public class TimePickerFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle bundle = getArguments();
         GregorianCalendar calendar = (GregorianCalendar) bundle.getSerializable(GregorianCalendar.class.getSimpleName());
-        boolean IS_BEGIN_TIME = bundle.getBoolean("IS_BEGIN_TIME");
 
-        if (IS_BEGIN_TIME)
-            return new TimePickerDialog(getActivity(),
-                    (TimePickerDialog.OnTimeSetListener) getActivity(),
-                    calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),
-                    DateFormat.is24HourFormat(getActivity()));
-        else
-            return new TimePickerDialog(getActivity(),
-                    (TimePickerDialog.OnTimeSetListener) getActivity(),
-                    calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),
-                    DateFormat.is24HourFormat(getActivity()));
+        return new TimePickerDialog(
+                getActivity(),
+                (TimePickerDialog.OnTimeSetListener) getActivity(),
+                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),
+                DateFormat.is24HourFormat(getActivity()));
     }
 }

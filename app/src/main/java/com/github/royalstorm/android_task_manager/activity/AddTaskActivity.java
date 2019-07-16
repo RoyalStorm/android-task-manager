@@ -12,9 +12,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -59,6 +61,8 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     TextView taskBeginTime;
     @BindView(R.id.task_end_time)
     TextView taskEndTime;
+    @BindView(R.id.time_zone_spinner)
+    Spinner timeZoneSpinner;
     @BindView(R.id.task_repeat_mode)
     TextView eventRepeatMode;
     @BindView(R.id.ic_token)
@@ -100,7 +104,6 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
                     break;
             }
 
-            bundle.putBoolean("IS_BEGIN_DATE", IS_BEGIN_DATE);
             picker = new DatePickerFragment();
             picker.setArguments(bundle);
             picker.show(getSupportFragmentManager(), "Date picker");
@@ -122,7 +125,6 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
                     break;
             }
 
-            bundle.putBoolean("IS_BEGIN_TIME", IS_BEGIN_TIME);
             picker = new TimePickerFragment();
             picker.setArguments(bundle);
             picker.show(getSupportFragmentManager(), "Time picker");
@@ -217,7 +219,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         EventPattern patternFromActivity = (EventPattern) data.getSerializableExtra(EventPattern.class.getSimpleName());
         eventPattern.setRrule(patternFromActivity.getRrule());
         eventPattern.setEndedAt(patternFromActivity.getEndedAt());
-        eventRepeatMode.setText("Другое");
+        eventRepeatMode.setText("Другое...");
     }
 
     private void initActivity() {
@@ -243,12 +245,27 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
         eventRepeatMode.setText("Не повторяется");
 
-        //Init event pattern
+        String timeZoneId = TimeZone.getDefault().getID();
+        eventPattern.setTimezone(timeZoneId);
+
+        String[] timeZones = TimeZone.getAvailableIDs();
+        timeZoneSpinner.setAdapter(
+                new ArrayAdapter<>(
+                        this,
+                        android.R.layout.simple_spinner_item,
+                        timeZones
+                )
+        );
+
+        for (int i = 0; i < timeZones.length; i++)
+            if (timeZones[i].equals(timeZoneId)) {
+                timeZoneSpinner.setSelection(i);
+                break;
+            }
+
         eventPattern.setStartedAt(start.getTimeInMillis());
         eventPattern.setEndedAt(end.getTimeInMillis());
-        //Default never repeat
         eventPattern.setRrule(null);
-        eventPattern.setTimezone(TimeZone.getDefault().getID());
         eventPattern.setDuration(end.getTimeInMillis() - start.getTimeInMillis());
     }
 
@@ -294,7 +311,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
             if (eventPattern.getRrule() == null || rRule.getCount() != 0)
                 eventPattern.setEndedAt(end.getTimeInMillis());
-            eventPattern.setTimezone(TimeZone.getDefault().getID());
+            eventPattern.setTimezone(timeZoneSpinner.getSelectedItem().toString());
             eventPattern.setDuration(end.getTimeInMillis() - start.getTimeInMillis());
         }
 

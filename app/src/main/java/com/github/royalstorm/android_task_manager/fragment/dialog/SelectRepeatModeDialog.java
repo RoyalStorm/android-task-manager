@@ -40,7 +40,7 @@ public class SelectRepeatModeDialog extends AppCompatDialogFragment {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.never:
+                case R.id.rbNever:
                     listener.applyMode("Не повторяется", NEVER, eventPattern.getEndedAt());
                     break;
                 case R.id.daily:
@@ -77,7 +77,7 @@ public class SelectRepeatModeDialog extends AppCompatDialogFragment {
 
         eventPattern = (EventPattern) this.getArguments().getSerializable(EventPattern.class.getSimpleName());
 
-        never = view.findViewById(R.id.never);
+        never = view.findViewById(R.id.rbNever);
         daily = view.findViewById(R.id.daily);
         weekly = view.findViewById(R.id.weekly);
         monthly = view.findViewById(R.id.monthly);
