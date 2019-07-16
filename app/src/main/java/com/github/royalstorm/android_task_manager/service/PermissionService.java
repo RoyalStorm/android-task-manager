@@ -3,6 +3,8 @@ package com.github.royalstorm.android_task_manager.service;
 import com.github.royalstorm.android_task_manager.dao.PermissionRequest;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 
+import java.io.IOException;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -14,8 +16,7 @@ public class PermissionService {
 
     private RequestPermissionCallback requestPermissionCallback;
 
-    private static final int TOKEN_BEGIN = 23;
-    private static final int TOKEN_END = 30;
+    private static final int TOKEN_BEGIN = 44;
 
     public PermissionService(RequestPermissionCallback requestPermissionCallback) {
         retrofitClient = RetrofitClient.getInstance();
@@ -27,10 +28,11 @@ public class PermissionService {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful())
-                    requestPermissionCallback.requestPermissionSuccess(
-                            response.isSuccessful(),
-                            response.body().toString().substring(TOKEN_BEGIN, TOKEN_END)
-                    );
+                    try {
+                        requestPermissionCallback.requestPermissionSuccess(true, response.body().string().substring(TOKEN_BEGIN));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
             }
 
             @Override

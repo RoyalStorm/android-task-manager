@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:text="Повторяется раз в"
+            android:text="@string/frequency_label"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -25,7 +25,7 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/interval"
+                android:id="@+id/et_interval"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:digits="0123456789"
@@ -34,12 +34,12 @@
                 android:textColor="@color/elegant_color" />
 
             <Spinner
-                android:id="@+id/frequency"
+                android:id="@+id/spinner_frequency"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="end|center"
@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:text="Когда повторяется:"
+            android:text="@string/by_day_label"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -68,49 +68,49 @@
             android:orientation="horizontal">
 
             <CheckBox
-                android:id="@+id/MO"
+                android:id="@+id/cb_mo"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/MO" />
 
             <CheckBox
-                android:id="@+id/TU"
+                android:id="@+id/cb_tu"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/TU" />
 
             <CheckBox
-                android:id="@+id/WE"
+                android:id="@+id/cb_we"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/WE" />
 
             <CheckBox
-                android:id="@+id/TH"
+                android:id="@+id/cb_th"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/TH" />
 
             <CheckBox
-                android:id="@+id/FR"
+                android:id="@+id/cb_fr"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/FR" />
 
             <CheckBox
-                android:id="@+id/SA"
+                android:id="@+id/cb_sa"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/SA" />
 
             <CheckBox
-                android:id="@+id/SU"
+                android:id="@+id/cb_su"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -126,25 +126,25 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Заканчивается:"
+            android:text="@string/ended_at_label"
             android:textSize="16sp"
             android:textStyle="bold" />
 
         <RadioGroup
-            android:id="@+id/ending_case"
+            android:id="@+id/rg_ending_mode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp">
 
             <RadioButton
-                android:id="@+id/rbNever"
+                android:id="@+id/rb_never"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/never" />
 
             <RadioButton
-                android:id="@+id/rbUntil"
+                android:id="@+id/rb_until"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
@@ -152,21 +152,21 @@
                 android:text="" />
 
             <TextView
-                android:id="@+id/until"
+                android:id="@+id/tv_until"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="35dp"
                 android:layout_marginTop="-25dp" />
 
             <RadioButton
-                android:id="@+id/rbCount"
+                android:id="@+id/rb_count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/repeat_count" />
 
             <EditText
-                android:id="@+id/count"
+                android:id="@+id/et_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="145dp"

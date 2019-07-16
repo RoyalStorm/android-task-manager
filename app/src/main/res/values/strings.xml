@@ -51,6 +51,9 @@
     <string name="SA">Сб</string>
     <string name="SU">Вс</string>
 
+    <string name="frequency_label">Повторяется раз в</string>
+    <string name="by_day_label">Когда повторяется:</string>
+    <string name="ended_at_label">Заканчивается:</string>
     <string name="never">Никогда</string>
     <string name="repeat_count">Повторить раз</string>
 
