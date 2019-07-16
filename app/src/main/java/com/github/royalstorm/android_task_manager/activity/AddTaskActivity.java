@@ -46,8 +46,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener,
-        TimePickerDialog.OnTimeSetListener, SelectRepeatModeDialog.SelectRepeatModeDialogListener {
+public class AddTaskActivity extends AppCompatActivity implements
+        DatePickerDialog.OnDateSetListener,
+        TimePickerDialog.OnTimeSetListener,
+        SelectRepeatModeDialog.SelectRepeatModeDialogListener {
+
     @BindView(R.id.task_name)
     EditText taskName;
     @BindView(R.id.task_details)

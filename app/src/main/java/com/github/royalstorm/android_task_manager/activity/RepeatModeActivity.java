@@ -1,6 +1,7 @@
 package com.github.royalstorm.android_task_manager.activity;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
@@ -243,14 +244,12 @@ public class RepeatModeActivity extends AppCompatActivity implements DatePickerD
 
         eventPattern.setEndedAt(getInfinitePeriod(eventPattern));
         eventPattern.setEndedAt(getUntil(eventPattern));
+        eventPattern.setRrule(rRule.toIcal().substring(6) + byDayPart.substring(0, byDayPart.length() - 1));
 
-        Snackbar.make(getWindow().getDecorView().
-                getRootView(), rRule.toIcal().substring(6) + byDayPart.substring(0, byDayPart.length() - 1) + "  " + eventPattern.getEndedAt(), Snackbar.LENGTH_LONG).show();
-
-        /*Intent intent = new Intent();
+        Intent intent = new Intent();
         intent.putExtra(EventPattern.class.getSimpleName(), eventPattern);
         setResult(RESULT_OK, intent);
-        finish();*/
+        finish();
     }
 
     private int getInterval() {

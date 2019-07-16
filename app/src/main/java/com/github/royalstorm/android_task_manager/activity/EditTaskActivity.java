@@ -49,26 +49,10 @@ import static com.github.royalstorm.android_task_manager.shared.Frequency.NEVER;
 import static com.github.royalstorm.android_task_manager.shared.Frequency.WEEKLY;
 import static com.github.royalstorm.android_task_manager.shared.Frequency.YEARLY;
 
-public class EditTaskActivity extends AppCompatActivity
-        implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener,
+public class EditTaskActivity extends AppCompatActivity implements
+        DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener,
         SelectRepeatModeDialog.SelectRepeatModeDialogListener,
         AccessConfigurationDialog.ApplyAccessConfiguration {
-
-    private RetrofitClient retrofitClient = RetrofitClient.getInstance();
-
-    private FirebaseAuth firebaseAuth;
-    private String userToken;
-
-    private EventInstance eventInstance;
-    private Event event;
-    private EventPattern eventPattern;
-
-    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM yyyy (E)", Locale.getDefault());
-
-    private GregorianCalendar start;
-    private GregorianCalendar end;
-
-    private String[] timeZones;
 
     @BindView(R.id.task_name)
     EditText taskName;
@@ -89,6 +73,22 @@ public class EditTaskActivity extends AppCompatActivity
     TextView eventRepeatMode;
     @BindView(R.id.generate_sharing_link)
     TextView generateSharingLink;
+
+    private RetrofitClient retrofitClient = RetrofitClient.getInstance();
+
+    private FirebaseAuth firebaseAuth;
+    private String userToken;
+
+    private EventInstance eventInstance;
+    private Event event;
+    private EventPattern eventPattern;
+
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMMM yyyy (E)", Locale.getDefault());
+
+    private GregorianCalendar start;
+    private GregorianCalendar end;
+
+    private String[] timeZones;
 
     private DialogFragment picker;
 
@@ -311,8 +311,9 @@ public class EditTaskActivity extends AppCompatActivity
         }
     }
 
-    private String getTimeFormat(int hourOfDay, int minute) {
-        return hourOfDay + ":" + (minute < 10 ? ("0" + minute) : minute);
+    @Override
+    public void applySharingLink(Intent sharingIntent) {
+        startActivity(Intent.createChooser(sharingIntent, "Выберите пользователя"));
     }
 
     @Override
@@ -435,12 +436,11 @@ public class EditTaskActivity extends AppCompatActivity
         });
     }
 
-    private void showSnackbar(String message) {
-        Snackbar.make(getWindow().getDecorView().getRootView(), message, Snackbar.LENGTH_LONG).show();
+    private String getTimeFormat(int hourOfDay, int minute) {
+        return hourOfDay + ":" + (minute < 10 ? ("0" + minute) : minute);
     }
 
-    @Override
-    public void applySharingLink(Intent sharingIntent) {
-        startActivity(Intent.createChooser(sharingIntent, "Выберите пользователя"));
+    private void showSnackbar(String message) {
+        Snackbar.make(getWindow().getDecorView().getRootView(), message, Snackbar.LENGTH_LONG).show();
     }
 }

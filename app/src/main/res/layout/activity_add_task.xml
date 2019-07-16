@@ -167,7 +167,7 @@
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:gravity="start|center"
-                android:text="Поделиться ссылкой активации"
+                android:text="@string/event_share_link"
                 android:textColor="@color/dove_gray"
                 android:textSize="18sp" />
         </LinearLayout>
