@@ -53,4 +53,8 @@
 
     <string name="never">Никогда</string>
     <string name="repeat_count">Повторить раз</string>
+
+    <string name="access_read">Чтение</string>
+    <string name="access_edit">Изменение</string>
+    <string name="access_delete">Удаление</string>
 </resources>

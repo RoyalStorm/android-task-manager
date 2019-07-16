@@ -13,26 +13,26 @@
         tools:layout_editor_absoluteY="8dp">
 
         <CheckBox
-            android:id="@+id/read"
+            android:id="@+id/cbRead"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:checked="true"
             android:clickable="false"
-            android:text="Чтение" />
+            android:text="@string/access_read" />
 
         <CheckBox
-            android:id="@+id/edit"
+            android:id="@+id/cbUpdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Изменение" />
+            android:text="@string/access_edit" />
 
         <CheckBox
-            android:id="@+id/delete"
+            android:id="@+id/cbDelete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Удаление" />
+            android:text="@string/access_delete" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
