@@ -72,6 +72,7 @@ public class RepeatModeActivity extends AppCompatActivity implements DatePickerD
     EditText etCount;
 
     private SimpleDateFormat untilSimpleDateFormat;
+    private EventPattern eventPattern;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +84,8 @@ public class RepeatModeActivity extends AppCompatActivity implements DatePickerD
         ButterKnife.bind(this);
 
         untilSimpleDateFormat = new SimpleDateFormat("d MMMM yyyy (E)", Locale.getDefault());
+
+        eventPattern = (EventPattern) getIntent().getExtras().getSerializable(EventPattern.class.getSimpleName());
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
@@ -193,9 +196,6 @@ public class RepeatModeActivity extends AppCompatActivity implements DatePickerD
     }
 
     private RRule initRRule() {
-        Bundle bundle = getIntent().getExtras();
-        EventPattern eventPattern = (EventPattern) bundle.getSerializable(EventPattern.class.getSimpleName());
-
         RRule rRule = new RRule();
 
         if (isEventHasEmptyRRule(eventPattern)) {
@@ -230,6 +230,13 @@ public class RepeatModeActivity extends AppCompatActivity implements DatePickerD
             return;
         }
 
+        StringBuilder byDayPart = new StringBuilder(";BYDAY=");
+        for (String day : byDay)
+            byDayPart.append(day).append(",");
+
+        Snackbar.make(getWindow().getDecorView().
+                getRootView(), rRule.toIcal() + byDayPart.substring(0, byDayPart.length() - 1) + "  " + eventPattern.getEndedAt(), Snackbar.LENGTH_LONG).show();
+
         /*Intent intent = new Intent();
         intent.putExtra(EventPattern.class.getSimpleName(), eventPattern);
         setResult(RESULT_OK, intent);
@@ -237,11 +244,8 @@ public class RepeatModeActivity extends AppCompatActivity implements DatePickerD
     }
 
     private int getInterval() {
-        if (rgEndingMode.getCheckedRadioButtonId() == R.id.et_count)
-            return etInterval.getText().toString().isEmpty() ?
-                    1 : Integer.parseInt(etInterval.getText().toString());
-
-        return 0;
+        return etInterval.getText().toString().isEmpty() ?
+                1 : Integer.parseInt(etInterval.getText().toString());
     }
 
     private Frequency getFrequency() {
