@@ -62,4 +62,11 @@
     <string name="access_read">Чтение</string>
     <string name="access_edit">Изменение</string>
     <string name="access_delete">Удаление</string>
+
+    <string name="no_repeat">Не повторяется</string>
+    <string name="daily">Каждый день</string>
+    <string name="weekly">Каждую неделю</string>
+    <string name="monthly">Каждый месяц</string>
+    <string name="yearly">Каждый год</string>
+    <string name="other">Другое</string>
 </resources>

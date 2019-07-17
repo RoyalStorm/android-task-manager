@@ -298,17 +298,17 @@ public class AddTaskActivity extends AppCompatActivity implements
 
     private void createEvent() {
         if (taskName.getText().toString().trim().isEmpty()) {
-            showSnackbar("Заголовок не может быть пустым");
+            showSnackBar("Заголовок не может быть пустым");
             return;
         } else {
             if (start.after(end)) {
-                showSnackbar("Событие не может завершиться раньше, чем начаться");
+                showSnackBar("Событие не может завершиться раньше, чем начаться");
                 return;
             }
 
             eventPattern.setStartedAt(start.getTimeInMillis());
 
-            //If selected never repeat
+            //If selected "never" repeat
             RRule rRule = null;
             try {
                 rRule = new RRule("RRULE:" + eventPattern.getRrule());
@@ -325,19 +325,12 @@ public class AddTaskActivity extends AppCompatActivity implements
         event.setDetails(taskDetails.getText().toString().trim());
         event.setName(taskName.getText().toString().trim());
 
-        if (userToken == null) {
-            firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
-                userToken = task.getResult().getToken();
-                saveRequest(event, eventPattern, userToken);
-            });
-        } else {
-            userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
-            saveRequest(event, eventPattern, userToken);
-        }
+        updateToken();
+        saveRequest(event, eventPattern, userToken);
     }
 
-    private String getTimeFormat(int hourOfDay, int minute) {
-        return hourOfDay + ":" + (minute < 10 ? ("0" + minute) : minute);
+    private String getTimeFormat(int hourOfDay, int minutes) {
+        return String.format("%d:%02d", hourOfDay, minutes);
     }
 
     private GregorianCalendar timestampToGregorian(Long millis) {
@@ -373,8 +366,17 @@ public class AddTaskActivity extends AppCompatActivity implements
         });
     }
 
-    private void showSnackbar(String message) {
+    private void showSnackBar(String message) {
         Snackbar.make(getWindow().getDecorView().getRootView(), message, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void updateToken() {
+        if (userToken == null)
+            firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
+                userToken = task.getResult().getToken();
+            });
+        else
+            userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
     }
 
     private void recountStartAndEnd() {

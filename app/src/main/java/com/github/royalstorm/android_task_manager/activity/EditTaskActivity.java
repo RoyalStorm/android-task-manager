@@ -168,38 +168,22 @@ public class EditTaskActivity extends AppCompatActivity implements
                 )
         );
 
-        if (userToken == null) {
-            firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
-                userToken = task.getResult().getToken();
-                initialRequest(eventInstance, userToken);
-            });
-        } else {
-            userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
-            initialRequest(eventInstance, userToken);
-        }
+        updateToken();
+        initialRequest(eventInstance, userToken);
     }
 
     private void deleteEvent(Long id) {
-        if (userToken == null) {
-            firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
-                userToken = task.getResult().getToken();
-                deleteRequest(id, userToken);
-            });
-        } else {
-            userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
-            deleteRequest(id, userToken);
-        }
+        updateToken();
+        deleteRequest(id, userToken);
     }
 
     private void updateEvent() {
         if (taskName.getText().toString().trim().isEmpty()) {
-            Snackbar.make(getWindow().getDecorView().
-                    getRootView(), "Заголовок не может быть пустым", Snackbar.LENGTH_LONG).show();
+            showSnackBar("Заголовок не может быть пустым");
             return;
         } else {
             if (start.after(end)) {
-                Snackbar.make(getWindow().getDecorView().
-                        getRootView(), "Событие не может завершиться раньше, чем начаться", Snackbar.LENGTH_LONG).show();
+                showSnackBar("Событие не может завершиться раньше, чем начаться");
                 return;
             }
 
@@ -214,15 +198,8 @@ public class EditTaskActivity extends AppCompatActivity implements
         event.setName(taskName.getText().toString().trim());
         event.setDetails(taskDetails.getText().toString().trim());
 
-        if (userToken == null) {
-            firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
-                userToken = task.getResult().getToken();
-                updateRequest(eventInstance.getPatternId(), eventInstance.getEventId(), userToken);
-            });
-        } else {
-            userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
-            updateRequest(eventInstance.getPatternId(), eventInstance.getEventId(), userToken);
-        }
+        updateToken();
+        updateRequest(eventInstance.getPatternId(), eventInstance.getEventId(), userToken);
     }
 
     private void setListeners() {
@@ -405,23 +382,23 @@ public class EditTaskActivity extends AppCompatActivity implements
                                     }
 
                                 if (eventPattern.getRrule() == NEVER)
-                                    eventRepeatMode.setText("Не повторяется");
+                                    eventRepeatMode.setText(R.string.no_repeat);
                                 else
                                     switch (eventPattern.getRrule()) {
                                         case DAILY:
-                                            eventRepeatMode.setText("Каждый день");
+                                            eventRepeatMode.setText(R.string.daily);
                                             break;
                                         case WEEKLY:
-                                            eventRepeatMode.setText("Каждую неделю");
+                                            eventRepeatMode.setText(R.string.weekly);
                                             break;
                                         case MONTHLY:
-                                            eventRepeatMode.setText("Каждый месяц");
+                                            eventRepeatMode.setText(R.string.monthly);
                                             break;
                                         case YEARLY:
-                                            eventRepeatMode.setText("Каждый год");
+                                            eventRepeatMode.setText(R.string.yearly);
                                             break;
                                         default:
-                                            eventRepeatMode.setText("Другое...");
+                                            eventRepeatMode.setText(R.string.other);
                                     }
                             }
                         }
@@ -441,12 +418,21 @@ public class EditTaskActivity extends AppCompatActivity implements
         });
     }
 
-    private String getTimeFormat(int hourOfDay, int minute) {
-        return hourOfDay + ":" + (minute < 10 ? ("0" + minute) : minute);
+    private String getTimeFormat(int hourOfDay, int minutes) {
+        return String.format("%d:%02d", hourOfDay, minutes);
     }
 
-    private void showSnackbar(String message) {
+    private void showSnackBar(String message) {
         Snackbar.make(getWindow().getDecorView().getRootView(), message, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void updateToken() {
+        if (userToken == null)
+            firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
+                userToken = task.getResult().getToken();
+            });
+        else
+            userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
     }
 
     private void recountStartAndEnd() {
