@@ -135,10 +135,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         notifyDataSetChanged();
     }
 
-    private void clearItems() {
-        eventInstances.clear();
-    }
-
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -154,5 +150,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public int getItemCount() {
         return eventInstances.size();
+    }
+
+    private void clearItems() {
+        eventInstances.clear();
     }
 }

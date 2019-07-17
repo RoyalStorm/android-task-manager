@@ -25,7 +25,11 @@ public interface PermissionRepository {
     );
 
     @GET("/api/v1/permissions")
-    Call<PermissionResponse> getPermissions(@Header("X-Firebase-Auth") String userToken);
+    Call<PermissionResponse> getPermissions(
+            @Query("entity_type") String entityType,
+            @Query("mine") boolean mine,
+            @Header("X-Firebase-Auth") String userToken
+    );
 
     @DELETE("/api/v1/permissions/{id}")
     Call<Void> delete(@Path("id") Long id, @Header("X-Firebase-Auth") String userToken);

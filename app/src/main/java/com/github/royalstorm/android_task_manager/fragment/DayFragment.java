@@ -175,13 +175,11 @@ public class DayFragment extends Fragment implements SelectDateDialog.SelectDayD
         retrofitClient.getEventsRepository().getEventInstancesByInterval(from.getTimeInMillis(), to.getTimeInMillis(), userToken).enqueue(new Callback<EventInstanceResponse>() {
             @Override
             public void onResponse(Call<EventInstanceResponse> call, Response<EventInstanceResponse> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        eventInstances = Arrays.asList(response.body().getData());
-                        Collections.sort(eventInstances, (a, b) -> a.getStartedAt().compareTo(b.getStartedAt()));
-                        eventAdapter.setItems(eventInstances);
-                        recyclerView.setAdapter(eventAdapter);
-                    }
+                if (response.isSuccessful() && response.body() != null) {
+                    eventInstances = Arrays.asList(response.body().getData());
+                    Collections.sort(eventInstances, (a, b) -> a.getStartedAt().compareTo(b.getStartedAt()));
+                    eventAdapter.setItems(eventInstances);
+                    recyclerView.setAdapter(eventAdapter);
                 }
             }
 

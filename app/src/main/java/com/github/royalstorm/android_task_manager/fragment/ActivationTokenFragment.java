@@ -68,9 +68,10 @@ public class ActivationTokenFragment extends Fragment {
         retrofitClient.getPermissionRepository().activateShareLink(activationToken, userToken).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful())
                     showSnackbar("Событие было успешно добавлено в Ваш календарь");
-                }
+                else
+                    showSnackbar("Активация не удалась, код ошибки " + response.code());
             }
 
             @Override
