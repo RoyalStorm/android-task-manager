@@ -23,6 +23,21 @@ public class PermissionService {
         this.requestPermissionCallback = requestPermissionCallback;
     }
 
+    public void getSharingPermissions(String entityType, String userToken) {
+        retrofitClient.getPermissionRepository().getSharingPermission(entityType, userToken).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful())
+                    requestPermissionCallback.requestPermissionSuccess(true, response.body());
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
+    }
+
     public void generateSharingLink(PermissionRequest[] permissionRequests, String userToken) {
         retrofitClient.getPermissionRepository().generateSharingLink(permissionRequests, userToken).enqueue(new Callback<ResponseBody>() {
             @Override
@@ -43,6 +58,6 @@ public class PermissionService {
     }
 
     public interface RequestPermissionCallback {
-        void requestPermissionSuccess(boolean success, String sharingLing);
+        void requestPermissionSuccess(boolean success, String sharingToken);
     }
 }

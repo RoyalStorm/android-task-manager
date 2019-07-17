@@ -68,10 +68,10 @@ public class RepeatModeActivity extends AppCompatActivity implements DatePickerD
     RadioButton rbUntil;
     @BindView(R.id.tv_until)
     TextView tvUntil;
-    @BindView(R.id.rb_count)
+    /*@BindView(R.id.rb_count)
     RadioButton rbCount;
     @BindView(R.id.et_count)
-    EditText etCount;
+    EditText etCount;*/
 
     private SimpleDateFormat untilSimpleDateFormat;
 
@@ -142,7 +142,7 @@ public class RepeatModeActivity extends AppCompatActivity implements DatePickerD
         });
 
         etInterval.setFilters(new InputFilter[]{new InputFilter.LengthFilter(2), new InputFilterMinMax(1, 99)});
-        etCount.setFilters(new InputFilter[]{new InputFilter.LengthFilter(2), new InputFilterMinMax(1, 99)});
+        //etCount.setFilters(new InputFilter[]{new InputFilter.LengthFilter(2), new InputFilterMinMax(1, 99)});
     }
 
     private void initActivity() {
@@ -195,13 +195,13 @@ public class RepeatModeActivity extends AppCompatActivity implements DatePickerD
         else if (rRule.getUntil() != null)
             rbUntil.toggle();
         else {
-            rbCount.toggle();
-            etCount.setText(Integer.toString(rRule.getCount()));
+            //rbCount.toggle();
+            //etCount.setText(Integer.toString(rRule.getCount()));
         }
 
         untilGregorianCalendar.add(Calendar.MONTH, 1);
         tvUntil.setText(untilSimpleDateFormat.format(untilGregorianCalendar.getTimeInMillis()));
-        etCount.setText("1");
+        //etCount.setText("1");
     }
 
     private RRule initRRule() {

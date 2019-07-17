@@ -187,6 +187,8 @@ public class AddTaskActivity extends AppCompatActivity implements
 
             taskEndDate.setText(simpleDateFormat.format(end.getTime()));
         }
+
+        recountStartAndEnd();
     }
 
     @Override
@@ -202,6 +204,8 @@ public class AddTaskActivity extends AppCompatActivity implements
 
             taskEndTime.setText(getTimeFormat(hourOfDay, minute));
         }
+
+        recountStartAndEnd();
     }
 
     @Override
@@ -267,9 +271,9 @@ public class AddTaskActivity extends AppCompatActivity implements
             }
 
         eventPattern.setStartedAt(start.getTimeInMillis());
-        eventPattern.setEndedAt(end.getTimeInMillis());
-        eventPattern.setRrule(null);
         eventPattern.setDuration(end.getTimeInMillis() - start.getTimeInMillis());
+        eventPattern.setEndedAt(start.getTimeInMillis() + eventPattern.getDuration());
+        eventPattern.setRrule(null);
     }
 
     private void setListeners() {
@@ -371,5 +375,11 @@ public class AddTaskActivity extends AppCompatActivity implements
 
     private void showSnackbar(String message) {
         Snackbar.make(getWindow().getDecorView().getRootView(), message, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void recountStartAndEnd() {
+        eventPattern.setStartedAt(start.getTimeInMillis());
+        eventPattern.setDuration(end.getTimeInMillis() - start.getTimeInMillis());
+        eventPattern.setEndedAt(start.getTimeInMillis() + eventPattern.getDuration());
     }
 }

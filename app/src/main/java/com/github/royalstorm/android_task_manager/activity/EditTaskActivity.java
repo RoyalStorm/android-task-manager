@@ -256,6 +256,7 @@ public class EditTaskActivity extends AppCompatActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.edit_event_menu, menu);
+
         return true;
     }
 
@@ -294,6 +295,8 @@ public class EditTaskActivity extends AppCompatActivity implements
 
             taskEndDate.setText(date);
         }
+
+        recountStartAndEnd();
     }
 
     @Override
@@ -309,6 +312,8 @@ public class EditTaskActivity extends AppCompatActivity implements
 
             taskEndTime.setText(getTimeFormat(hourOfDay, minute));
         }
+
+        recountStartAndEnd();
     }
 
     @Override
@@ -442,5 +447,11 @@ public class EditTaskActivity extends AppCompatActivity implements
 
     private void showSnackbar(String message) {
         Snackbar.make(getWindow().getDecorView().getRootView(), message, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void recountStartAndEnd() {
+        eventPattern.setStartedAt(start.getTimeInMillis());
+        eventPattern.setDuration(end.getTimeInMillis() - start.getTimeInMillis());
+        eventPattern.setEndedAt(start.getTimeInMillis() + eventPattern.getDuration());
     }
 }

@@ -32,9 +32,7 @@ public interface PermissionRepository {
 
     @GET("/api/v1/share")
     Call<String> getSharingPermission(
-            @Query("entity_id") Long entityId,
             @Query("entity_type") String entityType,
-            @Query("action") String action,
             @Header("X-Firebase-Auth") String userToken
     );
 

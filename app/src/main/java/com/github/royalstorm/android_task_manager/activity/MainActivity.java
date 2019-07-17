@@ -19,15 +19,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.annimon.stream.Stream;
 import com.github.royalstorm.android_task_manager.R;
+import com.github.royalstorm.android_task_manager.dao.Action;
+import com.github.royalstorm.android_task_manager.dao.EntityType;
+import com.github.royalstorm.android_task_manager.dao.PermissionRequest;
 import com.github.royalstorm.android_task_manager.fragment.ActivationTokenFragment;
 import com.github.royalstorm.android_task_manager.fragment.DayFragment;
 import com.github.royalstorm.android_task_manager.fragment.MonthFragment;
+import com.github.royalstorm.android_task_manager.fragment.RulesManagementFragment;
 import com.github.royalstorm.android_task_manager.fragment.WeekFragment;
+import com.github.royalstorm.android_task_manager.service.PermissionService;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -47,6 +52,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -55,8 +61,9 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        PermissionService.RequestPermissionCallback {
 
     private RetrofitClient retrofitClient = RetrofitClient.getInstance();
 
@@ -166,6 +173,11 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
 
+        if (id == R.id.share_all_events) {
+            shareAllCalendar();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -186,8 +198,8 @@ public class MainActivity extends AppCompatActivity
                         new MonthFragment()).commit();
                 break;
             case R.id.nav_sharing:
-                /*getSupportFragmentManager().beginTransaction().replace(R.id.calendarContainer,
-                        new RulesSharingFragment()).commit();*/
+                getSupportFragmentManager().beginTransaction().replace(R.id.calendarContainer,
+                        new RulesManagementFragment()).commit();
                 break;
             case R.id.nav_activate_token:
                 getSupportFragmentManager().beginTransaction().replace(R.id.calendarContainer,
@@ -217,6 +229,11 @@ public class MainActivity extends AppCompatActivity
             navigationView.getCheckedItem().setChecked(true);
 
         navigationView.setNavigationItemSelectedListener(null);
+
+        signInButton.setVisibility(View.VISIBLE);
+        signOutButton.setVisibility(View.GONE);
+
+        drawer.closeDrawer(GravityCompat.START);
 
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
         for (Fragment fragment : fragments)
@@ -332,5 +349,66 @@ public class MainActivity extends AppCompatActivity
                 userToken = null;
             }
         });
+    }
+
+    private void shareAllCalendar() {
+        PermissionService permissionService = new PermissionService(this);
+        updateUserToken();
+
+        List<PermissionRequest> permissionRequests = new ArrayList<>();
+
+        PermissionRequest readEventPermissionRequest = new PermissionRequest();
+        readEventPermissionRequest.setAction(Action.READ.name());
+        readEventPermissionRequest.setEntityType(EntityType.EVENT.name());
+        readEventPermissionRequest.setEntityId(null);
+
+        permissionRequests.add(readEventPermissionRequest);
+
+        PermissionRequest updateEventPermissionRequest = new PermissionRequest();
+        updateEventPermissionRequest.setAction(Action.UPDATE.name());
+        updateEventPermissionRequest.setEntityType(EntityType.EVENT.name());
+        updateEventPermissionRequest.setEntityId(null);
+
+        PermissionRequest updateEventPatternPermissionRequest = new PermissionRequest();
+        updateEventPatternPermissionRequest.setAction(Action.UPDATE.name());
+        updateEventPatternPermissionRequest.setEntityType(EntityType.PATTERN.name());
+        updateEventPatternPermissionRequest.setEntityId(null);
+
+        permissionRequests.add(updateEventPermissionRequest);
+        permissionRequests.add(updateEventPatternPermissionRequest);
+
+        PermissionRequest deleteEventPermissionRequest = new PermissionRequest();
+        deleteEventPermissionRequest.setAction(Action.DELETE.name());
+        deleteEventPermissionRequest.setEntityType(EntityType.EVENT.name());
+        deleteEventPermissionRequest.setEntityId(null);
+
+        PermissionRequest deleteEventPatternPermissionRequest = new PermissionRequest();
+        deleteEventPatternPermissionRequest.setAction(Action.DELETE.name());
+        deleteEventPatternPermissionRequest.setEntityType(EntityType.PATTERN.name());
+        deleteEventPatternPermissionRequest.setEntityId(null);
+
+        permissionRequests.add(deleteEventPermissionRequest);
+        permissionRequests.add(deleteEventPatternPermissionRequest);
+
+        permissionService.generateSharingLink(Stream.of(permissionRequests).toArray(PermissionRequest[]::new), userToken);
+    }
+
+    @Override
+    public void requestPermissionSuccess(boolean success, String sharingToken) {
+        Intent shareWithFriendsIntent = new Intent();
+        shareWithFriendsIntent.setAction(Intent.ACTION_SEND);
+        shareWithFriendsIntent.putExtra(Intent.EXTRA_TEXT, sharingToken);
+        shareWithFriendsIntent.setType("text/plain");
+        startActivity(Intent.createChooser(shareWithFriendsIntent, "Выберите пользователя"));
+    }
+
+    private void updateUserToken() {
+        if (userToken == null)
+            firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
+                userToken = task.getResult().getToken();
+            });
+        else
+            userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
+
     }
 }

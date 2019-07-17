@@ -8,6 +8,7 @@
     <string name="nav_header_subtitle">8 (914)736 9914</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="export_desc">Экспорт событий в файл .ics</string>
+    <string name="share_all_events_desc">Раздать доступ ко всем событиям</string>
 
     <string name="material_calendar_monday">Пн</string>
     <string name="material_calendar_tuesday">Вт</string>
