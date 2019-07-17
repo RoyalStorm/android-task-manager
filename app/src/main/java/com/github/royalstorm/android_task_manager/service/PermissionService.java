@@ -23,6 +23,21 @@ public class PermissionService {
         this.requestPermissionCallback = requestPermissionCallback;
     }
 
+    public void delete(Long id, String userToken) {
+        retrofitClient.getPermissionRepository().delete(id, userToken).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful())
+                    requestPermissionCallback.requestPermissionSuccess(true, null);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
+
     public void generateSharingLink(PermissionRequest[] permissionRequests, String userToken) {
         retrofitClient.getPermissionRepository().generateSharingLink(permissionRequests, userToken).enqueue(new Callback<ResponseBody>() {
             @Override

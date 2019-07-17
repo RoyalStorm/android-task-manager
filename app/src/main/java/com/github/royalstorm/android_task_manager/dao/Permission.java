@@ -3,7 +3,9 @@ package com.github.royalstorm.android_task_manager.dao;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Permission {
+import java.io.Serializable;
+
+public class Permission implements Serializable {
     /*Readonly fields*/
     @SerializedName("created_at")
     private Long createdAt;

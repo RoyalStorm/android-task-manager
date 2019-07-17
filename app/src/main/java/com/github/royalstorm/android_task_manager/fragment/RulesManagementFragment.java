@@ -15,6 +15,7 @@ import com.github.royalstorm.android_task_manager.adapter.MyPermissionAdapter;
 import com.github.royalstorm.android_task_manager.dao.EntityType;
 import com.github.royalstorm.android_task_manager.dao.Permission;
 import com.github.royalstorm.android_task_manager.dto.PermissionResponse;
+import com.github.royalstorm.android_task_manager.fragment.dialog.DeletePermissionAlert;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -26,7 +27,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RulesManagementFragment extends Fragment implements MyPermissionAdapter.OnMyPermissionListener {
+public class RulesManagementFragment extends Fragment implements
+        MyPermissionAdapter.OnMyPermissionListener {
 
     private RetrofitClient retrofitClient;
 
@@ -35,6 +37,8 @@ public class RulesManagementFragment extends Fragment implements MyPermissionAda
 
     private RecyclerView rvMyPermissions;
     private RecyclerView rvOtherPermissions;
+
+    private List<Permission> permissions;
 
     private MyPermissionAdapter myPermissionAdapter;
 
@@ -54,6 +58,8 @@ public class RulesManagementFragment extends Fragment implements MyPermissionAda
         rvMyPermissions.setLayoutManager(new LinearLayoutManager(getContext()));
         rvOtherPermissions.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        permissions = new ArrayList<>();
+
         myPermissionAdapter = new MyPermissionAdapter(new ArrayList<>(), this);
 
         updateToken();
@@ -67,7 +73,6 @@ public class RulesManagementFragment extends Fragment implements MyPermissionAda
             @Override
             public void onResponse(Call<PermissionResponse> call, Response<PermissionResponse> response) {
                 if (response.isSuccessful()) {
-                    List<Permission> permissions;
                     permissions = Arrays.asList(response.body().getData());
                     myPermissionAdapter.setItems(permissions);
                     rvMyPermissions.setAdapter(myPermissionAdapter);
@@ -92,6 +97,13 @@ public class RulesManagementFragment extends Fragment implements MyPermissionAda
 
     @Override
     public void onMyPermissionClick(int position) {
+        DeletePermissionAlert deletePermissionAlert = new DeletePermissionAlert();
 
+        Bundle bundle = new Bundle();
+        Permission permission = permissions.get(position);
+        bundle.putSerializable(Permission.class.getSimpleName(), permission);
+
+        deletePermissionAlert.setArguments(bundle);
+        deletePermissionAlert.show(getFragmentManager(), "Delete permission");
     }
 }

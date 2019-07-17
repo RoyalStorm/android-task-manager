@@ -23,6 +23,21 @@ public class EventService {
         this.requestEventCallback = requestEventCallback;
     }
 
+    public void delete(Long id, String userToken) {
+        retrofitClient.getEventsRepository().delete(id, userToken).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful())
+                    requestEventCallback.requestEventSuccess(true, null);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
+
     public void getEventInstancesByInterval(Long from, Long to, String userToken) {
         retrofitClient.getEventsRepository().getEventInstancesByInterval(from, to, userToken).enqueue(new Callback<EventInstanceResponse>() {
             @Override
