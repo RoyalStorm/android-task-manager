@@ -12,6 +12,7 @@ import com.github.royalstorm.android_task_manager.R;
 import com.github.royalstorm.android_task_manager.dao.Event;
 import com.github.royalstorm.android_task_manager.dao.EventInstance;
 import com.github.royalstorm.android_task_manager.dto.EventResponse;
+import com.github.royalstorm.android_task_manager.dto.UserResponse;
 import com.github.royalstorm.android_task_manager.shared.RetrofitClient;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -76,15 +77,8 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
             eventStart.setText(timestampToDate(eventInstance.getStartedAt()));
             eventEnd.setText(timestampToDate(eventInstance.getEndedAt()));
 
-            if (userToken == null)
-                firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
-                    userToken = task.getResult().getToken();
-                    getEventRequest(eventInstance, userToken);
-                });
-            else {
-                userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
-                getEventRequest(eventInstance, userToken);
-            }
+            updateToken();
+            getEventRequest(eventInstance, userToken);
         }
 
         @Override
@@ -110,13 +104,24 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
 
                         if (isPortraitOrientation()) {
                             eventName.setText(event.getName().length() < MAX_LENGTH ? event.getName() : (event.getName().substring(0, MAX_LENGTH_WITH_ELLIPSIS) + "..."));
-                            eventOwner.setText(event.getOwnerId());
                             eventDetails.setText(event.getDetails().length() < MAX_LENGTH ? event.getDetails() : (event.getDetails().substring(0, MAX_LENGTH_WITH_ELLIPSIS) + "..."));
                         } else {
                             eventName.setText(event.getName().length() < (MAX_LENGTH * 2) ? event.getName() : (event.getName().substring(0, MAX_LENGTH_WITH_ELLIPSIS * 2) + "..."));
-                            eventOwner.setText(event.getOwnerId());
                             eventDetails.setText(event.getDetails().length() < (MAX_LENGTH * 2) ? event.getDetails() : (event.getDetails().substring(0, MAX_LENGTH_WITH_ELLIPSIS * 2) + "..."));
                         }
+
+                        retrofitClient.getPermissionRepository().getUser(event.getOwnerId(), userToken).enqueue(new Callback<UserResponse>() {
+                            @Override
+                            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                                if (response.isSuccessful())
+                                    eventOwner.setText(response.body().getUsername());
+                            }
+
+                            @Override
+                            public void onFailure(Call<UserResponse> call, Throwable t) {
+
+                            }
+                        });
                     }
                 }
 
@@ -125,6 +130,15 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
 
                 }
             });
+        }
+
+        private void updateToken() {
+            if (userToken == null)
+                firebaseAuth.getCurrentUser().getIdToken(true).addOnCompleteListener(task -> {
+                    userToken = task.getResult().getToken();
+                });
+            else
+                userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
         }
     }
 

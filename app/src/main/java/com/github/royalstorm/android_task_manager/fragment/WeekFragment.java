@@ -121,7 +121,7 @@ public class WeekFragment extends Fragment implements EventService.RequestEventC
 
         gregorianCalendar.set(year, month, day);
 
-        currentWeek.setText(new SimpleDateFormat("MMM", Locale.getDefault()).format(gregorianCalendar.getTime()));
+        currentWeek.setText(new SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(gregorianCalendar.getTime()));
 
         TextView monNumber = view.findViewById(R.id.monNumber);
         TextView tueNumber = view.findViewById(R.id.tueNumber);

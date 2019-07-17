@@ -2,6 +2,7 @@ package com.github.royalstorm.android_task_manager.repository;
 
 import com.github.royalstorm.android_task_manager.dao.PermissionRequest;
 import com.github.royalstorm.android_task_manager.dto.PermissionResponse;
+import com.github.royalstorm.android_task_manager.dto.UserResponse;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -51,4 +52,7 @@ public interface PermissionRepository {
             @Path("token") String token,
             @Header("X-Firebase-Auth") String userToken
     );
+
+    @GET("/api/v1/user")
+    Call<UserResponse> getUser(@Query("user_id") String userId, @Header("X-Firebase-Auth") String userToken);
 }
