@@ -37,6 +37,9 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
 
     private View view;
 
+    private static final int MAX_LENGTH = 30;
+    private static final int MAX_LENGTH_WITH_ELLIPSIS = 27;
+
     public EventsRecyclerViewAdapter(List<EventInstance> eventInstances, OnEventListener onEventListener) {
         this.eventInstances = eventInstances;
         this.onEventListener = onEventListener;
@@ -106,13 +109,13 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
                         Event event = response.body().getData()[0];
 
                         if (isPortraitOrientation()) {
-                            eventName.setText(event.getName().length() < 29 ? event.getName() : (event.getName().substring(0, 27) + "..."));
+                            eventName.setText(event.getName().length() < MAX_LENGTH ? event.getName() : (event.getName().substring(0, MAX_LENGTH_WITH_ELLIPSIS) + "..."));
                             eventOwner.setText(event.getOwnerId());
-                            eventDetails.setText(event.getDetails().length() < 29 ? event.getDetails() : (event.getDetails().substring(0, 27) + "..."));
+                            eventDetails.setText(event.getDetails().length() < MAX_LENGTH ? event.getDetails() : (event.getDetails().substring(0, MAX_LENGTH_WITH_ELLIPSIS) + "..."));
                         } else {
-                            eventName.setText(event.getName().length() < 58 ? event.getName() : (event.getName().substring(0, 58) + "..."));
+                            eventName.setText(event.getName().length() < (MAX_LENGTH * 2) ? event.getName() : (event.getName().substring(0, MAX_LENGTH_WITH_ELLIPSIS * 2) + "..."));
                             eventOwner.setText(event.getOwnerId());
-                            eventDetails.setText(event.getDetails().length() < 58 ? event.getDetails() : (event.getDetails().substring(0, 58) + "..."));
+                            eventDetails.setText(event.getDetails().length() < (MAX_LENGTH * 2) ? event.getDetails() : (event.getDetails().substring(0, MAX_LENGTH_WITH_ELLIPSIS * 2) + "..."));
                         }
                     }
                 }

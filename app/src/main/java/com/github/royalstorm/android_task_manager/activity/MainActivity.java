@@ -14,7 +14,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -151,11 +150,10 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer.isDrawerOpen(GravityCompat.START))
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        else
             drawer.openDrawer(GravityCompat.START);
-        }
     }
 
     @Override
@@ -168,20 +166,18 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.export_from_server) {
-            exportToICal(userToken);
-            return true;
-        }
-
-        if (id == R.id.share_all_events) {
-            shareAllCalendar();
-            return true;
+        switch (id) {
+            case R.id.export_from_server:
+                exportToICal(userToken);
+                break;
+            case R.id.share_all_events:
+                shareAllCalendar();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    //@SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -259,9 +255,8 @@ public class MainActivity extends AppCompatActivity implements
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
-        } else { //permission is automatically granted on sdk<23 upon installation
+        } else
             return true;
-        }
     }
 
     private void exportToICal(String userToken) {
@@ -303,7 +298,6 @@ public class MainActivity extends AppCompatActivity implements
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             updateUI(account);
         } catch (ApiException e) {
-            Log.w("FAILED_SIGNED_IN", "signInResult:failed code=" + e.getStatusCode());
         }
     }
 
@@ -338,16 +332,11 @@ public class MainActivity extends AppCompatActivity implements
 
         firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) {
-                Log.d("AUTH DONE", "SUCCESS");
-
-                firebaseUser = firebaseAuth.getCurrentUser();
-                userToken = firebaseUser.getIdToken(false).getResult().getToken();
+                userToken = firebaseAuth.getCurrentUser().getIdToken(false).getResult().getToken();
 
                 navigationView.setNavigationItemSelectedListener(MainActivity.this);
-            } else {
-                Log.d("AUTH FAIL", task.getException().toString());
+            } else
                 userToken = null;
-            }
         });
     }
 
