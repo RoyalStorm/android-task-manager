@@ -49,7 +49,7 @@ import static com.github.royalstorm.android_task_manager.shared.Frequency.NEVER;
 import static com.github.royalstorm.android_task_manager.shared.Frequency.WEEKLY;
 import static com.github.royalstorm.android_task_manager.shared.Frequency.YEARLY;
 
-public class EditTaskActivity extends AppCompatActivity implements
+public class EditEventActivity extends AppCompatActivity implements
         DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener,
         SelectRepeatModeDialog.SelectRepeatModeDialogListener,
         AccessConfigurationDialog.ApplyAccessConfiguration {

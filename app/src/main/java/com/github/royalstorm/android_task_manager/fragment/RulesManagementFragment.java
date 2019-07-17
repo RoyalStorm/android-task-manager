@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.royalstorm.android_task_manager.R;
-import com.github.royalstorm.android_task_manager.adapter.MyPermissionAdapter;
+import com.github.royalstorm.android_task_manager.adapter.MyPermissionsRecyclerViewAdapter;
 import com.github.royalstorm.android_task_manager.dao.EntityType;
 import com.github.royalstorm.android_task_manager.dao.Permission;
 import com.github.royalstorm.android_task_manager.dto.PermissionResponse;
@@ -28,7 +28,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RulesManagementFragment extends Fragment implements
-        MyPermissionAdapter.OnMyPermissionListener {
+        MyPermissionsRecyclerViewAdapter.OnMyPermissionListener {
 
     private RetrofitClient retrofitClient;
 
@@ -40,7 +40,7 @@ public class RulesManagementFragment extends Fragment implements
 
     private List<Permission> permissions;
 
-    private MyPermissionAdapter myPermissionAdapter;
+    private MyPermissionsRecyclerViewAdapter myPermissionsRecyclerViewAdapter;
 
     @Nullable
     @Override
@@ -60,7 +60,7 @@ public class RulesManagementFragment extends Fragment implements
 
         permissions = new ArrayList<>();
 
-        myPermissionAdapter = new MyPermissionAdapter(new ArrayList<>(), this);
+        myPermissionsRecyclerViewAdapter = new MyPermissionsRecyclerViewAdapter(new ArrayList<>(), this);
 
         updateToken();
         getAllMyPermissionsRequest(true, userToken);
@@ -74,8 +74,8 @@ public class RulesManagementFragment extends Fragment implements
             public void onResponse(Call<PermissionResponse> call, Response<PermissionResponse> response) {
                 if (response.isSuccessful()) {
                     permissions = Arrays.asList(response.body().getData());
-                    myPermissionAdapter.setItems(permissions);
-                    rvMyPermissions.setAdapter(myPermissionAdapter);
+                    myPermissionsRecyclerViewAdapter.setItems(permissions);
+                    rvMyPermissions.setAdapter(myPermissionsRecyclerViewAdapter);
                 }
             }
 

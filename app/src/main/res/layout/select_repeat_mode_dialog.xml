@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Не повторяется"
+            android:text="@string/no_repeat"
             android:textSize="18sp" />
 
         <RadioButton
@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Каждый день"
+            android:text="@string/daily"
             android:textSize="18sp" />
 
         <RadioButton
@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Каждую неделю"
+            android:text="@string/weekly"
             android:textSize="18sp" />
 
         <RadioButton
@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Каждый месяц"
+            android:text="@string/monthly"
             android:textSize="18sp" />
 
         <RadioButton
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Каждый год"
+            android:text="@string/yearly"
             android:textSize="18sp" />
 
         <RadioButton
@@ -53,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Другое..."
+            android:text="@string/other"
             android:textSize="18sp" />
     </RadioGroup>
 </RelativeLayout>

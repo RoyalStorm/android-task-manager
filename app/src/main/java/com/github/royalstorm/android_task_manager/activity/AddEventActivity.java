@@ -46,7 +46,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddTaskActivity extends AppCompatActivity implements
+public class AddEventActivity extends AppCompatActivity implements
         DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener,
         SelectRepeatModeDialog.SelectRepeatModeDialogListener {

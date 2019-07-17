@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.Collection;
 import java.util.List;
 
-public class MyPermissionAdapter extends RecyclerView.Adapter<MyPermissionAdapter.MyPermissionViewHolder> {
+public class MyPermissionsRecyclerViewAdapter extends RecyclerView.Adapter<MyPermissionsRecyclerViewAdapter.MyPermissionViewHolder> {
 
     private FirebaseAuth firebaseAuth;
     private String userToken;
@@ -31,7 +31,7 @@ public class MyPermissionAdapter extends RecyclerView.Adapter<MyPermissionAdapte
 
     private EventService eventService;
 
-    public MyPermissionAdapter(List<Permission> permissions, MyPermissionAdapter.OnMyPermissionListener onMyPermissionListener) {
+    public MyPermissionsRecyclerViewAdapter(List<Permission> permissions, MyPermissionsRecyclerViewAdapter.OnMyPermissionListener onMyPermissionListener) {
         this.permissions = permissions;
         this.onMyPermissionListener = onMyPermissionListener;
     }
@@ -45,7 +45,7 @@ public class MyPermissionAdapter extends RecyclerView.Adapter<MyPermissionAdapte
 
         OnMyPermissionListener onMyPermissionListener;
 
-        MyPermissionViewHolder(View itemView, MyPermissionAdapter.OnMyPermissionListener onMyPermissionListener) {
+        MyPermissionViewHolder(View itemView, MyPermissionsRecyclerViewAdapter.OnMyPermissionListener onMyPermissionListener) {
             super(itemView);
 
             eventName = itemView.findViewById(R.id.event_name);
@@ -117,7 +117,7 @@ public class MyPermissionAdapter extends RecyclerView.Adapter<MyPermissionAdapte
     @Override
     public MyPermissionViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.permission_item, viewGroup, false);
-        return new MyPermissionAdapter.MyPermissionViewHolder(view, onMyPermissionListener);
+        return new MyPermissionsRecyclerViewAdapter.MyPermissionViewHolder(view, onMyPermissionListener);
     }
 
     @Override

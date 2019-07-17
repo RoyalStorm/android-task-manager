@@ -24,7 +24,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
+public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecyclerViewAdapter.EventViewHolder> {
 
     private RetrofitClient retrofitClient = RetrofitClient.getInstance();
 
@@ -37,7 +37,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     private View view;
 
-    public EventAdapter(List<EventInstance> eventInstances, OnEventListener onEventListener) {
+    public EventsRecyclerViewAdapter(List<EventInstance> eventInstances, OnEventListener onEventListener) {
         this.eventInstances = eventInstances;
         this.onEventListener = onEventListener;
     }
